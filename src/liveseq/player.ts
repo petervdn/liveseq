@@ -20,18 +20,15 @@ export const createPlayer = (options: PlayerOptions) => {
   };
 
   const play = () => {
-    if (isPlaying) {
-      return;
-    }
+    if (isPlaying) return;
 
     isPlaying = true;
     schedule();
   };
 
   const stop = () => {
-    if (!isPlaying) {
-      return;
-    }
+    if (!isPlaying) return;
+
     // todo actually stop current sounds
     isPlaying = false;
     timeoutId !== null && window.clearTimeout(timeoutId);
