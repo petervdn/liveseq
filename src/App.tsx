@@ -5,7 +5,7 @@ import { createPlayer, Player } from './liveseq/player';
 export default function App() {
   const playerRef = useRef<Player>();
   useEffect(() => {
-    playerRef.current = createPlayer({ lookAheadTime: 1200, interval: 1000 });
+    playerRef.current = createPlayer();
   }, []);
 
   return (
