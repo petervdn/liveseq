@@ -7,6 +7,7 @@ type PlayerOptions = {
 type BPM = number;
 export type Player = ReturnType<typeof createPlayer>;
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const createPlayer = (options: PlayerOptions) => {
   let isPlaying = false;
   let timeoutId: number | null = null;

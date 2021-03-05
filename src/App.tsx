@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { createPlayer, Player } from './liveseq/player';
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default function App() {
   const playerRef = useRef<Player>();
   useEffect(() => {
@@ -10,6 +11,7 @@ export default function App() {
   return (
     <div>
       <button
+        type="button"
         onClick={() => {
           playerRef.current?.play();
         }}
@@ -17,6 +19,7 @@ export default function App() {
         start
       </button>
       <button
+        type="button"
         onClick={() => {
           playerRef.current?.stop();
         }}
