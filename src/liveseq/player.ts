@@ -13,11 +13,7 @@ export const createPlayer = (options: PlayerOptions) => {
   let timeoutId: number | null = null;
 
   const schedule = () => {
-    // console.log('schedule', isPlaying);
-
-    timeoutId = window.setTimeout(() => {
-      schedule();
-    }, options.interval);
+    timeoutId = window.setTimeout(schedule, options.interval);
   };
 
   const play = () => {
