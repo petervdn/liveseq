@@ -1,6 +1,6 @@
 type PlayerOptions = {
-  lookAheadTime: number;
-  interval: number;
+  lookAheadTime?: number;
+  scheduleInterval?: number;
 };
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -8,12 +8,19 @@ type BPM = number;
 export type Player = ReturnType<typeof createPlayer>;
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const createPlayer = (options: PlayerOptions) => {
+export const createPlayer = ({
+  scheduleInterval = 1000,
+  lookAheadTime = 1200,
+}: PlayerOptions = {}) => {
   let isPlaying = false;
   let timeoutId: number | null = null;
 
+  if (lookAheadTime <= scheduleInterval) {
+    throw new Error('LookAheadTime should be larger than the scheduleInterval');
+  }
+
   const schedule = () => {
-    timeoutId = window.setTimeout(schedule, options.interval);
+    timeoutId = window.setTimeout(schedule, scheduleInterval);
   };
 
   const play = () => {
