@@ -4,6 +4,6 @@ module.exports = {
     project: 'tsconfig.json',
   },
   rules: {
-    "babel/no-unused-expressions": "off"
+    "babel/no-unused-expressions": "off",
   }
 };

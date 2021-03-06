@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { createPlayer, Player } from './liveseq/player';
+import { createPlayer, Player, playTick } from './liveseq/player';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const context = new (window.AudioContext || (window as any).webkitAudioContext)();
@@ -18,6 +18,7 @@ export default function App() {
         onClick={() => {
           context.state === 'suspended' && context.resume();
           setTimeout(() => {
+            playTick(context, 0);
             playerRef.current?.play();
           }, 10);
         }}
