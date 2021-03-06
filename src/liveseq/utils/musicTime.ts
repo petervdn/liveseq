@@ -35,14 +35,14 @@ export const musicTimeToBeats = (
   return bars * beatsPerBar + beats + (sixteenths + remainingSixteenth) / sixteenthsPerBeat;
 };
 
-export const musicTimeToNormalizedObject = (
+export const musicTimeToObject = (
   time: MusicTime,
   {
     beatsPerBar = DEFAULT_BEATS_PER_BAR,
     sixteenthsPerBeat = DEFAULT_SIXTEENTHS_PER_BEAT,
   }: MusicTimeOptions = {},
 ): MusicTimeObject => {
-  const totalBeats = musicTimeToBeats(time);
+  const totalBeats = musicTimeToBeats(time, { sixteenthsPerBeat, beatsPerBar });
 
   const totalSixteenths = totalBeats * sixteenthsPerBeat;
   const flooredSixteenths = Math.floor(totalSixteenths);
@@ -57,3 +57,14 @@ export const musicTimeToNormalizedObject = (
     remainingSixteenth: totalSixteenths - flooredSixteenths,
   };
 };
+
+export const beatsToTime = (beats: number, bpm: number): number => (beats * 60) / bpm;
+
+export const musicTimeToTime = (
+  musicTime: MusicTime,
+  bpm: number,
+  {
+    beatsPerBar = DEFAULT_BEATS_PER_BAR,
+    sixteenthsPerBeat = DEFAULT_SIXTEENTHS_PER_BEAT,
+  }: MusicTimeOptions = {},
+): number => beatsToTime(musicTimeToBeats(musicTime, { beatsPerBar, sixteenthsPerBeat }), bpm);
