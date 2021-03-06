@@ -1,14 +1,13 @@
 import { useEffect, useRef } from 'react';
 import { createPlayer, Player, playTick } from './liveseq/player';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const context = new (window.AudioContext || (window as any).webkitAudioContext)();
+import { audioContext } from './liveseq/utils/audioContext';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default function App() {
   const playerRef = useRef<Player>();
   useEffect(() => {
-    playerRef.current = createPlayer(context);
+    playerRef.current = createPlayer(audioContext);
   }, []);
 
   return (
@@ -16,9 +15,9 @@ export default function App() {
       <button
         type="button"
         onClick={() => {
-          context.state === 'suspended' && context.resume();
+          audioContext.state === 'suspended' && audioContext.resume();
           setTimeout(() => {
-            playTick(context, 0);
+            playTick(audioContext, 0);
             playerRef.current?.play();
           }, 10);
         }}
