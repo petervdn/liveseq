@@ -1,13 +1,13 @@
 import { useEffect, useRef } from 'react';
-import { createPlayer, Player, playTick } from './liveseq/player';
-
-import { audioContext } from './liveseq/utils/audioContext';
+import { playTick } from './liveseq/player';
+import { createLiveseq, Liveseq } from './liveseq/liveseq';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default function App() {
-  const playerRef = useRef<Player>();
+  const liveseqRef = useRef<Liveseq>();
+
   useEffect(() => {
-    playerRef.current = createPlayer(audioContext);
+    liveseqRef.current = createLiveseq();
   }, []);
 
   return (
@@ -15,10 +15,11 @@ export default function App() {
       <button
         type="button"
         onClick={() => {
+          const { audioContext } = liveseqRef.current!;
           audioContext.state === 'suspended' &&
             audioContext.resume().then(() => {
               playTick(audioContext, 0);
-              playerRef.current?.play();
+              liveseqRef.current?.play();
             });
         }}
       >
@@ -27,7 +28,7 @@ export default function App() {
       <button
         type="button"
         onClick={() => {
-          playerRef.current?.stop();
+          liveseqRef.current?.stop();
         }}
       >
         stop
