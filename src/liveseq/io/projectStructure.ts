@@ -1,5 +1,7 @@
 /* eslint-disable no-shadow */
 
+import { libraryVersion } from '../librartVersion';
+
 enum SlotType {
   Timeline = 'Timeline',
 }
@@ -80,6 +82,11 @@ type Timeline = {
 
 // SCENE
 
+// Scenes are actually a group of actions that can be triggered when scenes enter or leave
+// nothing changes if there are no actions and the scene gets activated
+// instead of being defined by "what is playing", it is defined by what changes should be made to the state
+// this allows more control because maybe you only want to change things partially but keep some other things as they are
+
 enum TransitionEvent {
   Enter = 'Enter',
   Leave = 'Leave',
@@ -117,21 +124,32 @@ type Scene = {
 
 // PROJECT
 
-// TODO: slots are not
-type Project = {
-  libVersion: 0;
+// TODO: should slots be global
+export type Project = {
+  libraryVersion: number;
   name: string;
   channels: Array<Channel>;
   instruments: Array<Instrument>;
   timelines: Array<Timeline>;
   clips: Array<Clip>;
   scenes: Array<Scene>;
-  activeSceneId: string;
+  activeSceneId: string | null; // TODO: if we keep scenes as a group of actions, we probably want to allow triggering multiple at once
+};
+
+export const defaultProject = {
+  libraryVersion,
+  name: 'untitled',
+  channels: [],
+  instruments: [],
+  timelines: [],
+  clips: [],
+  scenes: [],
+  activeSceneId: null,
 };
 
 // project file example (JSON)
 export const project: Project = {
-  libVersion: 0,
+  libraryVersion: 0,
   name: 'Project Name',
   activeSceneId: 'scene_1',
   channels: [
