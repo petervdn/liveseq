@@ -21,7 +21,7 @@ type Channel = {
   name?: string;
   isEnabled?: boolean;
   instrumentId: string;
-  slots: Array<TimelineSlot>;
+  slots: Array<TimelineSlot>; // only one slot per channel can play at a time
 };
 
 // INSTRUMENT
