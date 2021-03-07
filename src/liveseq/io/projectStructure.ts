@@ -125,12 +125,14 @@ type Project = {
   timelines: Array<Timeline>;
   clips: Array<Clip>;
   scenes: Array<Scene>;
+  activeSceneId: string;
 };
 
 // project file example (JSON)
 export const project: Project = {
   libVersion: 0,
   name: 'Project Name',
+  activeSceneId: 'scene_1',
   channels: [
     {
       id: 'channel_1',
