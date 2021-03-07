@@ -117,6 +117,7 @@ type Scene = {
 
 // PROJECT
 
+// TODO: slots are not
 type Project = {
   libVersion: 0;
   name: string;

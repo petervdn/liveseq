@@ -15,11 +15,11 @@ export default function App() {
       <button
         type="button"
         onClick={() => {
-          audioContext.state === 'suspended' && audioContext.resume();
-          setTimeout(() => {
-            playTick(audioContext, 0);
-            playerRef.current?.play();
-          }, 10);
+          audioContext.state === 'suspended' &&
+            audioContext.resume().then(() => {
+              playTick(audioContext, 0);
+              playerRef.current?.play();
+            });
         }}
       >
         start
