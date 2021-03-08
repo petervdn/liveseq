@@ -24,14 +24,10 @@ export enum ChannelType {
   Instrument = 'Instrument',
 }
 
-export type ChannelSlot = {
-  slotId: string;
-};
-
 export type InstrumentChannel = LiveseqEntity & {
   type: ChannelType.Instrument;
   instrumentId: string;
-  slots: Array<ChannelSlot>;
+  slotIds: Array<string>;
 };
 
 // ready for adding more types of channels
@@ -99,18 +95,12 @@ export type GlobalAction =
   | {
       type: ActionType.PlaySlots;
       // optional, if not present means all
-      slots?: Array<{
-        channelId: string;
-        slotId: string;
-      }>;
+      slotIds?: Array<string>;
     }
   | {
       type: ActionType.StopSlots;
       // optional, if not present means all
-      slots?: Array<{
-        channelId: string;
-        slotId: string;
-      }>;
+      slotIds?: Array<string>;
     };
 
 export type Scene = LiveseqEntity & {

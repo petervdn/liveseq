@@ -23,25 +23,14 @@ export const abSwitch: Project = {
         name: 'Channel Name',
         type: ChannelType.Instrument,
         instrumentId: 'sampler_1',
-        slots: [
-          {
-            slotId: 'slot_1',
-          },
-          {
-            slotId: 'slot_2',
-          },
-        ],
+        slotIds: ['slot_1', 'slot_2'],
       },
       {
         id: 'channel_2',
         name: 'Channel Name',
         type: ChannelType.Instrument,
         instrumentId: 'synth_1',
-        slots: [
-          {
-            slotId: 'slot_3',
-          },
-        ],
+        slotIds: ['slot_3'],
       },
     ],
     instruments: [
@@ -112,16 +101,7 @@ export const abSwitch: Project = {
           enter: [
             {
               type: ActionType.PlaySlots,
-              slots: [
-                {
-                  channelId: 'channel_1',
-                  slotId: 'slot_1',
-                },
-                {
-                  channelId: 'channel_2',
-                  slotId: 'slot_1',
-                },
-              ],
+              slotIds: ['slot_1', 'slot_3'],
             },
           ],
         },
@@ -136,12 +116,7 @@ export const abSwitch: Project = {
             },
             {
               type: ActionType.PlaySlots,
-              slots: [
-                {
-                  channelId: 'channel_1',
-                  slotId: 'slot_2',
-                },
-              ],
+              slotIds: ['slot_2'],
             },
           ],
         },
