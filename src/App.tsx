@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { playTick } from './liveseq/player';
-import { createLiveseq, Liveseq } from './liveseq/liveseq';
+import { createLiveseq, Liveseq, playTick } from './liveseq';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default function App() {

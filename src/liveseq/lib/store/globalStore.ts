@@ -63,5 +63,6 @@ export const createGlobalStore = (initialState: Partial<LiveseqState> = {}) => {
     },
     subscribe: store.subscribe,
     dispose: store.dispose,
+    getState: store.getState,
   };
 };

@@ -1,5 +1,5 @@
 import { createPlayer } from './player';
-import { createGlobalStore, LiveseqState } from './store/globalStore';
+import { ActionType, createGlobalStore, LiveseqState } from './store/globalStore';
 import { getAudioContext } from './utils/getAudioContext';
 
 export type LiveseqProps = {
@@ -21,7 +21,19 @@ export const createLiveseq = (props: LiveseqProps = {}) => {
   const audioContext = props.audioContext || getAudioContext();
   const player = createPlayer({ audioContext, store });
 
+  // TODO: move to a createConnectedPlayer fn
+  // make player respond to state changes
+  const subscriptionDisposers = [
+    store.subscribe(ActionType.Play, ({ state }) => {
+      state.isPlaying && player.play();
+    }),
+    store.subscribe(ActionType.Stop, ({ state }) => {
+      !state.isPlaying && player.stop();
+    }),
+  ];
+
   const dispose = () => {
+    subscriptionDisposers.forEach((disposeSubscription) => disposeSubscription());
     player.dispose();
     store.dispose();
   };

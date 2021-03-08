@@ -1,5 +1,5 @@
 /* eslint-disable no-shadow */
-import { libraryVersion } from '../libraryVersion';
+import { libraryVersion } from '../../libraryVersion';
 import type { ActionType } from '../store/globalStore';
 
 // this is present in many liveseq objs
