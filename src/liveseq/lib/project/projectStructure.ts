@@ -121,7 +121,7 @@ export type Sample = LiveseqEntity & {
 export type Project = {
   libraryVersion: number;
   name: string;
-  startScenes: Array<string> | null; // The scenes to trigger when liveseq is played (from stopped state)
+  startScenes: Array<string>; // The scenes to trigger when liveseq is played (from stopped state)
   entities: {
     channels: Array<Channel>;
     instruments: Array<Instrument>;
@@ -136,7 +136,7 @@ export type Project = {
 export const defaultProject: Project = {
   libraryVersion,
   name: 'untitled',
-  startScenes: null,
+  startScenes: [],
   entities: {
     channels: [],
     instruments: [],

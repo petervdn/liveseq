@@ -1,7 +1,3 @@
-// ACTIONS
-// actions can be triggered internally or programatically in real time
-// they abstract store dispatch from the rest of the app
-
 import { defaultProject, Project } from '../project/projectStructure';
 import { createStore, Store } from '../utils/store';
 
@@ -23,7 +19,10 @@ export enum ActionType {
 
 type GlobalStoreInstance = Store<LiveseqState, ActionType>;
 
-// TODO: rename to State
+// ACTIONS
+// actions can be triggered internally or programmatically in real time
+// they abstract store dispatch from the rest of the app
+
 const play = (store: GlobalStoreInstance) => () => {
   store.dispatch(
     ActionType.Play,

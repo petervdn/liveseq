@@ -21,7 +21,6 @@ export const createPlayer = ({
   }
 
   const schedule = () => {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const playTime = audioContext.currentTime - playStartTime!; // playStartTime should always be defined when playing
 
     // eslint-disable-next-line no-console
