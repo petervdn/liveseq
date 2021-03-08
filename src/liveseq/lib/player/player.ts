@@ -1,7 +1,4 @@
-import type { GlobalStore } from '../store/globalStore';
-
-type PlayerProps = {
-  store: GlobalStore;
+export type PlayerProps = {
   audioContext: AudioContext;
   lookAheadTime?: number;
   scheduleInterval?: number;
@@ -12,7 +9,6 @@ export type BPM = number;
 export type Player = ReturnType<typeof createPlayer>;
 
 export const createPlayer = ({
-  // store,
   audioContext,
   scheduleInterval = 1000,
   lookAheadTime = 1200,

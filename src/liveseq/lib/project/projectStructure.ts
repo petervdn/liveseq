@@ -94,15 +94,11 @@ export type Timeline = LiveseqEntity & {
 // instead of being defined by "what is playing", it is defined by what changes should be made to the state
 // this allows more control because maybe you only want to change things partially but keep some other things as they are
 
-export enum TransitionEventType {
-  Enter = 'Enter',
-  Leave = 'Leave',
-}
-
 // TODO: define union for all action types
 export type GlobalAction =
   | {
       type: ActionType.PlaySlots;
+      // optional, if not present means all
       slots?: Array<{
         channelId: string;
         slotId: string;
@@ -110,6 +106,7 @@ export type GlobalAction =
     }
   | {
       type: ActionType.StopSlots;
+      // optional, if not present means all
       slots?: Array<{
         channelId: string;
         slotId: string;
@@ -117,10 +114,10 @@ export type GlobalAction =
     };
 
 export type Scene = LiveseqEntity & {
-  eventActions: Array<{
-    event: TransitionEventType;
-    action: GlobalAction;
-  }>;
+  eventActions: {
+    enter?: Array<GlobalAction>; // when it becomes active
+    leave?: Array<GlobalAction>; // when it becomes inactive
+  };
 };
 
 // SAMPLES

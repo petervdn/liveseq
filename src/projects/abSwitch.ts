@@ -1,12 +1,4 @@
-import {
-  Project,
-  SlotType,
-  TransitionEventType,
-  InstrumentType,
-  ClipType,
-  ChannelType,
-  ActionType,
-} from '../liveseq';
+import { Project, SlotType, InstrumentType, ClipType, ChannelType, ActionType } from '../liveseq';
 
 // TODO: make this file describe this example
 // Example switching
@@ -58,7 +50,7 @@ export const abSwitch: Project = {
         type: InstrumentType.Sampler,
       },
     ],
-    // global to allow same slot multiple times in channels
+    // global to allow same slot in multiple channels
     slots: [
       {
         id: 'slot_1',
@@ -116,10 +108,9 @@ export const abSwitch: Project = {
       {
         id: 'scene_1',
         name: 'A',
-        eventActions: [
-          {
-            event: TransitionEventType.Enter,
-            action: {
+        eventActions: {
+          enter: [
+            {
               type: ActionType.PlaySlots,
               slots: [
                 {
@@ -132,22 +123,18 @@ export const abSwitch: Project = {
                 },
               ],
             },
-          },
-        ],
+          ],
+        },
       },
       {
         id: 'scene_2',
         name: 'B',
-        eventActions: [
-          {
-            event: TransitionEventType.Enter,
-            action: {
+        eventActions: {
+          enter: [
+            {
               type: ActionType.StopSlots,
             },
-          },
-          {
-            event: TransitionEventType.Enter,
-            action: {
+            {
               type: ActionType.PlaySlots,
               slots: [
                 {
@@ -156,8 +143,8 @@ export const abSwitch: Project = {
                 },
               ],
             },
-          },
-        ],
+          ],
+        },
       },
     ],
   },
