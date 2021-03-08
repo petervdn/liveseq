@@ -13,7 +13,11 @@ export const createConnectedPlayer = ({ store, ...playerProps }: ConnectedPlayer
   // make player respond to state changes
   const subscriptionDisposers = [
     store.subscribe(ActionType.Play, ({ state }) => {
-      state.isPlaying && player.play();
+      if (!state.isPlaying) return;
+
+      const { audioContext } = playerProps;
+
+      audioContext.state === 'suspended' ? audioContext.resume().then(player.play) : player.play();
     }),
     store.subscribe(ActionType.Stop, ({ state }) => {
       !state.isPlaying && player.stop();

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { createLiveseq, Liveseq, playTick } from './liveseq';
+import { createLiveseq, Liveseq } from './liveseq';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default function App() {
@@ -14,12 +14,7 @@ export default function App() {
       <button
         type="button"
         onClick={() => {
-          const { audioContext } = liveseqRef.current!;
-          audioContext.state === 'suspended' &&
-            audioContext.resume().then(() => {
-              playTick(audioContext, 0);
-              liveseqRef.current?.play();
-            });
+          liveseqRef.current?.play();
         }}
       >
         start
