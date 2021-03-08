@@ -1,4 +1,4 @@
-import type { GlobalStore } from './store/globalStore';
+import type { GlobalStore } from '../store/globalStore';
 
 type PlayerProps = {
   store: GlobalStore;

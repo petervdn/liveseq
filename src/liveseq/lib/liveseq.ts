@@ -1,4 +1,4 @@
-import { createPlayer } from './player';
+import { createPlayer } from './player/player';
 import { ActionType, createGlobalStore, LiveseqState } from './store/globalStore';
 import { getAudioContext } from './utils/getAudioContext';
 
