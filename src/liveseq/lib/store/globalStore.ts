@@ -1,5 +1,5 @@
 // ACTIONS
-// actions can be triggered internally by the Player or programatically in real time
+// actions can be triggered internally or programatically in real time
 // they abstract store dispatch from the rest of the app
 
 import { defaultProject, Project } from '../project/projectStructure';
