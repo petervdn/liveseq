@@ -121,16 +121,16 @@ export const abSwitch: Project = {
             event: TransitionEventType.Enter,
             action: {
               type: ActionType.PlaySlots,
-              channelId: 'channel_1',
-              slotId: 'slot_1',
-            },
-          },
-          {
-            event: TransitionEventType.Enter,
-            action: {
-              type: ActionType.PlaySlots,
-              channelId: 'channel_2',
-              slotId: 'slot_1',
+              slots: [
+                {
+                  channelId: 'channel_1',
+                  slotId: 'slot_1',
+                },
+                {
+                  channelId: 'channel_2',
+                  slotId: 'slot_1',
+                },
+              ],
             },
           },
         ],
@@ -149,8 +149,12 @@ export const abSwitch: Project = {
             event: TransitionEventType.Enter,
             action: {
               type: ActionType.PlaySlots,
-              channelId: 'channel_1',
-              slotId: 'slot_2',
+              slots: [
+                {
+                  channelId: 'channel_1',
+                  slotId: 'slot_2',
+                },
+              ],
             },
           },
         ],

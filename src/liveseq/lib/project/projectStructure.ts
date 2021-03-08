@@ -103,11 +103,17 @@ export enum TransitionEventType {
 export type GlobalAction =
   | {
       type: ActionType.PlaySlots;
-      channelId: string;
-      slotId: string;
+      slots?: Array<{
+        channelId: string;
+        slotId: string;
+      }>;
     }
   | {
       type: ActionType.StopSlots;
+      slots?: Array<{
+        channelId: string;
+        slotId: string;
+      }>;
     };
 
 export type Scene = LiveseqEntity & {
