@@ -5,6 +5,8 @@ import { createConnectedPlayer } from './player/connectedPlayer';
 export type LiveseqProps = {
   initialState?: Partial<LiveseqState>;
   audioContext?: AudioContext;
+  lookAheadTime?: number;
+  scheduleInterval?: number;
 };
 
 export type Liveseq = ReturnType<typeof createLiveseq>;
@@ -15,11 +17,20 @@ export type Liveseq = ReturnType<typeof createLiveseq>;
 //   - player initialization
 //   - sample loading // TODO
 
-export const createLiveseq = (props: LiveseqProps = {}) => {
-  const store = createGlobalStore(props.initialState);
+export const createLiveseq = ({
+  initialState,
+  lookAheadTime,
+  audioContext = getAudioContext(),
+  scheduleInterval,
+}: LiveseqProps = {}) => {
+  const store = createGlobalStore(initialState);
 
-  const audioContext = props.audioContext || getAudioContext();
-  const player = createConnectedPlayer({ audioContext, store });
+  const player = createConnectedPlayer({
+    audioContext,
+    store,
+    lookAheadTime,
+    scheduleInterval,
+  });
 
   const dispose = () => {
     player.dispose();
