@@ -5,5 +5,7 @@ module.exports = {
   },
   rules: {
     "babel/no-unused-expressions": "off",
+    "no-shadow": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off"
   }
 };

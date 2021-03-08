@@ -1,10 +1,14 @@
-type PlayerOptions = {
+import type { GlobalStore } from './store/globalStore';
+
+type PlayerProps = {
+  store: GlobalStore;
+  audioContext: AudioContext;
   lookAheadTime?: number;
   scheduleInterval?: number;
 };
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-type BPM = number;
+export type BPM = number;
 export type Player = ReturnType<typeof createPlayer>;
 
 export const playTick = (context: AudioContext, atTime: number, releaseTime = 0.1) => {
@@ -17,10 +21,12 @@ export const playTick = (context: AudioContext, atTime: number, releaseTime = 0.
   gain.gain.linearRampToValueAtTime(0, atTime + releaseTime);
 };
 
-export const createPlayer = (
-  audioContext: AudioContext,
-  { scheduleInterval = 1000, lookAheadTime = 1200 }: PlayerOptions = {},
-) => {
+export const createPlayer = ({
+  // store,
+  audioContext,
+  scheduleInterval = 1000,
+  lookAheadTime = 1200,
+}: PlayerProps) => {
   let isPlaying = false;
   let playStartTime: number | null = null;
   let timeoutId: number | null = null;
@@ -63,10 +69,14 @@ export const createPlayer = (
   // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
   const setTempo = (bpm: BPM) => {};
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  const dispose = () => {};
+
   return {
     play,
     stop,
     pause,
     setTempo,
+    dispose,
   };
 };

@@ -1,35 +1,36 @@
 import { createPlayer } from './player';
+import { createGlobalStore, LiveseqState } from './store/globalStore';
 import { getAudioContext } from './utils/getAudioContext';
-import type { Project } from './io/projectStructure';
-import { defaultProject } from './io/projectStructure';
 
-type LiveseqState = {
-  project: Project;
-};
-
-const getInitialState = (props: LiveseqProps): LiveseqState => {
-  return {
-    project: props.project || defaultProject,
-  };
-};
-
-type LiveseqProps = {
-  project?: Project;
+export type LiveseqProps = {
+  initialState?: Partial<LiveseqState>;
   audioContext?: AudioContext;
 };
 
 export type Liveseq = ReturnType<typeof createLiveseq>;
 
+// Entry point of the library
+// Manages:
+//   - store initialization
+//   - player initialization
+//   - sample loading // TODO
+
 export const createLiveseq = (props: LiveseqProps = {}) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const state = getInitialState(props);
-  state;
+  const store = createGlobalStore(props.initialState);
 
   const audioContext = props.audioContext || getAudioContext();
-  const player = createPlayer(audioContext);
+  const player = createPlayer({ audioContext, store });
 
+  const dispose = () => {
+    player.dispose();
+    store.dispose();
+  };
+
+  // liveseq's API
   return {
-    ...player,
+    subscribe: store.subscribe,
+    ...store.actions,
+    dispose,
     audioContext,
   };
 };
