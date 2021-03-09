@@ -25,6 +25,9 @@ export const createLiveseq = ({
 }: LiveseqProps = {}) => {
   const store = createGlobalStore(initialState);
 
+  // just trying with a store setup
+  // if you want the plain player just replace createConnectedPlayer with createPlayer
+  // and then return the ...player instead of the store.actions
   const player = createConnectedPlayer({
     audioContext,
     store,

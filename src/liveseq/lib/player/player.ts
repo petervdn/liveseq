@@ -1,3 +1,5 @@
+import { playTick } from '../..';
+
 export type PlayerProps = {
   audioContext: AudioContext;
   lookAheadTime?: number;
@@ -22,6 +24,8 @@ export const createPlayer = ({
 
   const schedule = () => {
     const playTime = audioContext.currentTime - playStartTime!; // playStartTime should always be defined when playing
+
+    playTick(audioContext, audioContext.currentTime);
 
     // eslint-disable-next-line no-console
     console.log('playTime', playTime, audioContext.currentTime, audioContext.state);
