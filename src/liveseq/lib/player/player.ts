@@ -49,11 +49,6 @@ export const createPlayer = ({
       item.instrument.schedule(audioContext, item.notes);
     });
 
-    // // eslint-disable-next-line no-console
-    // console.log('songTime', songTime, audioContext.currentTime, audioContext.state);
-
-    // playTick(audioContext, audioContext.currentTime);
-
     timeoutId = window.setTimeout(() => schedule(), scheduleInterval);
   };
 
@@ -78,15 +73,11 @@ export const createPlayer = ({
   const pause = () => {};
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
-  const setTempo = (bpm: BPM) => {};
-
-  // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
   const dispose = () => {};
 
   return {
     play,
     stop,
-    setTempo,
     pause,
     dispose,
   };
