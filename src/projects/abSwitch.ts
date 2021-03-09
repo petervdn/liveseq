@@ -75,8 +75,8 @@ export const abSwitch: Project = {
             pitch: 'C3',
           },
           {
-            start: [0, 2, 0],
-            end: [0, 3, 0],
+            start: [0, 1, 0],
+            end: [0, 2, 0],
             velocity: 0.75,
             pitch: 'C3',
           },
