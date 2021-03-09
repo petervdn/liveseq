@@ -1,5 +1,6 @@
 /* eslint-disable no-shadow */
 import type { ActionType } from '../store/globalStore';
+import type { MusicTime } from '../utils/musicTime';
 
 // this is present in many liveseq objs
 export type LiveseqEntity = {
@@ -55,15 +56,15 @@ export enum ClipType {
 }
 
 export type Note = {
-  start: string;
-  end: string;
+  start: MusicTime;
+  end: MusicTime;
   velocity: number;
   pitch: string;
 };
 
 export type NoteClip = LiveseqEntity & {
   type: ClipType.NoteClip;
-  duration: string;
+  duration: MusicTime;
   notes: Array<Note>;
 };
 
@@ -75,11 +76,11 @@ export type Clip = NoteClip;
 // for now just "clips" but could place other things
 
 export type Timeline = LiveseqEntity & {
-  duration?: string; // TODO: what to do if duration is undefined, maybe use Infinity instead or we can derive from its clips
+  duration?: MusicTime; // TODO: what to do if duration is undefined, maybe use Infinity instead or we can derive from its clips
   clips: Array<{
     clipId: string;
-    start: string;
-    end: string;
+    start: MusicTime;
+    end: MusicTime;
   }>;
 };
 

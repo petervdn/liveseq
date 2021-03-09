@@ -68,3 +68,33 @@ export const musicTimeToTime = (
     sixteenthsPerBeat = DEFAULT_SIXTEENTHS_PER_BEAT,
   }: MusicTimeOptions = {},
 ): number => beatsToTime(musicTimeToBeats(musicTime, { beatsPerBar, sixteenthsPerBeat }), bpm);
+
+// is a before b
+export const isBefore = (a: MusicTime, b: MusicTime) => {
+  // temp impl
+  const bpm = 120;
+  return musicTimeToTime(a, bpm) < musicTimeToTime(b, bpm);
+};
+
+export const isSameTime = (a: MusicTime, b: MusicTime) => {
+  // temp impl
+  const bpm = 120;
+  return musicTimeToTime(a, bpm) === musicTimeToTime(b, bpm);
+};
+
+export const addMusicTime = (a: MusicTime, b: MusicTime): MusicTime => {
+  const [a1, a2 = 0, a3 = 0, a4 = 0] = a;
+  const [b1, b2 = 0, b3 = 0, b4 = 0] = b;
+
+  return [a1 + b1, a2 + b2, a3 + b3, a4 + b4];
+};
+
+// is rangeA intersecting rangeB
+export const isInRange = (
+  aStart: MusicTime,
+  aEnd: MusicTime,
+  bStart: MusicTime,
+  bEnd: MusicTime,
+) => {
+  return !(isBefore(aEnd, bStart) || isBefore(bEnd, aStart));
+};

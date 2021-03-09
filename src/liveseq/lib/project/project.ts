@@ -1,8 +1,10 @@
 /* eslint-disable no-console */
 import type { Project } from './projectStructure';
 import { getDefaultProject } from './getDefaultProject';
-import { getSceneById, getSlotById } from './selectors';
+import { getSceneById, getSlotById, getTimelineById } from './selectors';
 import { ActionType } from '../..';
+import type { MusicTime } from '../utils/musicTime';
+import { createTimeline } from '../timeline/timeline';
 
 // takes a project config and returns some useful stuff
 // so we don't have to interact with the file directly
@@ -47,5 +49,23 @@ export const createProject = (project: Project = getDefaultProject()) => {
   console.log('those slots are in these channels:');
   console.log(playingChannels);
 
-  return {};
+  // given a start and end time, what notes should play on what instruments?
+  // TODO: this is a wip
+  const getNotesToPlay = (start: MusicTime, end: MusicTime) => {
+    //  TODO: return a reference of the instruments to play
+    // createTimeline
+    const timelines = startSlots.map((slot) => getTimelineById(project)(slot.timelineId));
+    // TODO: naming
+    const timelineInstances = timelines.map((timeline) =>
+      createTimeline(timeline, project.entities.clips),
+    );
+
+    const notesToPlay = timelineInstances.flatMap((tl) => tl.getNotesInRange(start, end));
+
+    return notesToPlay;
+  };
+
+  return {
+    getNotesToPlay,
+  };
 };

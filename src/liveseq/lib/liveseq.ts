@@ -31,7 +31,13 @@ export const createLiveseq = ({
 
   // TODO: better naming
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  createProject(project);
+  const projectInstance = createProject(project);
+
+  // eslint-disable-next-line no-console
+  console.log(
+    'all the notes playing in the first 2 bars:',
+    projectInstance.getNotesToPlay([0, 0, 0], [2, 0, 0]),
+  );
 
   // just trying with a store setup
   // if you want the plain player just replace createConnectedPlayer with createPlayer

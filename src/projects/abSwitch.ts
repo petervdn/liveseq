@@ -66,11 +66,11 @@ export const abSwitch: Project = {
         id: 'clip_1',
         type: ClipType.NoteClip,
         name: 'Clip Name',
-        duration: '1.0.0',
+        duration: [1, 0, 0],
         notes: [
           {
-            start: '0.0.0',
-            end: '0.1.0',
+            start: [0, 0, 0],
+            end: [0, 1, 0],
             velocity: 0.75,
             pitch: 'C3',
           },
@@ -82,12 +82,12 @@ export const abSwitch: Project = {
       {
         id: 'timeline_1',
         name: 'Timeline Name',
-        duration: '1.0.0',
+        duration: [2, 0, 0],
         clips: [
           {
             clipId: 'clip_1',
-            start: '1.0.0',
-            end: '2.0.0',
+            start: [0, 0, 0],
+            end: [1, 0, 0],
           },
         ],
       },
