@@ -12,27 +12,23 @@ export type LiveseqProps = {
   audioContext?: AudioContext;
   lookAheadTime?: number;
   scheduleInterval?: number;
+  bpm?: number;
 };
 
 export type Liveseq = ReturnType<typeof createLiveseq>;
 
 export const createLiveseq = ({
+  bpm = 120,
   initialState,
   lookAheadTime,
   project,
   audioContext = getAudioContext(),
   scheduleInterval,
 }: LiveseqProps = {}) => {
-  const bpm = 120;
-
   const store = createGlobalStore(initialState);
   const projectInstance = createProject(project);
 
   // just trying with a store setup
-  // if you want the plain player just replace createConnectedPlayer with createPlayer
-  // and then return the ...player instead of the store.actions
-  // TODO: move somewhere
-
   const player = createConnectedPlayer({
     // this function is just adding absolute time to the notes
     getScheduleItems: (startTime, endTime) => {
