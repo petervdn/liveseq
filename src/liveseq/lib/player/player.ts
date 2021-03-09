@@ -1,4 +1,3 @@
-import { playTick } from '../..';
 import type { Note } from '../project/projectStructure';
 
 export type ScheduleNote = Note & {
@@ -36,9 +35,6 @@ export const createPlayer = ({
   let playStartTime: number | null = null;
   let timeoutId: number | null = null;
 
-  // eslint-disable-next-line no-console
-  console.log(getScheduleItems(0, 10));
-
   if (lookAheadTime <= scheduleInterval) {
     throw new Error('LookAheadTime should be larger than the scheduleInterval');
   }
@@ -46,10 +42,16 @@ export const createPlayer = ({
   const schedule = () => {
     const songTime = audioContext.currentTime - playStartTime!; // playStartTime should always be defined when playing
 
-    // eslint-disable-next-line no-console
-    console.log('songTime', songTime, audioContext.currentTime, audioContext.state);
+    const scheduleItems = getScheduleItems(songTime, songTime + lookAheadTime);
 
-    playTick(audioContext, audioContext.currentTime);
+    scheduleItems.forEach((item) => {
+      item.instrument.schedule(audioContext, item.notes);
+    });
+
+    // // eslint-disable-next-line no-console
+    // console.log('songTime', songTime, audioContext.currentTime, audioContext.state);
+
+    // playTick(audioContext, audioContext.currentTime);
 
     timeoutId = window.setTimeout(() => schedule(), scheduleInterval);
   };
