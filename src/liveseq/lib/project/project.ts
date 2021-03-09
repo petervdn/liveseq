@@ -19,11 +19,9 @@ export const createProject = (project: Project = getDefaultProject()) => {
       return action.type === ActionType.PlaySlots;
     });
 
-    const slotsToPlay = playSlotsActions.flatMap((action) => {
+    return playSlotsActions.flatMap((action) => {
       return (action.slotIds || []).map(getSlotById(project));
     });
-
-    return slotsToPlay;
   });
 
   // returns which channels contain the slot

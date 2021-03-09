@@ -5,14 +5,7 @@ export type MusicTime = [
   remainingSixteenths?: number,
 ];
 
-// todo better name
-export type MusicTimeObject = {
-  bars: number;
-  beats: number;
-  sixteenths: number;
-  remainingSixteenth: number;
-};
-
+// todo: these should be part of a musicTime
 type MusicTimeOptions = {
   sixteenthsPerBeat?: number;
   beatsPerBar?: number;
@@ -28,20 +21,18 @@ export const musicTimeToBeats = (
     sixteenthsPerBeat = DEFAULT_SIXTEENTHS_PER_BEAT,
   }: MusicTimeOptions = {},
 ): number => {
-  const bars = time[0];
-  const beats = time[1] || 0;
-  const sixteenths = time[2] || 0;
-  const remainingSixteenth = time[3] || 0;
+  const [bars, beats = 0, sixteenths = 0, remainingSixteenth = 0] = time;
+
   return bars * beatsPerBar + beats + (sixteenths + remainingSixteenth) / sixteenthsPerBeat;
 };
 
-export const musicTimeToObject = (
+export const normalizeMusicTime = (
   time: MusicTime,
   {
     beatsPerBar = DEFAULT_BEATS_PER_BAR,
     sixteenthsPerBeat = DEFAULT_SIXTEENTHS_PER_BEAT,
   }: MusicTimeOptions = {},
-): MusicTimeObject => {
+): MusicTime => {
   const totalBeats = musicTimeToBeats(time, { sixteenthsPerBeat, beatsPerBar });
 
   const totalSixteenths = totalBeats * sixteenthsPerBeat;
@@ -50,12 +41,12 @@ export const musicTimeToObject = (
   const bars = Math.floor(flooredSixteenths / sixteenthsPerBar);
   const beats = Math.floor((flooredSixteenths - bars * sixteenthsPerBar) / sixteenthsPerBeat);
 
-  return {
+  return [
     bars,
     beats,
-    sixteenths: flooredSixteenths - bars * sixteenthsPerBar - beats * sixteenthsPerBeat,
-    remainingSixteenth: totalSixteenths - flooredSixteenths,
-  };
+    flooredSixteenths - bars * sixteenthsPerBar - beats * sixteenthsPerBeat,
+    totalSixteenths - flooredSixteenths,
+  ];
 };
 
 export const beatsToTime = (beats: number, bpm: number): number => (beats * 60) / bpm;
@@ -72,23 +63,16 @@ export const musicTimeToTime = (
 ): number => beatsToTime(musicTimeToBeats(musicTime, { beatsPerBar, sixteenthsPerBeat }), bpm);
 
 // is a before b
-export const isBefore = (a: MusicTime, b: MusicTime) => {
-  // temp impl
-  const bpm = 120;
-  return musicTimeToTime(a, bpm) < musicTimeToTime(b, bpm);
-};
+export const isBefore = (a: MusicTime, b: MusicTime) => musicTimeToBeats(a) < musicTimeToBeats(b);
 
-export const isSameTime = (a: MusicTime, b: MusicTime) => {
-  // temp impl
-  const bpm = 120;
-  return musicTimeToTime(a, bpm) === musicTimeToTime(b, bpm);
-};
+export const isSameTime = (a: MusicTime, b: MusicTime) =>
+  musicTimeToBeats(a) === musicTimeToBeats(b);
 
 export const addMusicTime = (a: MusicTime, b: MusicTime): MusicTime => {
   const [a1, a2 = 0, a3 = 0, a4 = 0] = a;
   const [b1, b2 = 0, b3 = 0, b4 = 0] = b;
 
-  return [a1 + b1, a2 + b2, a3 + b3, a4 + b4];
+  return normalizeMusicTime([a1 + b1, a2 + b2, a3 + b3, a4 + b4]);
 };
 
 // is rangeA intersecting rangeB

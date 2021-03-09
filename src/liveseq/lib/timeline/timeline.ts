@@ -33,7 +33,8 @@ export const createTimeline = (timeline: Timeline, clips: Array<Clip>) => {
     .map((clip) => {
       return {
         ...clip,
-        ...clips.find(({ id }) => clip.clipId === id)!,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        ...clips.find(({ id }) => clip.clipId === id)!, // todo get rid of non-null assert
       };
     })
     .map(createClip);
