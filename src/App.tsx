@@ -1,12 +1,15 @@
 import { useEffect, useRef } from 'react';
 import { createLiveseq, Liveseq } from './liveseq';
+import { abSwitch } from './projects/abSwitch';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default function App() {
   const liveseqRef = useRef<Liveseq>();
 
   useEffect(() => {
-    liveseqRef.current = createLiveseq();
+    liveseqRef.current = createLiveseq({
+      project: abSwitch,
+    });
   }, []);
 
   return (

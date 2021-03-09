@@ -1,3 +1,3 @@
-export const selectById = (id: string, objs: Array<{ id: string }>) => {
-  return objs.find((item) => item.id === id);
+export const selectById = <T extends { id: string }>(id: string, objs: Array<T>) => {
+  return objs.find((item) => item.id === id)!;
 };

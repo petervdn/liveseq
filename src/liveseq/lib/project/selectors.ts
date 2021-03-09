@@ -1,26 +1,30 @@
 import { selectById } from '../utils/selectById';
 import type { Project } from './projectStructure';
 
-export const getChannelById = (id: string, project: Project) => {
+export const getChannelById = (project: Project) => (id: string) => {
   return selectById(id, project.entities.channels);
 };
 
-export const getTimelineById = (id: string, project: Project) => {
+export const getTimelineById = (project: Project) => (id: string) => {
   return selectById(id, project.entities.timelines);
 };
 
-export const getSampleById = (id: string, project: Project) => {
+export const getSampleById = (project: Project) => (id: string) => {
   return selectById(id, project.entities.samples);
 };
 
-export const getInstrumentById = (id: string, project: Project) => {
+export const getInstrumentById = (project: Project) => (id: string) => {
   return selectById(id, project.entities.instruments);
 };
 
-export const getClipById = (id: string, project: Project) => {
+export const getClipById = (project: Project) => (id: string) => {
   return selectById(id, project.entities.clips);
 };
 
-export const getSceneById = (id: string, project: Project) => {
+export const getSlotById = (project: Project) => (id: string) => {
+  return selectById(id, project.entities.slots);
+};
+
+export const getSceneById = (project: Project) => (id: string) => {
   return selectById(id, project.entities.scenes);
 };

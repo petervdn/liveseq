@@ -1,5 +1,4 @@
 /* eslint-disable no-shadow */
-import { libraryVersion } from '../../libraryVersion';
 import type { ActionType } from '../store/globalStore';
 
 // this is present in many liveseq objs
@@ -131,19 +130,4 @@ export type Project = {
     slots: Array<Slot>;
     samples: Array<Sample>;
   };
-};
-
-export const defaultProject: Project = {
-  libraryVersion,
-  name: 'untitled',
-  startScenes: [],
-  entities: {
-    channels: [],
-    instruments: [],
-    timelines: [],
-    clips: [],
-    scenes: [],
-    samples: [],
-    slots: [],
-  },
 };
