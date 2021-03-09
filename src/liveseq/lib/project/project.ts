@@ -53,7 +53,7 @@ export const createProject = (project: Project = getDefaultProject()) => {
   // TODO: this is a wip
   const getNotesToPlay = (start: MusicTime, end: MusicTime) => {
     //  TODO: return a reference of the instruments to play
-    // createTimeline
+
     const timelines = startSlots.map((slot) => getTimelineById(project)(slot.timelineId));
     // TODO: naming
     const timelineInstances = timelines.map((timeline) =>
