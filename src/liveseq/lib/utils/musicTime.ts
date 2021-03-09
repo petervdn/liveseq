@@ -62,6 +62,10 @@ export const musicTimeToTime = (
   }: MusicTimeOptions = {},
 ): number => beatsToTime(musicTimeToBeats(musicTime, { beatsPerBar, sixteenthsPerBeat }), bpm);
 
+export const timeToMusicTime = (time: number, bpm: number): MusicTime => {
+  return [0, timeToBeats(time, bpm)];
+};
+
 // is a before b
 export const isBefore = (a: MusicTime, b: MusicTime) => musicTimeToBeats(a) < musicTimeToBeats(b);
 

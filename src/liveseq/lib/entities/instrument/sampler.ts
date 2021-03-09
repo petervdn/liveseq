@@ -1,5 +1,5 @@
-import type { ScheduleNote } from '../player/player';
-import { playTick } from '../..';
+import type { ScheduleNote } from '../../player/player';
+import { playTick } from '../../../index';
 
 type Instrument = {
   schedule: (context: AudioContext, notes: Array<ScheduleNote>) => void;

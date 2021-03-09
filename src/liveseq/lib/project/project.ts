@@ -4,8 +4,8 @@ import { getDefaultProject } from './getDefaultProject';
 import { getSceneById, getSlotById, getTimelineById } from './selectors';
 import { ActionType } from '../..';
 import type { MusicTime } from '../utils/musicTime';
-import { createTimeline } from '../timeline/timeline';
-import { createSampler } from '../instruments/sampler';
+import { createTimeline } from '../entities/timeline/timeline';
+import { createSampler } from '../entities/instrument/sampler';
 
 // takes a project config and returns some useful stuff
 // so we don't have to interact with the file directly
