@@ -49,20 +49,20 @@ export const createProject = (project: Project = getDefaultProject()) => {
   console.log('those slots are in these channels:');
   console.log(playingChannels);
 
-  // given a start and end time, what notes should play on what instruments?
-  // TODO: this is a wip
+  // given a start and end time, what notes should play on what channels?
   const getNotesToPlay = (start: MusicTime, end: MusicTime) => {
-    //  TODO: return a reference of the instruments to play
-
-    const timelines = startSlots.map((slot) => getTimelineById(project)(slot.timelineId));
-    // TODO: naming
-    const timelineInstances = timelines.map((timeline) =>
-      createTimeline(timeline, project.entities.clips),
-    );
-
-    const notesToPlay = timelineInstances.flatMap((tl) => tl.getNotesInRange(start, end));
-
-    return notesToPlay;
+    return startSlots.flatMap((slot) => {
+      const timeline = createTimeline(
+        getTimelineById(project)(slot.timelineId),
+        project.entities.clips,
+      );
+      return getChannelsBySlotId(slot.id).map((channel) => {
+        return {
+          notes: timeline.getNotesInRange(start, end),
+          channel,
+        };
+      });
+    });
   };
 
   return {
