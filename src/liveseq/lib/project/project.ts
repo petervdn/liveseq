@@ -2,9 +2,10 @@
 import type { Project } from './projectStructure';
 import { getDefaultProject } from './getDefaultProject';
 import { getSceneById, getSlotById, getTimelineById } from './selectors';
-import { ActionType } from '../..';
+import { ActionType, playTick } from '../..';
 import type { MusicTime } from '../utils/musicTime';
 import { createTimeline } from '../timeline/timeline';
+import type { ScheduleNote } from '../player/player';
 
 // takes a project config and returns some useful stuff
 // so we don't have to interact with the file directly
@@ -32,40 +33,67 @@ export const createProject = (project: Project = getDefaultProject()) => {
     });
   };
 
-  const playingChannels = startSlots.flatMap((slot) => {
-    const channels = getChannelsBySlotId(slot.id);
+  // const playingChannels = startSlots.flatMap((slot) => {
+  //   const channels = getChannelsBySlotId(slot.id);
+  //
+  //   channels.forEach((channel) => {
+  //     console.log(slot.timelineId, '->', slot.id, '->', channel.id, '->', channel.instrumentId);
+  //   });
+  //
+  //   return channels;
+  // });
 
-    channels.forEach((channel) => {
-      console.log(slot.timelineId, '->', slot.id, '->', channel.id, '->', channel.instrumentId);
-    });
+  // console.log('when we play liveseq, these scenes will trigger:');
+  // console.log(startScenes);
+  // console.log('those scenes will make these slots play:');
+  // console.log(startSlots);
+  // console.log('those slots are in these channels:');
+  // console.log(playingChannels);
 
-    return channels;
-  });
+  // Hardcoded tick
+  // TODO:create sampler and synth
+  const instrument = {
+    schedule: (context: AudioContext, notes: Array<ScheduleNote>) => {
+      notes.forEach((note) => {
+        playTick(context, note.startTime, note.startTime + note.endTime);
+      });
+    },
+  };
 
-  console.log('when we play liveseq, these scenes will trigger:');
-  console.log(startScenes);
-  console.log('those scenes will make these slots play:');
-  console.log(startSlots);
-  console.log('those slots are in these channels:');
-  console.log(playingChannels);
-
-  // given a start and end time, what notes should play on what channels?
-  const getNotesToPlay = (start: MusicTime, end: MusicTime) => {
+  // given a start and end time, return notes to schedule with respective instruments
+  const getScheduleItems = (start: MusicTime, end: MusicTime) => {
     return startSlots.flatMap((slot) => {
       const timeline = createTimeline(
         getTimelineById(project)(slot.timelineId),
         project.entities.clips,
       );
-      return getChannelsBySlotId(slot.id).map((channel) => {
+
+      const notesWithChannels = getChannelsBySlotId(slot.id).map((channel) => {
         return {
           notes: timeline.getNotesInRange(start, end),
           channel,
+        };
+      });
+
+      // export type ScheduleItem = {
+      //   notes: Array<ScheduleNote>;
+      //   instrument: {
+      //     // when the player calls instrument.schedule, it will already pass notes with time in seconds
+      //     // TODO: maybe the instrument returns a "cancel" fn
+      //     schedule: (context: AudioContext, notes: Array<ScheduleNote>) => void;
+      //   };
+      // };
+      // TODO: refactor
+      return notesWithChannels.map((notesWithChannel) => {
+        return {
+          instrument,
+          notes: notesWithChannel.notes,
         };
       });
     });
   };
 
   return {
-    getNotesToPlay,
+    getScheduleItems,
   };
 };

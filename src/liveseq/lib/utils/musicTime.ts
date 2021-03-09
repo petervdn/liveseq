@@ -60,6 +60,8 @@ export const musicTimeToObject = (
 
 export const beatsToTime = (beats: number, bpm: number): number => (beats * 60) / bpm;
 
+export const timeToBeats = (time: number, bpm: number): number => (time / 60) * bpm;
+
 export const musicTimeToTime = (
   musicTime: MusicTime,
   bpm: number,
