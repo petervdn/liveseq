@@ -3,8 +3,6 @@ import { getAudioContext } from './utils/getAudioContext';
 import { createConnectedPlayer } from './player/connectedPlayer';
 import type { Project } from './project/projectStructure';
 import { createProject } from './project/project';
-import { musicTimeToTime, timeToMusicTime } from './utils/musicTime';
-import type { ScheduleItem } from './player/player';
 
 export type LiveseqProps = {
   initialState?: Partial<LiveseqState>;
@@ -30,26 +28,8 @@ export const createLiveseq = ({
 
   // just trying with a store setup
   const player = createConnectedPlayer({
-    // this function is just adding absolute time to the notes
     getScheduleItems: (startTime, endTime) => {
-      const musicStartTime = timeToMusicTime(startTime, bpm);
-      const musicEndTime = timeToMusicTime(endTime, bpm);
-      const notesWithInstrument = projectInstance.getScheduleItems(musicStartTime, musicEndTime);
-
-      return notesWithInstrument.map((item) => {
-        const scheduleItem: ScheduleItem = {
-          ...item,
-          notes: item.notes.map((note) => {
-            return {
-              ...note,
-              startTime: musicTimeToTime(note.start, bpm),
-              endTime: musicTimeToTime(note.end, bpm),
-            };
-          }),
-        };
-
-        return scheduleItem;
-      });
+      return projectInstance.getScheduleItems(startTime, endTime, bpm);
     },
     audioContext,
     store,

@@ -13,7 +13,7 @@ export const createSampler = (props: SamplerProps): Instrument => {
   return {
     schedule: (context: AudioContext, notes: Array<ScheduleNote>) => {
       notes.forEach((note) => {
-        playTick(context, note.startTime, note.startTime + note.endTime);
+        playTick(context, note.startTime, note.endTime - note.startTime);
       });
     },
   };

@@ -3,9 +3,10 @@ import type { Project } from './projectStructure';
 import { getDefaultProject } from './getDefaultProject';
 import { getSceneById, getSlotById, getTimelineById } from './selectors';
 import { ActionType } from '../..';
-import type { MusicTime } from '../utils/musicTime';
 import { createTimeline } from '../entities/timeline/timeline';
 import { createSampler } from '../entities/instrument/sampler';
+import { musicTimeToTime, timeToMusicTime } from '../utils/musicTime';
+import type { ScheduleItem } from '../player/player';
 
 // takes a project config and returns some useful stuff
 // so we don't have to interact with the file directly
@@ -33,8 +34,11 @@ export const createProject = (project: Project = getDefaultProject()) => {
 
   const instrument = createSampler({});
 
-  // given a start and end time, return notes to schedule with respective instruments
-  const getScheduleItems = (start: MusicTime, end: MusicTime) => {
+  // given a start and end time and a bpm, return notes to schedule with respective instruments
+  const getScheduleItems = (start: number, end: number, bpm: number): Array<ScheduleItem> => {
+    const musicStartTime = timeToMusicTime(start, bpm);
+    const musicEndTime = timeToMusicTime(end, bpm);
+
     return startSlots.flatMap((slot) => {
       const timeline = createTimeline(
         getTimelineById(project)(slot.timelineId),
@@ -43,16 +47,21 @@ export const createProject = (project: Project = getDefaultProject()) => {
 
       const notesWithChannels = getChannelsBySlotId(slot.id).map((channel) => {
         return {
-          notes: timeline.getNotesInRange(start, end),
+          notes: timeline.getNotesInRange(musicStartTime, musicEndTime),
           channel,
         };
       });
 
-      // TODO: refactor
       return notesWithChannels.map((notesWithChannel) => {
         return {
           instrument,
-          notes: notesWithChannel.notes,
+          notes: notesWithChannel.notes.map((note) => {
+            return {
+              ...note,
+              startTime: musicTimeToTime(note.start, bpm),
+              endTime: musicTimeToTime(note.end, bpm),
+            };
+          }),
         };
       });
     });
