@@ -14,9 +14,16 @@ export const getTimelineClips = (timeline: Timeline, clips: Array<Clip>) => {
 };
 
 // useful to "infer" timeline length from its clips
-// export const getLastClipEnd = (
-//   clips: Array<MusicTimeRange & { duration: MusicTime; notes: Array<Note> }>,
-// ): MusicTime => {};
+export const getLastClipEnd = (
+  clips: Array<BeatsRange & { duration: Beats; notes: Array<Note> }>,
+): Beats | null => {
+  return clips.reduce((accumulator, current) => {
+    if (accumulator !== null && current.end > accumulator!) {
+      return accumulator;
+    }
+    return accumulator;
+  }, null);
+};
 
 // the props that make a note be considered the same note to the scheduler
 export type UniqueSchedulingIdProps = BeatsRange & {
