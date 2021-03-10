@@ -36,8 +36,10 @@ export const createProject = (project: Project = getDefaultProject()) => {
 
   // given a start and end time and a bpm, return notes to schedule with respective instruments
   const getScheduleItems = (start: number, end: number, bpm: number): Array<ScheduleItem> => {
-    const musicStartTime = timeToMusicTime(start, bpm);
-    const musicEndTime = timeToMusicTime(end, bpm);
+    const musicTimeRange = {
+      start: timeToMusicTime(start, bpm),
+      end: timeToMusicTime(end, bpm),
+    };
 
     return startSlots.flatMap((slot) => {
       const timelineClips = getTimelineClips(
@@ -48,7 +50,7 @@ export const createProject = (project: Project = getDefaultProject()) => {
       const notesWithChannels = getChannelsBySlotId(slot.id)
         .map((channel) => {
           return {
-            notes: getTimelineNotesInRange(musicStartTime, musicEndTime, timelineClips),
+            notes: getTimelineNotesInRange(musicTimeRange, timelineClips),
             channel,
           };
         })

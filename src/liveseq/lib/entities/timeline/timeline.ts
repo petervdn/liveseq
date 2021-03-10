@@ -1,6 +1,7 @@
 import type { Clip, Note, Timeline } from '../../project/projectStructure';
 import type { MusicTime } from '../../utils/musicTime';
-import { getItemsInRange } from '../clip/clip';
+import type { MusicTimeRange } from '../../utils/musicTimeRange';
+import { getItemsInRange } from '../../utils/musicTimeRange';
 
 export const getTimelineClips = (timeline: Timeline, clips: Array<Clip>) => {
   return timeline.clips.map((clip) => {
@@ -13,13 +14,12 @@ export const getTimelineClips = (timeline: Timeline, clips: Array<Clip>) => {
 };
 
 export const getTimelineNotesInRange = (
-  rangeStart: MusicTime,
-  rangeEnd: MusicTime,
+  musicTimeRange: MusicTimeRange,
   clips: Array<{ start: MusicTime; end: MusicTime; duration: MusicTime; notes: Array<Note> }>,
 ) => {
-  const clipsInRange = getItemsInRange(rangeStart, rangeEnd, clips);
+  const clipsInRange = getItemsInRange(musicTimeRange, clips);
 
   return clipsInRange.flatMap((clip) => {
-    return getItemsInRange(rangeStart, rangeEnd, clip.notes);
+    return getItemsInRange(musicTimeRange, clip.notes);
   });
 };

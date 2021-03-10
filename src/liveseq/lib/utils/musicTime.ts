@@ -77,14 +77,3 @@ export const addMusicTime = (a: MusicTime, b: MusicTime): MusicTime => {
 
   return normalizeMusicTime([a1 + b1, a2 + b2, a3 + b3, a4 + b4]);
 };
-
-// is rangeA intersecting rangeB
-export const isInRange = (
-  aStart: MusicTime,
-  aEnd: MusicTime,
-  bStart: MusicTime,
-  bEnd: MusicTime,
-) => {
-  // todo: btw this implies that starts are before the end, which might not be the case
-  return !(isBefore(aEnd, bStart) || isBefore(bEnd, aStart));
-};
