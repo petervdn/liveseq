@@ -24,9 +24,10 @@ export const createLiveseq = ({
   audioContext = getAudioContext(),
   scheduleInterval,
 }: LiveseqProps = {}) => {
-  let currentBpm = bpm;
   const store = createGlobalStore(initialState);
   const projectInstance = createProject(project);
+
+  let currentBpm = bpm;
 
   const setTempo = (bpm: BPM) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -36,7 +37,10 @@ export const createLiveseq = ({
   // just trying with a store setup
   const player = createConnectedPlayer({
     getScheduleItems: (startTime, endTime) => {
-      return projectInstance.getScheduleItems(startTime, endTime, currentBpm);
+      const scheduleItems = projectInstance.getScheduleItems(startTime, endTime, currentBpm);
+      // eslint-disable-next-line no-console
+      console.log(scheduleItems);
+      return scheduleItems;
     },
     audioContext,
     store,

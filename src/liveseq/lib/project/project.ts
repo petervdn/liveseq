@@ -45,12 +45,17 @@ export const createProject = (project: Project = getDefaultProject()) => {
         project.entities.clips,
       );
 
-      const notesWithChannels = getChannelsBySlotId(slot.id).map((channel) => {
-        return {
-          notes: timeline.getNotesInRange(musicStartTime, musicEndTime),
-          channel,
-        };
-      });
+      const notesWithChannels = getChannelsBySlotId(slot.id)
+        .map((channel) => {
+          return {
+            notes: timeline.getNotesInRange(musicStartTime, musicEndTime),
+            channel,
+          };
+        })
+        .filter(({ notes }) => {
+          // remove the ones that have no notes
+          return notes.length > 0;
+        });
 
       return notesWithChannels.map((notesWithChannel) => {
         return {
