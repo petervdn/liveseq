@@ -62,9 +62,8 @@ export const musicTimeToTime = (
   }: MusicTimeOptions = {},
 ): number => beatsToTime(musicTimeToBeats(musicTime, { beatsPerBar, sixteenthsPerBeat }), bpm);
 
-export const timeToMusicTime = (time: number, bpm: number): MusicTime => {
-  return [0, timeToBeats(time, bpm)];
-};
+export const timeToMusicTime = (time: number, bpm: number): MusicTime =>
+  normalizeMusicTime([0, timeToBeats(time, bpm)]);
 
 // is a before b
 export const isBefore = (a: MusicTime, b: MusicTime) => musicTimeToBeats(a) < musicTimeToBeats(b);
@@ -86,5 +85,6 @@ export const isInRange = (
   bStart: MusicTime,
   bEnd: MusicTime,
 ) => {
+  // todo: btw this implies that starts are before the end, which might not be the case
   return !(isBefore(aEnd, bStart) || isBefore(bEnd, aStart));
 };
