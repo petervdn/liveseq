@@ -3,6 +3,7 @@ import type { Note } from '../project/projectStructure';
 export type ScheduleNote = Note & {
   startTime: number;
   endTime: number;
+  schedulingId: string;
 };
 
 export type ScheduleItem = {
@@ -34,6 +35,7 @@ export const createPlayer = ({
 }: PlayerProps) => {
   let playStartTime: number | null = null;
   let timeoutId: number | null = null;
+  let previouslyScheduledNoteIds: Array<string> = [];
 
   if (lookAheadTime <= scheduleInterval) {
     throw new Error('LookAheadTime should be larger than the scheduleInterval');
@@ -46,7 +48,16 @@ export const createPlayer = ({
     const scheduleItems = getScheduleItems(songTime, songTime + lookAheadTime);
 
     scheduleItems.forEach((item) => {
-      item.instrument.schedule(audioContext, item.notes);
+      const notesToSchedule = item.notes.filter(({ schedulingId }) => {
+        const hasBeenScheduled = previouslyScheduledNoteIds.includes(schedulingId);
+        // eslint-disable-next-line no-console
+        hasBeenScheduled && console.log('skipping scheduling of', schedulingId);
+        return !hasBeenScheduled;
+      });
+
+      item.instrument.schedule(audioContext, notesToSchedule);
+
+      previouslyScheduledNoteIds = notesToSchedule.map(({ schedulingId }) => schedulingId);
     });
 
     timeoutId = window.setTimeout(() => schedule(), scheduleInterval);

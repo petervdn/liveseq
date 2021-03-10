@@ -46,15 +46,13 @@ export const createProject = (project: Project = getDefaultProject()) => {
     };
 
     return startSlots.flatMap((slot) => {
-      const timelineClips = getTimelineClips(
-        getTimelineById(project)(slot.timelineId),
-        project.entities.clips,
-      );
+      const timeline = getTimelineById(project)(slot.timelineId);
+      const timelineClips = getTimelineClips(timeline, project.entities.clips);
 
       const notesWithChannels = getChannelsBySlotId(slot.id)
         .map((channel) => {
           return {
-            notes: getTimelineNotesInRange(musicTimeRange, timelineClips),
+            notes: getTimelineNotesInRange(musicTimeRange, timeline, timelineClips, channel.id),
             channel,
           };
         })

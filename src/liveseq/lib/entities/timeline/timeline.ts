@@ -13,10 +13,30 @@ export const getTimelineClips = (timeline: Timeline, clips: Array<Clip>) => {
   });
 };
 
+// useful to "infer" timeline length from its clips
+// export const getLastClipEnd = (
+//   clips: Array<MusicTimeRange & { duration: MusicTime; notes: Array<Note> }>,
+// ): MusicTime => {};
+
+// gets a note and "what loop" it's in and returns a unique id based on its properties, current repetition and channel
+export const getLoopNoteId = (note: Note, channelId: string, repetition: number) => {
+  return JSON.stringify({
+    pitch: note.pitch,
+    repetition,
+    start: note.start,
+    end: note.end,
+    channelId,
+  });
+};
+
+// TODO: these returned notes need ids. The ids must be unique for every timeline loop
 // TODO: account for duration
 export const getTimelineNotesInRange = (
   musicTimeRange: MusicTimeRange,
+  timeline: Timeline,
   clips: Array<MusicTimeRange & { duration: MusicTime; notes: Array<Note> }>,
+  channelId: string,
+  // timelineLoops? = 1,
 ) => {
   const clipsInRange = getItemsInRange(musicTimeRange, clips);
 
@@ -26,7 +46,12 @@ export const getTimelineNotesInRange = (
     return getItemsInRange(localRange, clip.notes).map((note) => {
       const noteWithTimelineTime = addToRange(note, clip.start);
 
-      return noteWithTimelineTime;
+      return {
+        ...noteWithTimelineTime,
+        // to easily know if note has been scheduled...
+        // could also just add a property with the current repetition but the start and end change so it would be confusing
+        schedulingId: getLoopNoteId(noteWithTimelineTime, channelId, 0),
+      };
     });
   });
 
