@@ -35,10 +35,14 @@ export const createProject = (project: Project = getDefaultProject()) => {
   const instrument = createSampler({});
 
   // given a start and end time and a bpm, return notes to schedule with respective instruments
-  const getScheduleItems = (start: number, end: number, bpm: number): Array<ScheduleItem> => {
+  const getScheduleItems = (
+    startTime: number,
+    endTime: number,
+    bpm: number,
+  ): Array<ScheduleItem> => {
     const musicTimeRange = {
-      start: timeToMusicTime(start, bpm),
-      end: timeToMusicTime(end, bpm),
+      start: timeToMusicTime(startTime, bpm),
+      end: timeToMusicTime(endTime, bpm),
     };
 
     return startSlots.flatMap((slot) => {
