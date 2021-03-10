@@ -13,6 +13,7 @@ export const getTimelineClips = (timeline: Timeline, clips: Array<Clip>) => {
   });
 };
 
+// TODO: account for duration
 export const getTimelineNotesInRange = (
   musicTimeRange: MusicTimeRange,
   clips: Array<MusicTimeRange & { duration: MusicTime; notes: Array<Note> }>,

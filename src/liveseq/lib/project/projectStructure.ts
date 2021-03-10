@@ -1,5 +1,6 @@
 /* eslint-disable no-shadow */
 import type { MusicTime } from '../utils/musicTime';
+import type { MusicTimeRange } from '../utils/musicTimeRange';
 
 // this is present in many objs
 export type LiveseqEntity = {
@@ -39,9 +40,7 @@ export type Instrument = SamplerInstrument | SimpleSynthInstrument;
 
 // CLIP
 // Clips are good for placing data within a time duration
-export type Note = {
-  start: MusicTime;
-  end: MusicTime;
+export type Note = MusicTimeRange & {
   velocity: number;
   pitch: string;
 };
@@ -61,11 +60,11 @@ export type Clip = NoteClip;
 
 export type Timeline = LiveseqEntity & {
   duration?: MusicTime; // TODO: what to do if duration is undefined, maybe use Infinity instead or we can derive from its clips
-  clips: Array<{
-    clipId: string;
-    start: MusicTime;
-    end: MusicTime;
-  }>;
+  clips: Array<
+    MusicTimeRange & {
+      clipId: string;
+    }
+  >;
 };
 
 // SCENE
