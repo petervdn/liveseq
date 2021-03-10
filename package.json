@@ -50,5 +50,8 @@
     "ts-node": "^9.1.1",
     "typescript": "^4.2.3",
     "web-vitals": "^1.1.0"
+  },
+  "devDependencies": {
+    "type-fest": "^0.21.3"
   }
 }

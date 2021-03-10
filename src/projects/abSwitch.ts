@@ -1,4 +1,5 @@
 import type { Project } from '../liveseq';
+import { musicTimeToBeats } from '../liveseq/lib/utils/musicTime';
 
 // TODO: make this file describe this example
 // Example switching
@@ -66,23 +67,23 @@ export const abSwitch: Project = {
         id: 'clip_1',
         type: 'noteClip',
         name: 'Clip Name',
-        duration: [1, 0, 0],
+        duration: musicTimeToBeats([1, 0, 0]),
         notes: [
           {
-            start: [0, 0, 0],
-            end: [0, 1, 0],
+            start: musicTimeToBeats([0, 0, 0]),
+            end: musicTimeToBeats([0, 1, 0]),
             velocity: 0.75,
             pitch: 'C3',
           },
           {
-            start: [0, 1, 0],
-            end: [0, 2, 0],
+            start: musicTimeToBeats([0, 1, 0]),
+            end: musicTimeToBeats([0, 2, 0]),
             velocity: 0.75,
             pitch: 'C3',
           },
           {
-            start: [0, 4, 0],
-            end: [0, 5, 0],
+            start: musicTimeToBeats([0, 4, 0]),
+            end: musicTimeToBeats([0, 5, 0]),
             velocity: 0.75,
             pitch: 'C3',
           },
@@ -94,12 +95,12 @@ export const abSwitch: Project = {
       {
         id: 'timeline_1',
         name: 'Timeline Name',
-        duration: [2, 0, 0],
+        duration: musicTimeToBeats([2, 0, 0]),
         clips: [
           {
             clipId: 'clip_1',
-            start: [0, 0, 0],
-            end: [1, 0, 0],
+            start: musicTimeToBeats([0, 0, 0]),
+            end: musicTimeToBeats([1, 0, 0]),
           },
         ],
       },

@@ -1,7 +1,7 @@
 import type { Clip, Note, Timeline } from '../../project/projectStructure';
-import type { MusicTime } from '../../utils/musicTime';
-import type { MusicTimeRange } from '../../utils/musicTimeRange';
-import { addToRange, getItemsInRange, subtractFromRange } from '../../utils/musicTimeRange';
+import type { Beats } from '../../utils/musicTime';
+import type { BeatsRange } from '../../utils/beatsRange';
+import { addToRange, getItemsInRange, subtractFromRange } from '../../utils/beatsRange';
 
 export const getTimelineClips = (timeline: Timeline, clips: Array<Clip>) => {
   return timeline.clips.map((clip) => {
@@ -19,7 +19,7 @@ export const getTimelineClips = (timeline: Timeline, clips: Array<Clip>) => {
 // ): MusicTime => {};
 
 // the props that make a note be considered the same note to the scheduler
-export type UniqueSchedulingIdProps = MusicTimeRange & {
+export type UniqueSchedulingIdProps = BeatsRange & {
   pitch: string;
   loop: number;
   channelId: string;
@@ -35,9 +35,9 @@ export const getUniqueSchedulingId = (props: UniqueSchedulingIdProps) => {
 // TODO: these returned notes need ids. The ids must be unique for every timeline loop
 // TODO: account for duration
 export const getTimelineNotesInRange = (
-  musicTimeRange: MusicTimeRange,
+  musicTimeRange: BeatsRange,
   timeline: Timeline,
-  clips: Array<MusicTimeRange & { id: string; duration: MusicTime; notes: Array<Note> }>,
+  clips: Array<BeatsRange & { id: string; duration: Beats; notes: Array<Note> }>,
   channelId: string,
   slotId: string,
   // timelineLoops? = 1,

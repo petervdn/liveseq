@@ -1,3 +1,9 @@
+import type { Opaque } from 'type-fest';
+
+export type Beats = Opaque<number, 'Beats'>;
+export type Bpm = Opaque<number, 'Bpm'>;
+export type TimeInSeconds = Opaque<number, 'TimeInSeconds'>;
+
 export type MusicTime = [
   bars: number,
   beats?: number,
@@ -20,10 +26,12 @@ export const musicTimeToBeats = (
     beatsPerBar = DEFAULT_BEATS_PER_BAR,
     sixteenthsPerBeat = DEFAULT_SIXTEENTHS_PER_BEAT,
   }: MusicTimeOptions = {},
-): number => {
+): Beats => {
   const [bars, beats = 0, sixteenths = 0, remainingSixteenth = 0] = time;
 
-  return bars * beatsPerBar + beats + (sixteenths + remainingSixteenth) / sixteenthsPerBeat;
+  return (bars * beatsPerBar +
+    beats +
+    (sixteenths + remainingSixteenth) / sixteenthsPerBeat) as Beats;
 };
 
 export const normalizeMusicTime = (
@@ -49,9 +57,13 @@ export const normalizeMusicTime = (
   ];
 };
 
-export const beatsToTime = (beats: number, bpm: number): number => (beats * 60) / bpm;
+export const beatsToTime = (beats: Beats, bpm: number): number => {
+  return (beats * 60) / bpm;
+};
 
-export const timeToBeats = (time: number, bpm: number): number => (time / 60) * bpm;
+export const timeToBeats = (time: number, bpm: number): Beats => {
+  return ((time / 60) * bpm) as Beats;
+};
 
 export const musicTimeToTime = (
   musicTime: MusicTime,

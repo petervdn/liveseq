@@ -3,7 +3,7 @@ import { getAudioContext } from './utils/getAudioContext';
 import { createConnectedPlayer } from './player/connectedPlayer';
 import type { Project } from './project/projectStructure';
 import { createProject } from './project/project';
-import type { BPM } from './player/player';
+import type { Bpm } from './utils/musicTime';
 
 export type LiveseqProps = {
   initialState?: Partial<LiveseqState>;
@@ -27,9 +27,9 @@ export const createLiveseq = ({
   const store = createGlobalStore(initialState);
   const projectInstance = createProject(project);
 
-  let currentBpm = bpm;
+  let currentBpm = bpm as Bpm;
 
-  const setTempo = (bpm: BPM) => {
+  const setTempo = (bpm: Bpm) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     currentBpm = bpm;
   };

@@ -1,6 +1,6 @@
 /* eslint-disable no-shadow */
-import type { MusicTime } from '../utils/musicTime';
-import type { MusicTimeRange } from '../utils/musicTimeRange';
+import type { BeatsRange } from '../utils/beatsRange';
+import type { Beats } from '../utils/musicTime';
 
 // this is present in many objs
 export type LiveseqEntity = {
@@ -40,14 +40,14 @@ export type Instrument = SamplerInstrument | SimpleSynthInstrument;
 
 // CLIP
 // Clips are good for placing data within a time duration
-export type Note = MusicTimeRange & {
+export type Note = BeatsRange & {
   velocity: number;
   pitch: string;
 };
 
 export type NoteClip = LiveseqEntity & {
   type: 'noteClip';
-  duration: MusicTime;
+  duration: Beats;
   notes: Array<Note>;
 };
 
@@ -59,9 +59,9 @@ export type Clip = NoteClip;
 // for now just "clips" but could place other things
 
 export type Timeline = LiveseqEntity & {
-  duration?: MusicTime; // TODO: what to do if duration is undefined, maybe use Infinity instead or we can derive from its clips
+  duration?: Beats; // TODO: what to do if duration is undefined, maybe use Infinity instead or we can derive from its clips
   clips: Array<
-    MusicTimeRange & {
+    BeatsRange & {
       clipId: string;
     }
   >;

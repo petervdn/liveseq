@@ -1,5 +1,6 @@
 import {
   addMusicTime,
+  Beats,
   beatsToTime,
   musicTimeToBeats,
   musicTimeToTime,
@@ -41,7 +42,7 @@ it('converts musicTime to beats with different settings', () => {
 });
 
 it('converts beats to time', () => {
-  expect(beatsToTime(120, 120)).toBe(60);
+  expect(beatsToTime(120 as Beats, 120)).toBe(60);
 });
 
 it('converts time to beats', () => {
