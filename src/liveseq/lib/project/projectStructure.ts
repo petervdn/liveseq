@@ -1,8 +1,7 @@
 /* eslint-disable no-shadow */
-import type { ActionType } from '../store/globalStore';
 import type { MusicTime } from '../utils/musicTime';
 
-// this is present in many liveseq objs
+// this is present in many objs
 export type LiveseqEntity = {
   id: string;
   name?: string;
@@ -10,22 +9,15 @@ export type LiveseqEntity = {
 };
 
 // SLOT
-export enum SlotType {
-  Timeline = 'Timeline',
-}
-
-export type TimelineSlot = LiveseqEntity & { type: SlotType.Timeline; timelineId: string };
+export type TimelineSlot = LiveseqEntity & { type: 'timeline'; timelineId: string };
 
 // ready for adding more types of slots
 export type Slot = TimelineSlot;
 
 // CHANNEL
-export enum ChannelType {
-  Instrument = 'Instrument',
-}
 
 export type InstrumentChannel = LiveseqEntity & {
-  type: ChannelType.Instrument;
+  type: 'instrument';
   instrumentId: string;
   slotIds: Array<string>;
 };
@@ -34,27 +26,19 @@ export type InstrumentChannel = LiveseqEntity & {
 export type Channel = InstrumentChannel;
 
 // INSTRUMENT
-export enum InstrumentType {
-  Sampler = 'Sampler',
-  SimpleSynth = 'SimpleSynth',
-}
 
 export type SamplerInstrument = LiveseqEntity & {
-  type: InstrumentType.Sampler;
+  type: 'sampler';
 };
 
 export type SimpleSynthInstrument = LiveseqEntity & {
-  type: InstrumentType.SimpleSynth;
+  type: 'simpleSynth';
 };
 
 export type Instrument = SamplerInstrument | SimpleSynthInstrument;
 
 // CLIP
 // Clips are good for placing data within a time duration
-export enum ClipType {
-  NoteClip = 'NoteClip',
-}
-
 export type Note = {
   start: MusicTime;
   end: MusicTime;
@@ -63,7 +47,7 @@ export type Note = {
 };
 
 export type NoteClip = LiveseqEntity & {
-  type: ClipType.NoteClip;
+  type: 'noteClip';
   duration: MusicTime;
   notes: Array<Note>;
 };
@@ -93,12 +77,12 @@ export type Timeline = LiveseqEntity & {
 // TODO: define union for all action types
 export type GlobalAction =
   | {
-      type: ActionType.PlaySlots;
+      type: 'playSlots';
       // optional, if not present means all
       slotIds?: Array<string>;
     }
   | {
-      type: ActionType.StopSlots;
+      type: 'stopSlots';
       // optional, if not present means all
       slotIds?: Array<string>;
     };

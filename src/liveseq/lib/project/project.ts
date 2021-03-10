@@ -2,7 +2,7 @@
 import type { Project } from './projectStructure';
 import { getDefaultProject } from './getDefaultProject';
 import { getSceneById, getSlotById, getTimelineById } from './selectors';
-import { ActionType } from '../..';
+
 import { createTimeline } from '../entities/timeline/timeline';
 import { createSampler } from '../entities/instrument/sampler';
 import { musicTimeToTime, timeToMusicTime } from '../utils/musicTime';
@@ -17,7 +17,7 @@ export const createProject = (project: Project = getDefaultProject()) => {
 
   const startSlots = startScenes.flatMap((scene) => {
     const playSlotsActions = (scene.eventActions.enter || []).filter((action) => {
-      return action.type === ActionType.PlaySlots;
+      return action.type === 'playSlots';
     });
 
     return playSlotsActions.flatMap((action) => {

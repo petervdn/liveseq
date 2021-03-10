@@ -9,14 +9,7 @@ export type LiveseqState = {
   tempo: number;
 };
 
-export enum ActionType {
-  Play = 'Play',
-  Stop = 'Stop',
-  Pause = 'Pause',
-  PlaySlots = 'PlaySlots',
-  StopSlots = 'StopSlots',
-  ActivateScenes = 'ActivateScenes',
-}
+export type ActionType = 'play' | 'stop' | 'pause' | 'playSlots' | 'stopSlots' | 'activateScenes';
 
 type GlobalStoreInstance = Store<LiveseqState, ActionType>;
 
@@ -26,7 +19,7 @@ type GlobalStoreInstance = Store<LiveseqState, ActionType>;
 
 const play = (store: GlobalStoreInstance) => () => {
   store.dispatch(
-    ActionType.Play,
+    'play',
     store.setState({
       ...store.getState(),
       isPlaying: true,
@@ -36,7 +29,7 @@ const play = (store: GlobalStoreInstance) => () => {
 
 const stop = (store: GlobalStoreInstance) => () => {
   store.dispatch(
-    ActionType.Stop,
+    'stop',
     store.setState({
       ...store.getState(),
       isPlaying: false,

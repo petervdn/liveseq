@@ -1,5 +1,4 @@
 import type { GlobalStore } from '../store/globalStore';
-import { ActionType } from '../store/globalStore';
 import type { PlayerProps } from './player';
 import { createPlayer } from './player';
 
@@ -12,14 +11,14 @@ export const createConnectedPlayer = ({ store, ...playerProps }: ConnectedPlayer
 
   // make player respond to state changes
   const subscriptionDisposers = [
-    store.subscribe(ActionType.Play, ({ state }) => {
+    store.subscribe('play', ({ state }) => {
       if (!state.isPlaying) return;
 
       const { audioContext } = playerProps;
 
       audioContext.state === 'suspended' ? audioContext.resume().then(player.play) : player.play();
     }),
-    store.subscribe(ActionType.Stop, ({ state }) => {
+    store.subscribe('stop', ({ state }) => {
       !state.isPlaying && player.stop();
     }),
   ];

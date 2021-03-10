@@ -1,4 +1,4 @@
-import { Project, SlotType, InstrumentType, ClipType, ChannelType, ActionType } from '../liveseq';
+import type { Project } from '../liveseq';
 
 // TODO: make this file describe this example
 // Example switching
@@ -21,14 +21,14 @@ export const abSwitch: Project = {
       {
         id: 'channel_1',
         name: 'Channel Name',
-        type: ChannelType.Instrument,
+        type: 'instrument',
         instrumentId: 'sampler_1',
         slotIds: ['slot_1', 'slot_2'],
       },
       {
         id: 'channel_2',
         name: 'Channel Name',
-        type: ChannelType.Instrument,
+        type: 'instrument',
         instrumentId: 'synth_1',
         slotIds: ['slot_3'],
       },
@@ -36,26 +36,26 @@ export const abSwitch: Project = {
     instruments: [
       {
         id: 'sampler_1',
-        type: InstrumentType.Sampler,
+        type: 'sampler',
       },
     ],
     // global to allow same slot in multiple channels
     slots: [
       {
         id: 'slot_1',
-        type: SlotType.Timeline,
+        type: 'timeline',
         name: 'Slot Name',
         timelineId: 'timeline_1',
       },
       {
         id: 'slot_2',
-        type: SlotType.Timeline,
+        type: 'timeline',
         timelineId: 'timeline_2',
         name: 'Slot Name',
       },
       {
         id: 'slot_3',
-        type: SlotType.Timeline,
+        type: 'timeline',
         timelineId: 'timeline_1',
         name: 'Slot Name',
       },
@@ -64,7 +64,7 @@ export const abSwitch: Project = {
     clips: [
       {
         id: 'clip_1',
-        type: ClipType.NoteClip,
+        type: 'noteClip',
         name: 'Clip Name',
         duration: [1, 0, 0],
         notes: [
@@ -112,7 +112,7 @@ export const abSwitch: Project = {
         eventActions: {
           enter: [
             {
-              type: ActionType.PlaySlots,
+              type: 'playSlots',
               slotIds: ['slot_1', 'slot_3'],
             },
           ],
@@ -124,10 +124,10 @@ export const abSwitch: Project = {
         eventActions: {
           enter: [
             {
-              type: ActionType.StopSlots,
+              type: 'stopSlots',
             },
             {
-              type: ActionType.PlaySlots,
+              type: 'playSlots',
               slotIds: ['slot_2'],
             },
           ],
