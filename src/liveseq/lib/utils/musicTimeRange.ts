@@ -1,4 +1,4 @@
-import { isBefore, MusicTime } from './musicTime';
+import { addMusicTime, isBefore, MusicTime, subtractMusicTime } from './musicTime';
 
 export type MusicTimeRange = {
   start: MusicTime;
@@ -18,4 +18,20 @@ export const getItemsInRange = <T extends MusicTimeRange>(
   return items.filter((item) => {
     return isInRange(item, range);
   });
+};
+
+export const addToRange = <T extends MusicTimeRange>(range: T, offsetBy: MusicTime): T => {
+  return {
+    ...range,
+    start: addMusicTime(range.start, offsetBy),
+    end: addMusicTime(range.end, offsetBy),
+  };
+};
+
+export const subtractFromRange = <T extends MusicTimeRange>(range: T, offsetBy: MusicTime): T => {
+  return {
+    ...range,
+    start: subtractMusicTime(range.start, offsetBy),
+    end: subtractMusicTime(range.end, offsetBy),
+  };
 };

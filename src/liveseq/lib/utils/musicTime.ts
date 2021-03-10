@@ -77,3 +77,12 @@ export const addMusicTime = (a: MusicTime, b: MusicTime): MusicTime => {
 
   return normalizeMusicTime([a1 + b1, a2 + b2, a3 + b3, a4 + b4]);
 };
+
+export const subtractMusicTime = (a: MusicTime, b: MusicTime): MusicTime => {
+  const [a1, a2 = 0, a3 = 0, a4 = 0] = a;
+  const [b1, b2 = 0, b3 = 0, b4 = 0] = b;
+  const subtracted = [a1 - b1, a2 - b2, a3 - b3, a4 - b4];
+  const limitedToPositive = subtracted.map((n) => Math.min(0, n));
+
+  return normalizeMusicTime(limitedToPositive as MusicTime);
+};
