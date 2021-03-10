@@ -52,7 +52,13 @@ export const createProject = (project: Project = getDefaultProject()) => {
       const notesWithChannels = getChannelsBySlotId(slot.id)
         .map((channel) => {
           return {
-            notes: getTimelineNotesInRange(musicTimeRange, timeline, timelineClips, channel.id),
+            notes: getTimelineNotesInRange(
+              musicTimeRange,
+              timeline,
+              timelineClips,
+              channel.id,
+              slot.id,
+            ),
             channel,
           };
         })

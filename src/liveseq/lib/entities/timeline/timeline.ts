@@ -18,15 +18,18 @@ export const getTimelineClips = (timeline: Timeline, clips: Array<Clip>) => {
 //   clips: Array<MusicTimeRange & { duration: MusicTime; notes: Array<Note> }>,
 // ): MusicTime => {};
 
+// the props that make a note be considered the same note to the scheduler
+export type UniqueSchedulingIdProps = MusicTimeRange & {
+  pitch: string;
+  loop: number;
+  channelId: string;
+  slotId: string;
+  clipId: string;
+};
+
 // gets a note and "what loop" it's in and returns a unique id based on its properties, current repetition and channel
-export const getLoopNoteId = (note: Note, channelId: string, repetition: number) => {
-  return JSON.stringify({
-    pitch: note.pitch,
-    repetition,
-    start: note.start,
-    end: note.end,
-    channelId,
-  });
+export const getUniqueSchedulingId = (props: UniqueSchedulingIdProps) => {
+  return JSON.stringify(props);
 };
 
 // TODO: these returned notes need ids. The ids must be unique for every timeline loop
@@ -34,8 +37,9 @@ export const getLoopNoteId = (note: Note, channelId: string, repetition: number)
 export const getTimelineNotesInRange = (
   musicTimeRange: MusicTimeRange,
   timeline: Timeline,
-  clips: Array<MusicTimeRange & { duration: MusicTime; notes: Array<Note> }>,
+  clips: Array<MusicTimeRange & { id: string; duration: MusicTime; notes: Array<Note> }>,
   channelId: string,
+  slotId: string,
   // timelineLoops? = 1,
 ) => {
   const clipsInRange = getItemsInRange(musicTimeRange, clips);
@@ -50,7 +54,15 @@ export const getTimelineNotesInRange = (
         ...noteWithTimelineTime,
         // to easily know if note has been scheduled...
         // could also just add a property with the current repetition but the start and end change so it would be confusing
-        schedulingId: getLoopNoteId(noteWithTimelineTime, channelId, 0),
+        schedulingId: getUniqueSchedulingId({
+          pitch: note.pitch,
+          start: note.start,
+          end: note.end,
+          loop: 0,
+          channelId,
+          slotId,
+          clipId: clip.id,
+        }),
       };
     });
   });
