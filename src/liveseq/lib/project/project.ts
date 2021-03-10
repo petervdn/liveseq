@@ -3,10 +3,10 @@ import type { Project } from './projectStructure';
 import { getDefaultProject } from './getDefaultProject';
 import { getSceneById, getSlotById, getTimelineById } from './selectors';
 
-import { createTimeline } from '../entities/timeline/timeline';
 import { createSampler } from '../entities/instrument/sampler';
 import { musicTimeToTime, timeToMusicTime } from '../utils/musicTime';
 import type { ScheduleItem } from '../player/player';
+import { getTimelineClips, getTimelineNotesInRange } from '../entities/timeline/timeline';
 
 // takes a project config and returns some useful stuff
 // so we don't have to interact with the file directly
@@ -40,7 +40,7 @@ export const createProject = (project: Project = getDefaultProject()) => {
     const musicEndTime = timeToMusicTime(end, bpm);
 
     return startSlots.flatMap((slot) => {
-      const timeline = createTimeline(
+      const timelineClips = getTimelineClips(
         getTimelineById(project)(slot.timelineId),
         project.entities.clips,
       );
@@ -48,7 +48,7 @@ export const createProject = (project: Project = getDefaultProject()) => {
       const notesWithChannels = getChannelsBySlotId(slot.id)
         .map((channel) => {
           return {
-            notes: timeline.getNotesInRange(musicStartTime, musicEndTime),
+            notes: getTimelineNotesInRange(musicStartTime, musicEndTime, timelineClips),
             channel,
           };
         })

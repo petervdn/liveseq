@@ -1,26 +1,25 @@
-import type { Clip, Timeline } from '../../project/projectStructure';
+import type { Clip, Note, Timeline } from '../../project/projectStructure';
 import type { MusicTime } from '../../utils/musicTime';
-import { isInRange } from '../../utils/musicTime';
-import { createNoteClip } from '../clip/noteClip';
+import { getItemsInRange } from '../clip/clip';
 
-export const createTimeline = (timeline: Timeline, clips: Array<Clip>) => {
-  const clipInstances = timeline.clips.map((clip) => {
-    return createNoteClip({
+export const getTimelineClips = (timeline: Timeline, clips: Array<Clip>) => {
+  return timeline.clips.map((clip) => {
+    return {
       ...clip,
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       ...clips.find(({ id }) => clip.clipId === id)!, // todo get rid of non-null assert
-    });
+    };
   });
+};
 
-  const getClipsInRange = (start: MusicTime, end: MusicTime) => {
-    return clipInstances.filter((clip) => isInRange(clip.start, clip.end, start, end));
-  };
+export const getTimelineNotesInRange = (
+  rangeStart: MusicTime,
+  rangeEnd: MusicTime,
+  clips: Array<{ start: MusicTime; end: MusicTime; duration: MusicTime; notes: Array<Note> }>,
+) => {
+  const clipsInRange = getItemsInRange(rangeStart, rangeEnd, clips);
 
-  const getNotesInRange = (start: MusicTime, end: MusicTime) => {
-    return getClipsInRange(start, end).flatMap((clipInstance) => {
-      return clipInstance.getNotesInRange(start, end);
-    });
-  };
-
-  return { getClipsInRange, getNotesInRange };
+  return clipsInRange.flatMap((clip) => {
+    return getItemsInRange(rangeStart, rangeEnd, clip.notes);
+  });
 };
