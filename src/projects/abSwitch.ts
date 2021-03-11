@@ -70,18 +70,21 @@ export const abSwitch: Project = {
         duration: musicTimeToBeats([1, 0, 0]),
         notes: [
           {
+            id: 'note_1',
             start: musicTimeToBeats([0, 0, 0]),
             end: musicTimeToBeats([0, 1, 0]),
             velocity: 0.75,
             pitch: 'C3',
           },
           {
+            id: 'note_2',
             start: musicTimeToBeats([0, 1, 0]),
             end: musicTimeToBeats([0, 2, 0]),
             velocity: 0.75,
             pitch: 'C3',
           },
           {
+            id: 'note_3',
             start: musicTimeToBeats([0, 4, 0]),
             end: musicTimeToBeats([0, 5, 0]),
             velocity: 0.75,

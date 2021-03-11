@@ -41,6 +41,7 @@ export type Instrument = SamplerInstrument | SimpleSynthInstrument;
 // CLIP
 // Clips are good for placing data within a time duration
 export type Note = BeatsRange & {
+  id: string;
   velocity: number;
   pitch: string;
 };

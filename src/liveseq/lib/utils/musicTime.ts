@@ -80,21 +80,10 @@ export const timeToMusicTime = (time: number, bpm: number): MusicTime =>
 // is a before b
 export const isBefore = (a: MusicTime, b: MusicTime) => musicTimeToBeats(a) < musicTimeToBeats(b);
 
-export const isSameTime = (a: MusicTime, b: MusicTime) =>
-  musicTimeToBeats(a) === musicTimeToBeats(b);
-
-export const addMusicTime = (a: MusicTime, b: MusicTime): MusicTime => {
-  const [a1, a2 = 0, a3 = 0, a4 = 0] = a;
-  const [b1, b2 = 0, b3 = 0, b4 = 0] = b;
-
-  return normalizeMusicTime([a1 + b1, a2 + b2, a3 + b3, a4 + b4]);
+export const isSameTime = (a: MusicTime, b: MusicTime) => {
+  return musicTimeToBeats(a) === musicTimeToBeats(b);
 };
 
-export const subtractMusicTime = (a: MusicTime, b: MusicTime): MusicTime => {
-  const [a1, a2 = 0, a3 = 0, a4 = 0] = a;
-  const [b1, b2 = 0, b3 = 0, b4 = 0] = b;
-  const subtracted = [a1 - b1, a2 - b2, a3 - b3, a4 - b4];
-  const limitedToPositive = subtracted.map((n) => Math.min(0, n));
-
-  return normalizeMusicTime(limitedToPositive as MusicTime);
+export const addMusicTime = (a: MusicTime, b: MusicTime) => {
+  return normalizeMusicTime([0, musicTimeToBeats(a) + musicTimeToBeats(b)]);
 };

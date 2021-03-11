@@ -1,7 +1,13 @@
 import type { Clip, Note, Timeline } from '../../project/projectStructure';
 import type { Beats } from '../../utils/musicTime';
 import type { BeatsRange } from '../../utils/beatsRange';
-import { addToRange, getItemsInRange, subtractFromRange } from '../../utils/beatsRange';
+import {
+  addToRange,
+  createRangeFromDuration,
+  getItemsInRange,
+  getWrappedRanges,
+  subtractFromRange,
+} from '../../utils/beatsRange';
 
 export const getTimelineClips = (timeline: Timeline, clips: Array<Clip>) => {
   return timeline.clips.map((clip) => {
@@ -13,28 +19,27 @@ export const getTimelineClips = (timeline: Timeline, clips: Array<Clip>) => {
   });
 };
 
-// useful to "infer" timeline length from its clips
-export const getLastClipEnd = (
-  clips: Array<BeatsRange & { duration: Beats; notes: Array<Note> }>,
-): Beats | null => {
-  return clips.reduce((accumulator, current) => {
-    if (accumulator !== null && current.end > accumulator!) {
-      return accumulator;
-    }
-    return accumulator;
-  }, null);
+export const getTimelineDuration = (timeline: Timeline): Beats => {
+  return timeline.duration !== undefined
+    ? timeline.duration
+    : timeline.clips.reduce((accumulator, current) => {
+        return accumulator !== null && current.end > accumulator! ? current.end : accumulator;
+      }, 0 as Beats);
+};
+
+export const getTimelineLength = (timeline: Timeline, loops = 0): Beats => {
+  return (getTimelineDuration(timeline) * (loops + 1)) as Beats;
 };
 
 // the props that make a note be considered the same note to the scheduler
-export type UniqueSchedulingIdProps = BeatsRange & {
-  pitch: string;
-  loop: number;
+export type UniqueSchedulingIdProps = {
+  iteration: number;
+  noteId: string;
   channelId: string;
   slotId: string;
   clipId: string;
 };
 
-// gets a note and "what loop" it's in and returns a unique id based on its properties, current repetition and channel
 export const getUniqueSchedulingId = (props: UniqueSchedulingIdProps) => {
   return JSON.stringify(props);
 };
@@ -42,35 +47,36 @@ export const getUniqueSchedulingId = (props: UniqueSchedulingIdProps) => {
 // TODO: these returned notes need ids. The ids must be unique for every timeline loop
 // TODO: account for duration
 export const getTimelineNotesInRange = (
-  musicTimeRange: BeatsRange,
+  range: BeatsRange,
   timeline: Timeline,
   clips: Array<BeatsRange & { id: string; duration: Beats; notes: Array<Note> }>,
   channelId: string,
   slotId: string,
-  // timelineLoops? = 1,
+  timelineLoops = 0,
 ) => {
-  const clipsInRange = getItemsInRange(musicTimeRange, clips);
+  const clipsInRange = getItemsInRange(range, clips);
+  const timelineRange = createRangeFromDuration(getTimelineDuration(timeline));
+  const loopedRanges = getWrappedRanges(range, timelineRange, timelineLoops);
 
   const notesInRange = clipsInRange.flatMap((clip) => {
-    const localRange = subtractFromRange(musicTimeRange, clip.start);
+    return loopedRanges.flatMap((loopedRange, iteration) => {
+      const localRange = subtractFromRange(loopedRange, clip.start);
 
-    return getItemsInRange(localRange, clip.notes).map((note) => {
-      const noteWithTimelineTime = addToRange(note, clip.start);
+      return getItemsInRange(localRange, clip.notes).map((note) => {
+        const noteWithTimelineTime = addToRange(note, clip.start);
 
-      return {
-        ...noteWithTimelineTime,
-        // to easily know if note has been scheduled...
-        // could also just add a property with the current repetition but the start and end change so it would be confusing
-        schedulingId: getUniqueSchedulingId({
-          pitch: note.pitch,
-          start: note.start,
-          end: note.end,
-          loop: 0,
-          channelId,
-          slotId,
-          clipId: clip.id,
-        }),
-      };
+        return {
+          ...noteWithTimelineTime,
+          // to easily know if note has been scheduled
+          schedulingId: getUniqueSchedulingId({
+            noteId: note.id,
+            iteration,
+            channelId,
+            slotId,
+            clipId: clip.id,
+          }),
+        };
+      });
     });
   });
 
