@@ -86,7 +86,7 @@ export const isInRange = (rangeA: BeatsRange, rangeB: BeatsRange) => {
 
 // given a range and a number of loops, what is the resulting range?
 const getLoopedRange = (range: BeatsRange, loops: number): BeatsRange => {
-  const times = Math.min(0, loops) + 1;
+  const times = Math.max(0, loops + 1);
   const newDuration = (getRangeDuration(range) * times) as Beats;
   return createRangeFromDuration(newDuration, range.start);
 };
@@ -116,12 +116,6 @@ export const getWrappedRanges = (
   // if rangeLimit and clampedRangeToWrap start at the same time and have same duration, coveredArea will be 1
   const coveredArea = (startDifference + clampedRangeDuration) / rangeLimitDuration;
 
-  // console.log({
-  //   startDifference,
-  //   clampedRangeDuration,
-  //   rangeLimitDuration,
-  // });
-
   // how many ranges will need to be generated to cover the wrapped range
   const iterations = Math.ceil(coveredArea);
 
@@ -130,33 +124,20 @@ export const getWrappedRanges = (
   // the result will be an array filled with rangeLimit
   // but the first item and last item are special cases
   const result = new Array(iterations).fill(rangeLimit);
-  // gotta set the start time of the first item
+  // gotta set the start time of the first item...
   result[0] = setStart(result[0], clampedRangeToWrap.start);
 
   if (result.length === 1) return result;
 
-  // and end time of the last item
+  // ...and end time of the last item
+  const durationFraction = coveredArea % 1 || 1;
   result[result.length - 1] = createRangeFromDuration(
-    (rangeLimitDuration * (coveredArea % 1)) as Beats,
+    (rangeLimitDuration * durationFraction) as Beats,
     rangeLimit.start,
   );
 
   return result;
 };
-
-// console.log(
-//   getWrappedRanges(
-//     {
-//       start: 0,
-//       end: 2,
-//     } as BeatsRange,
-//     {
-//       start: 0,
-//       end: 1,
-//     } as BeatsRange,
-//     1,
-//   ),
-// );
 
 export const getItemsInRange = <T extends BeatsRange>(range: BeatsRange, items: Array<T>) => {
   return items.filter((item) => {
