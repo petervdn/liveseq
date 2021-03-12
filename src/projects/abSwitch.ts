@@ -1,5 +1,5 @@
 import type { Project } from '../liveseq';
-import { musicTimeToBeats } from '../liveseq/lib/utils/musicTime';
+import { musicTimeToBeats } from '../liveseq/lib/entities/time/musicTime';
 
 // TODO: make this file describe this example
 // Example switching

@@ -1,9 +1,9 @@
-import type { Note } from '../project/projectStructure';
-import type { TimeInSeconds } from '../utils/musicTime';
+import type { Note } from '../entities/note/note';
+import type { TimeInSeconds } from '../entities/time/time';
 
 export type ScheduleNote = Note & {
-  startTime: number;
-  endTime: number;
+  startTime: TimeInSeconds;
+  endTime: TimeInSeconds;
   schedulingId: string;
 };
 
@@ -18,21 +18,19 @@ export type ScheduleItem = {
 
 export type PlayerProps = {
   audioContext: AudioContext;
-  lookAheadTime?: number;
-  scheduleInterval?: number;
+  lookAheadTime?: TimeInSeconds;
+  scheduleInterval?: TimeInSeconds;
   // called every time schedule runs to get "what" to schedule from the project
   getScheduleItems: (startTime: TimeInSeconds, endTime: TimeInSeconds) => Array<ScheduleItem>;
 };
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
-
-export type Player = ReturnType<typeof createPlayer>;
+// export type Player = ReturnType<typeof createPlayer>;
 
 export const createPlayer = ({
   audioContext,
   getScheduleItems,
-  scheduleInterval = 1000,
-  lookAheadTime = 1200,
+  scheduleInterval = 1000 as TimeInSeconds,
+  lookAheadTime = 1200 as TimeInSeconds,
 }: PlayerProps) => {
   let playStartTime: number | null = null;
   let timeoutId: number | null = null;

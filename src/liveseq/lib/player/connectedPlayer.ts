@@ -18,6 +18,7 @@ export const createConnectedPlayer = ({ store, ...playerProps }: ConnectedPlayer
 
       audioContext.state === 'suspended' ? audioContext.resume().then(player.play) : player.play();
     }),
+
     store.subscribe('stop', ({ state }) => {
       !state.isPlaying && player.stop();
     }),

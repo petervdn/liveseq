@@ -1,23 +1,24 @@
 import { createGlobalStore, LiveseqState } from './store/globalStore';
 import { getAudioContext } from './utils/getAudioContext';
 import { createConnectedPlayer } from './player/connectedPlayer';
-import type { Project } from './project/projectStructure';
+
 import { createProject } from './project/project';
-import type { Bpm } from './utils/musicTime';
+import type { Project } from './entities/project/project';
+import type { Bpm, TimeInSeconds } from './entities/time/time';
 
 export type LiveseqProps = {
   initialState?: Partial<LiveseqState>;
   project?: Project;
   audioContext?: AudioContext;
-  lookAheadTime?: number;
-  scheduleInterval?: number;
-  bpm?: number;
+  lookAheadTime?: TimeInSeconds;
+  scheduleInterval?: TimeInSeconds;
+  bpm?: Bpm;
 };
 
 export type Liveseq = ReturnType<typeof createLiveseq>;
 
 export const createLiveseq = ({
-  bpm = 120,
+  bpm = 120 as Bpm,
   initialState,
   lookAheadTime,
   project,

@@ -1,6 +1,6 @@
-import type { Project } from '../project/projectStructure';
 import { createStore, Store } from '../utils/store';
 import { getDefaultProject } from '../project/getDefaultProject';
+import type { Project } from '../entities/project/project';
 
 export type LiveseqState = {
   isPlaying: boolean;
@@ -47,7 +47,7 @@ export const createGlobalStore = (initialState: Partial<LiveseqState> = {}) => {
     tempo: 120,
   };
 
-  const store = createStore(defaultState, initialState);
+  const store = createStore<LiveseqState, ActionType>(defaultState, initialState);
 
   return {
     actions: {

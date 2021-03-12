@@ -1,13 +1,15 @@
 /* eslint-disable no-console */
-import type { Project } from './projectStructure';
 import { getDefaultProject } from './getDefaultProject';
 import { getSceneById, getSlotById, getTimelineById } from './selectors';
 
 import { createSampler } from '../entities/instrument/sampler';
-import { beatsToTime, Bpm, TimeInSeconds } from '../utils/musicTime';
+
 import type { ScheduleItem } from '../player/player';
-import { getTimelineClips, getTimelineNotesInRange } from '../entities/timeline/timeline';
-import { timeRangeToBeatsRange } from '../utils/beatsRange';
+import type { Project } from '../entities/project/project';
+import type { Bpm, TimeInSeconds } from '../entities/time/time';
+import { getTimelineClips, getTimelineNotesInRange } from '../entities/timeline/timeline.utils';
+import { beatsToTime } from '../entities/time/musicTime';
+import { timeRangeToBeatsRange } from '../entities/time/timeRange.utils';
 
 // takes a project config and returns some useful stuff
 // so we don't have to interact with the file directly

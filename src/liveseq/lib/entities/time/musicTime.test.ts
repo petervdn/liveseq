@@ -1,12 +1,12 @@
 import {
   addMusicTime,
-  Beats,
   beatsToTime,
   musicTimeToBeats,
   musicTimeToTime,
   normalizeMusicTime,
   timeToBeats,
 } from './musicTime';
+import type { Beats, Bpm, TimeInSeconds } from './time';
 
 export {};
 
@@ -42,15 +42,15 @@ it('converts musicTime to beats with different settings', () => {
 });
 
 it('converts beats to time', () => {
-  expect(beatsToTime(120 as Beats, 120)).toBe(60);
+  expect(beatsToTime(120 as Beats, 120 as Bpm)).toBe(60);
 });
 
 it('converts time to beats', () => {
-  expect(timeToBeats(60, 120)).toBe(120);
+  expect(timeToBeats(60 as TimeInSeconds, 120 as Bpm)).toBe(120);
 });
 
 it('converts musicTime to time', () => {
-  expect(musicTimeToTime([0, 120], 120)).toBe(60);
+  expect(musicTimeToTime([0, 120], 120 as Bpm)).toBe(60);
 });
 
 it('adds musicTimes', () => {

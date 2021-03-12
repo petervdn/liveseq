@@ -10,6 +10,8 @@ export default function App() {
     liveseqRef.current = createLiveseq({
       project: abSwitch,
     });
+
+    // liveseqRef.current?.subscribe();
   }, []);
 
   return (

@@ -1,8 +1,4 @@
-import type { Opaque } from 'type-fest';
-
-export type Beats = Opaque<number, 'Beats'>;
-export type Bpm = Opaque<number, 'Bpm'>;
-export type TimeInSeconds = Opaque<number, 'TimeInSeconds'>;
+import type { Beats, Bpm, TimeInSeconds } from './time';
 
 export type MusicTime = [
   bars: number,
@@ -57,24 +53,24 @@ export const normalizeMusicTime = (
   ];
 };
 
-export const beatsToTime = (beats: Beats, bpm: number): number => {
-  return (beats * 60) / bpm;
+export const beatsToTime = (beats: Beats, bpm: Bpm): TimeInSeconds => {
+  return ((beats * 60) / bpm) as TimeInSeconds;
 };
 
-export const timeToBeats = (time: number, bpm: number): Beats => {
+export const timeToBeats = (time: TimeInSeconds, bpm: Bpm): Beats => {
   return ((time / 60) * bpm) as Beats;
 };
 
 export const musicTimeToTime = (
   musicTime: MusicTime,
-  bpm: number,
+  bpm: Bpm,
   {
     beatsPerBar = DEFAULT_BEATS_PER_BAR,
     sixteenthsPerBeat = DEFAULT_SIXTEENTHS_PER_BEAT,
   }: MusicTimeOptions = {},
 ): number => beatsToTime(musicTimeToBeats(musicTime, { beatsPerBar, sixteenthsPerBeat }), bpm);
 
-export const timeToMusicTime = (time: number, bpm: number): MusicTime =>
+export const timeToMusicTime = (time: TimeInSeconds, bpm: Bpm): MusicTime =>
   normalizeMusicTime([0, timeToBeats(time, bpm)]);
 
 // is a before b
