@@ -2,9 +2,10 @@ import { createGlobalStore, LiveseqState } from './store/globalStore';
 import { getAudioContext } from './utils/getAudioContext';
 import { createConnectedPlayer } from './player/connectedPlayer';
 
-import { createProject } from './project/project';
 import type { Project } from './entities/project/project';
 import type { Bpm, TimeInSeconds } from './entities/time/time';
+import { getScheduleItems } from './entities/project/project.utils';
+import { getDefaultProject } from './project/getDefaultProject';
 
 export type LiveseqProps = {
   initialState?: Partial<LiveseqState>;
@@ -21,12 +22,12 @@ export const createLiveseq = ({
   bpm = 120 as Bpm,
   initialState,
   lookAheadTime,
-  project,
+  project = getDefaultProject(),
   audioContext = getAudioContext(),
   scheduleInterval,
 }: LiveseqProps = {}) => {
   const store = createGlobalStore(initialState);
-  const projectInstance = createProject(project);
+  // const projectInstance = createProject(project);
 
   let currentBpm = bpm as Bpm;
 
@@ -38,7 +39,7 @@ export const createLiveseq = ({
   // just trying with a store setup
   const player = createConnectedPlayer({
     getScheduleItems: (startTime, endTime) => {
-      const scheduleItems = projectInstance.getScheduleItems(startTime, endTime, currentBpm);
+      const scheduleItems = getScheduleItems(project, startTime, endTime, currentBpm);
       // eslint-disable-next-line no-console
       console.log(scheduleItems);
       return scheduleItems;

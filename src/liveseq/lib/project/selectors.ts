@@ -28,3 +28,9 @@ export const getSlotById = (project: Project) => (id: string) => {
 export const getSceneById = (project: Project) => (id: string) => {
   return selectById(id, project.entities.scenes);
 };
+
+export const getChannelsBySlotId = (project: Project, slotId: string) => {
+  return project.entities.channels.filter((channel) => {
+    return channel.slotIds.includes(slotId);
+  });
+};
