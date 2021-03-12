@@ -13,16 +13,12 @@ export const createRangeFromDuration = (duration: Beats, start = 0 as Beats) => 
   };
 };
 
-export const timeRangeToBeatsRange = (timeRange: TimeRange, bpm: Bpm): BeatsRange => {
-  return {
-    start: timeToBeats(timeRange.start, bpm),
-    end: timeToBeats(timeRange.end, bpm),
-  };
-};
+export const timeRangeToBeatsRange = (timeRange: TimeRange, bpm: Bpm): BeatsRange => ({
+  start: timeToBeats(timeRange.start, bpm),
+  end: timeToBeats(timeRange.end, bpm),
+});
 
-export const getRangeDuration = (range: BeatsRange): Beats => {
-  return (range.end - range.start) as Beats;
-};
+export const getRangeDuration = (range: BeatsRange): Beats => (range.end - range.start) as Beats;
 
 export const splitRange = (range: BeatsRange, splitAt: Beats): Array<BeatsRange> => {
   const isBetween = range.start < splitAt && range.end > splitAt;
@@ -41,25 +37,18 @@ export const splitRange = (range: BeatsRange, splitAt: Beats): Array<BeatsRange>
     : [range];
 };
 
-export const setStart = (range: BeatsRange, start: Beats): BeatsRange => {
-  const newStart = Math.min(start, range.end) as Beats;
-  return {
-    start: newStart,
-    end: range.end,
-  };
-};
+export const setStart = (range: BeatsRange, start: Beats): BeatsRange => ({
+  start: Math.min(start, range.end) as Beats,
+  end: range.end,
+});
 
-export const setEnd = (range: BeatsRange, end: Beats): BeatsRange => {
-  const newEnd = Math.max(end, range.start) as Beats;
-  return {
-    start: range.start,
-    end: newEnd,
-  };
-};
+export const setEnd = (range: BeatsRange, end: Beats): BeatsRange => ({
+  start: range.start,
+  end: Math.max(end, range.start) as Beats,
+});
 
-export const splitRangeByDuration = (range: BeatsRange, duration: Beats): Array<BeatsRange> => {
-  return splitRange(range, (range.start + duration) as Beats);
-};
+export const splitRangeByDuration = (range: BeatsRange, duration: Beats): Array<BeatsRange> =>
+  splitRange(range, (range.start + duration) as Beats);
 
 // moves whole range to new start
 export const moveRange = (range: BeatsRange, newStart: Beats): BeatsRange => {
@@ -84,12 +73,11 @@ const getLoopedRange = (range: BeatsRange, loops: number): BeatsRange => {
   return createRangeFromDuration(newDuration, range.start);
 };
 
-const clampRange = (range: BeatsRange, rangeLimit: BeatsRange): BeatsRange => {
-  return {
+const clampRange = (range: BeatsRange, rangeLimit: BeatsRange): BeatsRange =>
+  ({
     start: Math.max(range.start, rangeLimit.start),
     end: Math.min(range.end, rangeLimit.end),
-  } as BeatsRange;
-};
+  } as BeatsRange);
 
 // TODO: this could be optimized
 // returns an array of wrapped ranges representing the range in each loop iteration

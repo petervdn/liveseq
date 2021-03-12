@@ -12,27 +12,22 @@ import {
 } from '../time/timeRange.utils';
 import type { BeatsRange } from '../time/timeRange';
 
-export const getTimelineClips = (timeline: Timeline, clips: Array<Clip>) => {
-  return timeline.clips.map((clip) => {
-    return {
-      ...clip,
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      ...clips.find(({ id }) => clip.clipId === id)!, // todo get rid of non-null assert
-    };
-  });
-};
+export const getTimelineClips = (timeline: Timeline, clips: Array<Clip>) =>
+  timeline.clips.map((clip) => ({
+    ...clip,
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    ...clips.find(({ id }) => clip.clipId === id)!, // todo get rid of non-null assert
+  }));
 
-export const getTimelineDuration = (timeline: Timeline): Beats => {
-  return timeline.duration !== undefined
+export const getTimelineDuration = (timeline: Timeline): Beats =>
+  timeline.duration !== undefined
     ? timeline.duration
     : timeline.clips.reduce((accumulator, current) => {
         return accumulator !== null && current.end > accumulator! ? current.end : accumulator;
       }, 0 as Beats);
-};
 
-export const getTimelineLength = (timeline: Timeline, loops = 0): Beats => {
-  return (getTimelineDuration(timeline) * (loops + 1)) as Beats;
-};
+export const getTimelineLength = (timeline: Timeline, loops = 0): Beats =>
+  (getTimelineDuration(timeline) * (loops + 1)) as Beats;
 
 // the props that make a note be considered the same note to the scheduler
 export type UniqueSchedulingIdProps = {
@@ -43,9 +38,7 @@ export type UniqueSchedulingIdProps = {
   clipId: string;
 };
 
-export const getUniqueSchedulingId = (props: UniqueSchedulingIdProps) => {
-  return JSON.stringify(props);
-};
+export const getUniqueSchedulingId = (props: UniqueSchedulingIdProps) => JSON.stringify(props);
 
 // TODO: these returned notes need ids. The ids must be unique for every timeline loop
 // TODO: account for duration
