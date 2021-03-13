@@ -1,37 +1,34 @@
-import { useEffect, useRef } from 'react';
-import { createLiveseq, Liveseq } from './liveseq';
+import { useLiveseq } from './liveseq/react/hooks/useLiveseq';
 import { abSwitch } from './projects/abSwitch';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default function App() {
-  const liveseqRef = useRef<Liveseq>();
-
-  useEffect(() => {
-    liveseqRef.current = createLiveseq({
-      project: abSwitch,
-    });
-
-    // liveseqRef.current?.subscribe();
-  }, []);
+  // Note that LiveseqProvider is a WIP implementation
+  // eventually will allow us to use hooks like useIsPlaying
+  const { liveseq, LiveseqProvider } = useLiveseq({
+    project: abSwitch,
+  });
 
   return (
     <div>
-      <button
-        type="button"
-        onClick={() => {
-          liveseqRef.current?.play();
-        }}
-      >
-        start
-      </button>
-      <button
-        type="button"
-        onClick={() => {
-          liveseqRef.current?.stop();
-        }}
-      >
-        stop
-      </button>
+      <LiveseqProvider>
+        <button
+          type="button"
+          onClick={() => {
+            liveseq.play();
+          }}
+        >
+          start
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            liveseq.stop();
+          }}
+        >
+          stop
+        </button>
+      </LiveseqProvider>
     </div>
   );
 }

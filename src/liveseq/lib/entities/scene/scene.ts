@@ -1,5 +1,5 @@
 import type { LiveseqEntity } from '../liveseqEntity';
-import type { GlobalAction } from '../../project/projectStructure';
+import type { GlobalAction } from '../../store/globalStore';
 
 export type Scene = LiveseqEntity & {
   eventActions: {
