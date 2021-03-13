@@ -1,5 +1,5 @@
 import type React from 'react';
-import { useLiveseq } from '../liveseq/react/useLiveseq';
+import { useLiveseq } from '../liveseq';
 import type { LiveseqProps } from '../liveseq';
 import { PlaybackButton } from './PlaybackButton';
 
