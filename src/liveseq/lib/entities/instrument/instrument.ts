@@ -1,8 +1,5 @@
 import type { LiveseqEntity } from '../liveseqEntity';
-
-export type SamplerInstrument = LiveseqEntity & {
-  type: 'samplerInstrument';
-};
+import type { SamplerInstrument } from './sampler';
 
 export type SimpleSynthInstrument = LiveseqEntity & {
   type: 'simpleSynthInstrument';

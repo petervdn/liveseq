@@ -1,6 +1,10 @@
 import type { ScheduleNote } from '../../player/player';
 import { playTick } from '../../utils/playTick';
+import type { LiveseqEntity } from '../liveseqEntity';
 
+export type SamplerInstrument = LiveseqEntity & {
+  type: 'samplerInstrument';
+};
 type Instrument = {
   schedule: (context: AudioContext, notes: Array<ScheduleNote>) => void;
 };
