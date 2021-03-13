@@ -2,8 +2,6 @@ import { timeToBeats } from './musicTime';
 import type { BeatsRange, TimeRange } from './timeRange';
 import type { Beats, Bpm } from './time';
 
-// TODO: consolidate this stuff with musicTime stuff in their own "timing" directory
-
 export const createRangeFromDuration = (duration: Beats, start = 0 as Beats) => {
   const end = (start + duration) as Beats;
 
