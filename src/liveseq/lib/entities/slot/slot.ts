@@ -1,4 +1,4 @@
-import type { LiveseqEntity } from '../liveSeqEntity';
+import type { LiveseqEntity } from '../liveseqEntity';
 
 export type TimelineSlot = LiveseqEntity & { type: 'timeline'; timelineId: string };
 

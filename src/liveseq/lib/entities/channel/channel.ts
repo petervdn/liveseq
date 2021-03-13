@@ -1,4 +1,4 @@
-import type { LiveseqEntity } from '../liveSeqEntity';
+import type { LiveseqEntity } from '../liveseqEntity';
 
 export type InstrumentChannel = LiveseqEntity & {
   type: 'instrument';

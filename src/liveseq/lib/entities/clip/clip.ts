@@ -1,4 +1,4 @@
-import type { LiveseqEntity } from '../liveSeqEntity';
+import type { LiveseqEntity } from '../liveseqEntity';
 import type { Beats } from '../time/time';
 import type { Note } from '../note/note';
 
