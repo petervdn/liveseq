@@ -1,6 +1,7 @@
 import type { ScheduleNote } from '../../player/player';
 import { playTick } from '../../utils/playTick';
 import type { LiveseqEntity } from '../liveseqEntity';
+import { getFrequency } from '../../note/note';
 
 export type SamplerInstrument = LiveseqEntity & {
   type: 'samplerInstrument';
@@ -17,7 +18,7 @@ export const createSampler = (props: SamplerProps): Instrument => {
   return {
     schedule: (context: AudioContext, notes: Array<ScheduleNote>) => {
       notes.forEach((note) => {
-        playTick(context, note.startTime, note.endTime - note.startTime);
+        playTick(context, getFrequency(note.pitch), note.startTime, note.endTime - note.startTime);
       });
     },
   };

@@ -1,5 +1,6 @@
 import type { Project } from '../liveseq';
 import { musicTimeToBeats } from '../liveseq/lib/time/musicTime';
+import type { NoteName } from '../liveseq/lib/note/note';
 
 // TODO: make this file describe this example
 // Example switching
@@ -78,21 +79,28 @@ export const abSwitch: Project = {
             start: musicTimeToBeats([0, 0, 0]),
             end: musicTimeToBeats([0, 1, 0]),
             velocity: 0.75,
-            pitch: 'C3',
+            pitch: 'C6' as NoteName,
           },
           {
             id: 'note_2',
             start: musicTimeToBeats([0, 1, 0]),
             end: musicTimeToBeats([0, 2, 0]),
             velocity: 0.75,
-            pitch: 'C3',
+            pitch: 'C5' as NoteName,
           },
           {
             id: 'note_3',
-            start: musicTimeToBeats([0, 4, 0]),
-            end: musicTimeToBeats([0, 5, 0]),
+            start: musicTimeToBeats([0, 2, 0]),
+            end: musicTimeToBeats([0, 3, 0]),
             velocity: 0.75,
-            pitch: 'C3',
+            pitch: 'C5' as NoteName,
+          },
+          {
+            id: 'note_4',
+            start: musicTimeToBeats([0, 3, 0]),
+            end: musicTimeToBeats([0, 4, 0]),
+            velocity: 0.75,
+            pitch: 'C5' as NoteName,
           },
         ],
       },
