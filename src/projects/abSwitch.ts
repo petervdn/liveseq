@@ -39,6 +39,10 @@ export const abSwitch: Project = {
         id: 'sampler_1',
         type: 'sampler',
       },
+      {
+        id: 'synth_1',
+        type: 'simpleSynth',
+      },
     ],
     // global to allow same slot in multiple channels
     slots: [
