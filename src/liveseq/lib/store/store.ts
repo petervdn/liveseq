@@ -12,11 +12,12 @@ export type Store<State, ActionType> = {
   dispose: () => void;
 };
 
-export const createStore = <State, ActionType>(
+export const createStore = <State, ActionType extends string>(
   defaultState: State,
   initialState: Partial<State>,
+  logger?: (actionType: string, props: unknown) => void,
 ): Store<State, ActionType> => {
-  const pubSub = createPubSub<ActionType, StateChange<State>>();
+  const pubSub = createPubSub<ActionType, StateChange<State>>(logger);
 
   let state: State = {
     ...defaultState,

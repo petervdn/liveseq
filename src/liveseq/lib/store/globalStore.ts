@@ -1,12 +1,14 @@
 import { createStore, Store } from './store';
 import { getDefaultProject } from '../project/getDefaultProject';
 import type { Project } from '../project/project';
+import type { Bpm } from '../time/time';
+import { logDispatch } from './logDispatch';
 
 export type LiveseqState = {
   isPlaying: boolean;
   project: Project;
   activeSceneIds: Array<string>;
-  tempo: number;
+  tempo: Bpm;
 };
 
 // TODO: define union for all action types
@@ -58,10 +60,10 @@ export const createGlobalStore = (initialState: Partial<LiveseqState> = {}) => {
     isPlaying: false,
     project: getDefaultProject(),
     activeSceneIds: [],
-    tempo: 120,
+    tempo: 120 as Bpm,
   };
 
-  const store = createStore<LiveseqState, ActionType>(defaultState, initialState);
+  const store = createStore<LiveseqState, ActionType>(defaultState, initialState, logDispatch);
 
   return {
     actions: {

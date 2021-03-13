@@ -8,14 +8,16 @@
 // pubSub.dispatch('hello', {message: 'welcome'})
 // pubSub.dispose()
 
-export const createPubSub = <ActionType, CallbackProps>() => {
+export const createPubSub = <EventName extends string, CallbackProps>(
+  onDispatch?: (actionType: EventName, props: CallbackProps) => void,
+) => {
   // TODO: use an object to find by actionType without running through the whole array
   let subscriptions: Array<{
-    actionType: ActionType;
+    actionType: EventName;
     callback: (props: CallbackProps) => void;
   }> = [];
 
-  const subscribe = (actionType: ActionType, callback: (props: CallbackProps) => void) => {
+  const subscribe = (actionType: EventName, callback: (props: CallbackProps) => void) => {
     const subscription = {
       actionType,
       callback,
@@ -32,7 +34,9 @@ export const createPubSub = <ActionType, CallbackProps>() => {
     return unsubscribe;
   };
 
-  const dispatch = (actionType: ActionType, props: CallbackProps) => {
+  const dispatch = (actionType: EventName, props: CallbackProps) => {
+    onDispatch && onDispatch(actionType, props);
+
     subscriptions.forEach((subscription) => {
       if (subscription.actionType !== actionType) return;
 
