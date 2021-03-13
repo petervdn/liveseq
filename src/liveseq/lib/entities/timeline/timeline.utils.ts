@@ -1,5 +1,5 @@
 import type { Timeline } from './timeline';
-import type { Beats } from '../time/time';
+import type { Beats } from '../../time/time';
 
 import type { Note } from '../note/note';
 import type { Clip } from '../clip/clip';
@@ -9,8 +9,8 @@ import {
   getItemsInRange,
   getWrappedRanges,
   subtractFromRange,
-} from '../time/timeRange.utils';
-import type { BeatsRange } from '../time/timeRange';
+} from '../../time/timeRange.utils';
+import type { BeatsRange } from '../../time/timeRange';
 
 export const getTimelineClips = (timeline: Timeline, clips: Array<Clip>) =>
   timeline.clips.map((clip) => ({

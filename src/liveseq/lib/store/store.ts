@@ -1,4 +1,4 @@
-import { createPubSub } from './pubSub';
+import { createPubSub } from '../utils/pubSub';
 
 // simple and lightweight store implementation tuned for this use
 

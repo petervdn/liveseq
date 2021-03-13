@@ -1,4 +1,4 @@
-import type { BeatsRange } from '../time/timeRange';
+import type { BeatsRange } from '../../time/timeRange';
 
 export type Note = BeatsRange & {
   id: string;

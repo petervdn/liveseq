@@ -1,4 +1,4 @@
-import { createStore, Store } from '../utils/store';
+import { createStore, Store } from './store';
 import { getDefaultProject } from '../project/getDefaultProject';
 import type { Project } from '../entities/project/project';
 
