@@ -1,4 +1,4 @@
-import { getChannelsBySlotId, getSceneById, getSlotById, getTimelineById } from './selectors';
+import { getChannelsBySlotId, getTimelineById } from './selectors';
 import type { Project } from './project';
 import type { Bpm, TimeInSeconds } from '../time/time';
 import type { ScheduleItem } from '../player/player';
@@ -6,20 +6,7 @@ import { timeRangeToBeatsRange } from '../time/timeRange.utils';
 import { getTimelineClips, getTimelineNotesInRange } from '../entities/timeline/timeline.utils';
 import { beatsToTime } from '../time/musicTime';
 import { createSampler } from '../entities/instrument/sampler';
-
-export const getStartSlots = (project: Project) => {
-  const startScenes = project.startScenes.map(getSceneById(project));
-
-  return startScenes.flatMap((scene) => {
-    const playSlotsActions = (scene.eventActions.enter || []).filter((action) => {
-      return action.type === 'playSlots';
-    });
-
-    return playSlotsActions.flatMap((action) => {
-      return (action.slotIds || []).map(getSlotById(project));
-    });
-  });
-};
+import { getStartSlots } from './getStartSlots';
 
 export const getScheduleItems = (
   project: Project,

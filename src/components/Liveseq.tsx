@@ -1,6 +1,6 @@
 import type React from 'react';
-import { useLiveseq } from '../liveseq/react/hooks/useLiveseq';
-import type { LiveseqProps } from '../liveseq/lib/liveseq';
+import { useLiveseq } from '../liveseq/react/useLiveseq';
+import type { LiveseqProps } from '../liveseq';
 import { PlaybackButton } from './PlaybackButton';
 
 export const Liveseq: React.FunctionComponent<LiveseqProps> = (props) => {

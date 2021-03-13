@@ -1,6 +1,5 @@
 import type { Timeline } from './timeline';
 import type { Beats } from '../../time/time';
-
 import type { Note } from '../../note/note';
 import type { Clip } from '../clip/clip';
 import {

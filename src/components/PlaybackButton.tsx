@@ -1,13 +1,13 @@
 import type React from 'react';
 import { useEffect, useState } from 'react';
-import { useLiveseqContext } from '../liveseq/react/hooks/useLiveseq';
+import { useLiveseqContext } from '../liveseq/react/useLiveseq';
 
 export const PlaybackButton: React.FunctionComponent = () => {
   const liveseq = useLiveseqContext();
   const [isPlaying, setIsPlaying] = useState(liveseq.getState().isPlaying);
 
   useEffect(() => {
-    // TODO: allow multiple subs in one go
+    // TODO: allow multiple subs in one go, or improve how this is done
     const disposers = [
       liveseq.subscribe('play', ({ state }) => {
         setIsPlaying(state.isPlaying);

@@ -4,8 +4,9 @@ import { createConnectedPlayer } from './player/connectedPlayer';
 
 import type { Project } from './project/project';
 import type { Bpm, TimeInSeconds } from './time/time';
-import { getScheduleItems } from './project/project.utils';
+
 import { getDefaultProject } from './project/getDefaultProject';
+import { getScheduleItems } from './project/getScheduleItems';
 
 export type LiveseqProps = {
   initialState?: Partial<LiveseqState>;
