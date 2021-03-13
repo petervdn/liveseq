@@ -1,4 +1,4 @@
-import type { Note } from '../entities/note/note';
+import type { Note } from '../note/note';
 import type { TimeInSeconds } from '../time/time';
 
 export type ScheduleNote = Note & {

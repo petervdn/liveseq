@@ -1,7 +1,7 @@
 import type { LiveseqEntity } from '../liveseqEntity';
 
 export type InstrumentChannel = LiveseqEntity & {
-  type: 'instrument';
+  type: 'instrumentChannel';
   instrumentId: string;
   slotIds: Array<string>;
 };

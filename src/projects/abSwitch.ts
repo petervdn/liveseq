@@ -22,14 +22,14 @@ export const abSwitch: Project = {
       {
         id: 'channel_1',
         name: 'Channel Name',
-        type: 'instrument',
+        type: 'instrumentChannel',
         instrumentId: 'sampler_1',
         slotIds: ['slot_1', 'slot_2'],
       },
       {
         id: 'channel_2',
         name: 'Channel Name',
-        type: 'instrument',
+        type: 'instrumentChannel',
         instrumentId: 'synth_1',
         slotIds: ['slot_3'],
       },
@@ -37,30 +37,30 @@ export const abSwitch: Project = {
     instruments: [
       {
         id: 'sampler_1',
-        type: 'sampler',
+        type: 'samplerInstrument',
       },
       {
         id: 'synth_1',
-        type: 'simpleSynth',
+        type: 'simpleSynthInstrument',
       },
     ],
     // global to allow same slot in multiple channels
     slots: [
       {
         id: 'slot_1',
-        type: 'timeline',
+        type: 'timelineSlot',
         name: 'Slot Name',
         timelineId: 'timeline_1',
       },
       {
         id: 'slot_2',
-        type: 'timeline',
+        type: 'timelineSlot',
         timelineId: 'timeline_2',
         name: 'Slot Name',
       },
       {
         id: 'slot_3',
-        type: 'timeline',
+        type: 'timelineSlot',
         timelineId: 'timeline_1',
         name: 'Slot Name',
       },
