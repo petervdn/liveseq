@@ -58,7 +58,11 @@ export const getTimelineNotesInRange = (
       const localRange = subtractFromRange(loopedRange, clip.start);
 
       return getItemsInRange(localRange, clip.notes).map((note) => {
-        const noteWithTimelineTime = addToRange(note, clip.start);
+        // adjust note timing
+        const noteWithTimelineTime = addToRange(
+          note,
+          (clip.start + clip.duration * iteration) as Beats,
+        );
 
         return {
           ...noteWithTimelineTime,

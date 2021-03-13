@@ -26,13 +26,13 @@ export const abSwitch: Project = {
         instrumentId: 'sampler_1',
         slotIds: ['slot_1', 'slot_2'],
       },
-      {
-        id: 'channel_2',
-        name: 'Channel Name',
-        type: 'instrumentChannel',
-        instrumentId: 'synth_1',
-        slotIds: ['slot_3'],
-      },
+      // {
+      //   id: 'channel_2',
+      //   name: 'Channel Name',
+      //   type: 'instrumentChannel',
+      //   instrumentId: 'synth_1',
+      //   slotIds: ['slot_3'],
+      // },
     ],
     instruments: [
       {

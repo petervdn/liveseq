@@ -27,7 +27,14 @@ export const getScheduleItems = (
     const notesWithChannels = getChannelsBySlotId(project, slot.id)
       .map((channel) => {
         return {
-          notes: getTimelineNotesInRange(beatsRange, timeline, timelineClips, channel.id, slot.id),
+          notes: getTimelineNotesInRange(
+            beatsRange,
+            timeline,
+            timelineClips,
+            channel.id,
+            slot.id,
+            Infinity,
+          ),
           channel,
         };
       })
