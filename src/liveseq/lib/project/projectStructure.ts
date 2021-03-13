@@ -1,6 +1,5 @@
-import type { LiveseqEntity } from '../entities/liveSeqEntity';
-
 // TODO: define union for all action types
+// todo: how does global action relate to ActionType (are these type props even actiontypes?)
 export type GlobalAction =
   | {
       type: 'playSlots';
@@ -12,10 +11,3 @@ export type GlobalAction =
       // optional, if not present means all
       slotIds?: Array<string>;
     };
-
-// SAMPLES
-export type Sample = LiveseqEntity & {
-  source: string;
-};
-
-// PROJECT
