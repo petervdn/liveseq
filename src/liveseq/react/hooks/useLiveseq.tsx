@@ -1,6 +1,10 @@
-import { Context, createContext, useMemo } from 'react';
-import { createLiveseq, Liveseq } from '../..';
-import type { LiveseqProps } from '../../lib/liveseq';
+import { createContext, useContext, useMemo } from 'react';
+
+import type { Liveseq, LiveseqProps } from '../../lib/liveseq';
+import { createLiveseq } from '../../lib/liveseq';
+
+// TODO: remove the "as Liveseq" cast
+const liveseqContext = createContext<Liveseq>({} as Liveseq);
 
 type LiveseqProvider = ({ children }: { children: React.ReactNode }) => JSX.Element;
 
@@ -15,15 +19,11 @@ export const useLiveseq = (props: LiveseqProps) => {
     return createLiveseq(initialProps);
   }, [initialProps]);
 
-  const liveseqContext = useMemo<Context<Liveseq>>(() => {
-    return createContext(liveseq);
-  }, [liveseq]);
-
   const LiveseqProvider = useMemo<LiveseqProvider>(() => {
     return ({ children }: { children: React.ReactNode }) => (
       <liveseqContext.Provider value={liveseq}>{children}</liveseqContext.Provider>
     );
-  }, [liveseq, liveseqContext]);
+  }, [liveseq]);
 
   return {
     liveseq,
@@ -32,4 +32,8 @@ export const useLiveseq = (props: LiveseqProps) => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     LiveseqProvider,
   };
+};
+
+export const useLiveseqContext = () => {
+  return useContext(liveseqContext);
 };

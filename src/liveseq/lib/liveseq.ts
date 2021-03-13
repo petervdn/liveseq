@@ -59,6 +59,7 @@ export const createLiveseq = ({
   return {
     subscribe: store.subscribe,
     ...store.actions,
+    getState: store.getState,
     setTempo,
     dispose,
     audioContext,
