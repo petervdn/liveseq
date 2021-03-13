@@ -2,9 +2,9 @@ import { createGlobalStore, LiveseqState } from './store/globalStore';
 import { getAudioContext } from './utils/getAudioContext';
 import { createConnectedPlayer } from './player/connectedPlayer';
 
-import type { Project } from './entities/project/project';
+import type { Project } from './project/project';
 import type { Bpm, TimeInSeconds } from './time/time';
-import { getScheduleItems } from './entities/project/project.utils';
+import { getScheduleItems } from './project/project.utils';
 import { getDefaultProject } from './project/getDefaultProject';
 
 export type LiveseqProps = {

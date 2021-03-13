@@ -1,16 +1,11 @@
-import {
-  getChannelsBySlotId,
-  getSceneById,
-  getSlotById,
-  getTimelineById,
-} from '../../project/selectors';
+import { getChannelsBySlotId, getSceneById, getSlotById, getTimelineById } from './selectors';
 import type { Project } from './project';
-import type { Bpm, TimeInSeconds } from '../../time/time';
-import type { ScheduleItem } from '../../player/player';
-import { timeRangeToBeatsRange } from '../../time/timeRange.utils';
-import { getTimelineClips, getTimelineNotesInRange } from '../timeline/timeline.utils';
-import { beatsToTime } from '../../time/musicTime';
-import { createSampler } from '../instrument/sampler';
+import type { Bpm, TimeInSeconds } from '../time/time';
+import type { ScheduleItem } from '../player/player';
+import { timeRangeToBeatsRange } from '../time/timeRange.utils';
+import { getTimelineClips, getTimelineNotesInRange } from '../entities/timeline/timeline.utils';
+import { beatsToTime } from '../time/musicTime';
+import { createSampler } from '../entities/instrument/sampler';
 
 export const getStartSlots = (project: Project) => {
   const startScenes = project.startScenes.map(getSceneById(project));

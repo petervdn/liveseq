@@ -1,5 +1,5 @@
 import { selectById } from '../utils/selectById';
-import type { Project } from '../entities/project/project';
+import type { Project } from './project';
 
 export const getChannelById = (project: Project) => (id: string) =>
   selectById(id, project.entities.channels);

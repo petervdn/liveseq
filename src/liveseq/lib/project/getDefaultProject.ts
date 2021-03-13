@@ -1,5 +1,5 @@
 import { libraryVersion } from '../../libraryVersion';
-import type { Project } from '../entities/project/project';
+import type { Project } from './project';
 
 export const getDefaultProject = (): Project => {
   return {
