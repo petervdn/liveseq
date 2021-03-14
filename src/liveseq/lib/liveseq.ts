@@ -6,9 +6,9 @@ import type { SerializableProject } from './project/project';
 import type { Bpm, TimeInSeconds } from './time/time';
 
 import { getDefaultProject } from './project/getDefaultProject';
-import { getScheduleItems } from './project/getScheduleItems';
-import { getStartSlots } from './project/getStartSlots';
-import { createEntities } from './entities/entities';
+import { getScheduleItems } from './player/getScheduleItems';
+
+import { createEntities, getSlotsByScenes } from './entities/entities';
 
 export type LiveseqProps = {
   initialState?: Partial<LiveseqState>;
@@ -33,7 +33,7 @@ export const createLiveseq = ({
   const entities = createEntities(project);
 
   // TODO: we're always using start slots, should be able to switch with scenes
-  const startSlots = getStartSlots(project);
+  const startSlots = getSlotsByScenes(project.startScenes, entities);
   const startSlotIds = startSlots.map(({ id }) => id);
 
   // const projectInstance = createProject(project);

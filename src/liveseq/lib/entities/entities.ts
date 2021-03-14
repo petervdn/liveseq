@@ -56,4 +56,19 @@ export const getChannelsBySlotId = (
   });
 };
 
+// TODO: consider already playing slots... right now works as if starting playing from scratch
+export const getSlotsByScenes = (sceneIds: Array<string>, entities: Entities) => {
+  const scenes = sceneIds.map((id) => entities.scenes[id]);
+
+  return scenes.flatMap((scene) => {
+    const playSlotsActions = (scene.eventActions.enter || []).filter((action) => {
+      return action.type === 'playSlots';
+    });
+
+    return playSlotsActions.flatMap((action) => {
+      return (action.slotIds || []).map((id) => entities.slots[id]);
+    });
+  });
+};
+
 // export const removeEntity = (entity: keyof Entities, id: string, entities: Entities) => {};

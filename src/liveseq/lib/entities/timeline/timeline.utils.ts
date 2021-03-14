@@ -10,37 +10,30 @@ import {
 } from '../../time/timeRange.utils';
 import type { BeatsRange } from '../../time/timeRange';
 import type { NoteClipEntity } from '../clip/noteClip';
+import { getUniqueSchedulingId } from '../../player/getUniqueSchedulingId';
 
 export const getTimelineClips = (
   timeline: SerializableTimeline,
   clipsById: Record<string, NoteClipEntity>,
-) =>
-  timeline.clips.map((clip) => ({
+) => {
+  return timeline.clips.map((clip) => ({
     ...clip,
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     ...clipsById[clip.clipId],
   }));
+};
 
-export const getTimelineDuration = (timeline: SerializableTimeline): Beats =>
-  timeline.duration !== undefined
+export const getTimelineDuration = (timeline: SerializableTimeline): Beats => {
+  return timeline.duration !== undefined
     ? timeline.duration
     : timeline.clips.reduce((accumulator, current) => {
         return accumulator !== null && current.end > accumulator! ? current.end : accumulator;
       }, 0 as Beats);
-
-export const getTimelineLength = (timeline: SerializableTimeline, loops = 0): Beats =>
-  (getTimelineDuration(timeline) * (loops + 1)) as Beats;
-
-// the props that make a note be considered the same note to the scheduler
-export type UniqueSchedulingIdProps = {
-  iteration: number;
-  noteId: string;
-  channelId: string;
-  slotId: string;
-  clipId: string;
 };
 
-export const getUniqueSchedulingId = (props: UniqueSchedulingIdProps) => JSON.stringify(props);
+export const getTimelineLength = (timeline: SerializableTimeline, loops = 0): Beats => {
+  return (getTimelineDuration(timeline) * (loops + 1)) as Beats;
+};
 
 // TODO: these returned notes need ids. The ids must be unique for every timeline loop
 // TODO: account for duration

@@ -1,5 +1,5 @@
 import type { Bpm, TimeInSeconds } from '../time/time';
-import type { ScheduleItem } from '../player/player';
+import type { ScheduleItem } from './player';
 import { timeRangeToBeatsRange } from '../time/timeRange.utils';
 import { getTimelineClips, getTimelineNotesInRange } from '../entities/timeline/timeline.utils';
 import { beatsToTime } from '../time/musicTime';
