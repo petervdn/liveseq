@@ -46,4 +46,14 @@ export const createEntities = (project: Project): Entities => {
   };
 };
 
+// entity selectors
+export const getChannelsBySlotId = (
+  channelsById: Record<string, ChannelEntity>,
+  slotId: string,
+): Array<ChannelEntity> => {
+  return Object.values(channelsById).filter((channel) => {
+    return channel.slotIds.includes(slotId);
+  });
+};
+
 // export const removeEntity = (entity: keyof Entities, id: string, entities: Entities) => {};

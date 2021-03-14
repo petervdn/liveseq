@@ -15,12 +15,3 @@ export type ChannelEntity = ReturnType<typeof createInstrumentChannelEntity>;
 export const createInstrumentChannelEntity = (props: InstrumentChannel): InstrumentChannel => {
   return props;
 };
-
-export const getChannelsBySlotId = (
-  channelsById: Record<string, ChannelEntity>,
-  slotId: string,
-): Array<ChannelEntity> => {
-  return Object.values(channelsById).filter((channel) => {
-    return channel.slotIds.includes(slotId);
-  });
-};

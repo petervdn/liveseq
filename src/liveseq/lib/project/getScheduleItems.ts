@@ -4,7 +4,7 @@ import { timeRangeToBeatsRange } from '../time/timeRange.utils';
 import { getTimelineClips, getTimelineNotesInRange } from '../entities/timeline/timeline.utils';
 import { beatsToTime } from '../time/musicTime';
 import type { Entities } from '../entities/entities';
-import { getChannelsBySlotId } from '../entities/channel/channel';
+import { getChannelsBySlotId } from '../entities/entities';
 
 export const getScheduleItems = (
   entities: Entities,
