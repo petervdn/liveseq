@@ -1,5 +1,6 @@
 import type { Note } from '../note/note';
 import type { TimeInSeconds } from '../time/time';
+import type { SomeDataType } from './schedule.utils';
 
 export type ScheduleNote = Note & {
   startTime: TimeInSeconds;
@@ -21,7 +22,11 @@ export type PlayerProps = {
   lookAheadTime?: TimeInSeconds;
   scheduleInterval?: TimeInSeconds;
   // called every time schedule runs to get "what" to schedule from the project
-  getScheduleItems: (startTime: TimeInSeconds, endTime: TimeInSeconds) => Array<ScheduleItem>;
+  getScheduleItems: (
+    startTime: TimeInSeconds,
+    endTime: TimeInSeconds,
+    previouslyScheduledNoteIds: Array<string>,
+  ) => SomeDataType;
 };
 
 // export type Player = ReturnType<typeof createPlayer>;
@@ -44,20 +49,26 @@ export const createPlayer = ({
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const songTime = (audioContext.currentTime - playStartTime!) as TimeInSeconds; // playStartTime should always be defined when playing
 
-    const scheduleItems = getScheduleItems(songTime, (songTime + lookAheadTime) as TimeInSeconds);
+    const result = getScheduleItems(
+      songTime,
+      (songTime + lookAheadTime) as TimeInSeconds,
+      previouslyScheduledNoteIds,
+    );
 
-    scheduleItems.forEach((item) => {
-      const notesToSchedule = item.notes.filter(({ schedulingId }) => {
-        const hasBeenScheduled = previouslyScheduledNoteIds.includes(schedulingId);
-        // eslint-disable-next-line no-console
-        hasBeenScheduled && console.log('skipping scheduling of', schedulingId);
-        return !hasBeenScheduled;
-      });
+    previouslyScheduledNoteIds = result.previouslyScheduledNoteIds;
 
-      item.instrument.schedule(audioContext, notesToSchedule);
-
-      previouslyScheduledNoteIds = notesToSchedule.map(({ schedulingId }) => schedulingId);
-    });
+    // scheduleItems.forEach((item) => {
+    //   const notesToSchedule = item.notes.filter(({ schedulingId }) => {
+    //     const hasBeenScheduled = previouslyScheduledNoteIds.includes(schedulingId);
+    //     // eslint-disable-next-line no-console
+    //     hasBeenScheduled && console.log('skipping scheduling of', schedulingId);
+    //     return !hasBeenScheduled;
+    //   });
+    //
+    //   item.instrument.schedule(audioContext, notesToSchedule);
+    //
+    //   previouslyScheduledNoteIds = notesToSchedule.map(({ schedulingId }) => schedulingId);
+    // });
 
     timeoutId = window.setTimeout(() => schedule(), scheduleInterval);
   };

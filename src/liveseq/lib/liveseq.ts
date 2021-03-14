@@ -6,9 +6,9 @@ import type { SerializableProject } from './project/project';
 import type { Bpm, TimeInSeconds } from './time/time';
 
 import { getDefaultProject } from './project/getDefaultProject';
-import { getScheduleItems } from './player/getScheduleItems';
 
 import { createEntities, getSlotsBySceneIds } from './entities/entities';
+import { getNotesToScheduleInTimeRange } from './player/schedule.utils';
 
 export type CommonProps = {
   id: string;
@@ -51,13 +51,14 @@ export const createLiveseq = ({
 
   // just trying with a store setup
   const player = createConnectedPlayer({
-    getScheduleItems: (startTime, endTime) => {
-      const scheduleItems = getScheduleItems(
+    getScheduleItems: (startTime, endTime, previouslyScheduledNoteIds: Array<string>) => {
+      const scheduleItems = getNotesToScheduleInTimeRange(
         entities,
         startSlotIds,
         startTime,
         endTime,
         currentBpm,
+        previouslyScheduledNoteIds,
       );
       // eslint-disable-next-line no-console
       console.log(scheduleItems);
