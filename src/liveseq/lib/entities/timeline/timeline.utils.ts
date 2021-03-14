@@ -1,7 +1,6 @@
 import type { Timeline } from './timeline';
 import type { Beats } from '../../time/time';
 import type { Note } from '../../note/note';
-import type { Clip } from '../clip/clip';
 import {
   addToRange,
   createRangeFromDuration,
@@ -10,12 +9,13 @@ import {
   subtractFromRange,
 } from '../../time/timeRange.utils';
 import type { BeatsRange } from '../../time/timeRange';
+import type { NoteClipEntity } from '../clip/noteClip';
 
-export const getTimelineClips = (timeline: Timeline, clips: Array<Clip>) =>
+export const getTimelineClips = (timeline: Timeline, clipsById: Record<string, NoteClipEntity>) =>
   timeline.clips.map((clip) => ({
     ...clip,
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    ...clips.find(({ id }) => clip.clipId === id)!, // todo get rid of non-null assert
+    ...clipsById[clip.clipId],
   }));
 
 export const getTimelineDuration = (timeline: Timeline): Beats =>

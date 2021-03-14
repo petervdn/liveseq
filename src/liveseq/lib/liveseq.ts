@@ -7,6 +7,8 @@ import type { Bpm, TimeInSeconds } from './time/time';
 
 import { getDefaultProject } from './project/getDefaultProject';
 import { getScheduleItems } from './project/getScheduleItems';
+import { getStartSlots } from './project/getStartSlots';
+import { createEntities } from './entities/entities';
 
 export type LiveseqProps = {
   initialState?: Partial<LiveseqState>;
@@ -28,6 +30,12 @@ export const createLiveseq = ({
   scheduleInterval,
 }: LiveseqProps = {}) => {
   const store = createGlobalStore(initialState);
+  const entities = createEntities(project);
+
+  // TODO: we're always using start slots, should be able to switch with scenes
+  const startSlots = getStartSlots(project);
+  const startSlotIds = startSlots.map(({ id }) => id);
+
   // const projectInstance = createProject(project);
 
   let currentBpm = bpm as Bpm;
@@ -40,7 +48,13 @@ export const createLiveseq = ({
   // just trying with a store setup
   const player = createConnectedPlayer({
     getScheduleItems: (startTime, endTime) => {
-      const scheduleItems = getScheduleItems(project, startTime, endTime, currentBpm);
+      const scheduleItems = getScheduleItems(
+        entities,
+        startSlotIds,
+        startTime,
+        endTime,
+        currentBpm,
+      );
       // eslint-disable-next-line no-console
       console.log(scheduleItems);
       return scheduleItems;

@@ -1,30 +1,26 @@
-import { getChannelsBySlotId, getTimelineById } from './selectors';
-import type { Project } from './project';
 import type { Bpm, TimeInSeconds } from '../time/time';
 import type { ScheduleItem } from '../player/player';
 import { timeRangeToBeatsRange } from '../time/timeRange.utils';
 import { getTimelineClips, getTimelineNotesInRange } from '../entities/timeline/timeline.utils';
 import { beatsToTime } from '../time/musicTime';
-import { createSampler } from '../entities/instrument/sampler';
-import { getStartSlots } from './getStartSlots';
+import type { Entities } from '../entities/entities';
+import { getChannelsBySlotId } from '../entities/channel/channel';
 
 export const getScheduleItems = (
-  project: Project,
+  entities: Entities,
+  slotIds: Array<string>,
   startTime: TimeInSeconds,
   endTime: TimeInSeconds,
   bpm: Bpm,
 ): Array<ScheduleItem> => {
-  const startSlots = getStartSlots(project);
-
-  const instrument = createSampler({});
-
   const beatsRange = timeRangeToBeatsRange({ start: startTime, end: endTime }, bpm);
 
-  return startSlots.flatMap((slot) => {
-    const timeline = getTimelineById(project)(slot.timelineId);
-    const timelineClips = getTimelineClips(timeline, project.entities.clips);
+  return slotIds.flatMap((slotId) => {
+    const slot = entities.slots[slotId];
+    const timeline = entities.timelines[slot.timelineId];
+    const timelineClips = getTimelineClips(timeline, entities.clips);
 
-    const notesWithChannels = getChannelsBySlotId(project, slot.id)
+    const notesWithChannels = getChannelsBySlotId(entities.channels, slot.id)
       .map((channel) => {
         return {
           notes: getTimelineNotesInRange(
@@ -45,6 +41,8 @@ export const getScheduleItems = (
 
     return notesWithChannels.map(
       (notesWithChannel): ScheduleItem => {
+        const instrument = entities.instruments[notesWithChannel.channel.instrumentId];
+
         return {
           instrument,
           notes: notesWithChannel.notes.map((note) => {
