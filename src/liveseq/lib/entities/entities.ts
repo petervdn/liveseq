@@ -20,7 +20,7 @@ export type Entities = {
   scenes: Record<string, SceneEntity>;
 };
 
-const getRecordById = <T extends Pick<CommonProps, 'id'>>(
+const createRecordById = <T extends Pick<CommonProps, 'id'>>(
   entityConfig: Array<T>,
 ): Record<string, T> => {
   return entityConfig.reduce((accumulator, current) => {
@@ -32,12 +32,12 @@ const getRecordById = <T extends Pick<CommonProps, 'id'>>(
 // TODO: this is a work in progress
 export const createEntities = (project: SerializableProject): Entities => {
   return {
-    channels: getRecordById(project.entities.channels.map(createInstrumentChannelEntity)),
-    timelines: getRecordById(project.entities.timelines.map(createTimelineEntity)),
-    clips: getRecordById(project.entities.clips.map(createNoteClipEntity)),
-    instruments: getRecordById(project.entities.instruments.map(createSamplerEntity)),
-    slots: getRecordById(project.entities.slots.map(createSlotEntity)),
-    scenes: getRecordById(project.entities.scenes.map(createSceneEntity)),
+    channels: createRecordById(project.entities.channels.map(createInstrumentChannelEntity)),
+    timelines: createRecordById(project.entities.timelines.map(createTimelineEntity)),
+    clips: createRecordById(project.entities.clips.map(createNoteClipEntity)),
+    instruments: createRecordById(project.entities.instruments.map(createSamplerEntity)),
+    slots: createRecordById(project.entities.slots.map(createSlotEntity)),
+    scenes: createRecordById(project.entities.scenes.map(createSceneEntity)),
   };
 };
 
