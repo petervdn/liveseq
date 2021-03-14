@@ -33,7 +33,7 @@ export const getScheduleItems = (
             timelineClips,
             channel.id,
             slot.id,
-            Infinity,
+            slot.loops,
           ),
           channel,
         };

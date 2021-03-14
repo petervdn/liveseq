@@ -52,18 +52,21 @@ export const abSwitch: Project = {
         type: 'timelineSlot',
         name: 'Slot Name',
         timelineId: 'timeline_1',
+        loops: 0,
       },
       {
         id: 'slot_2',
         type: 'timelineSlot',
         timelineId: 'timeline_2',
         name: 'Slot Name',
+        loops: 0,
       },
       {
         id: 'slot_3',
         type: 'timelineSlot',
         timelineId: 'timeline_1',
         name: 'Slot Name',
+        loops: 0,
       },
     ],
     // global to allow same clip being used multiple times in timelines
