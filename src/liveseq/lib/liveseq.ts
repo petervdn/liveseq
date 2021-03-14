@@ -42,8 +42,6 @@ export const createLiveseq = ({
   const startSlots = getSlotsBySceneIds(entities, project.startScenes);
   const startSlotIds = startSlots.map(({ id }) => id);
 
-  // const projectInstance = createProject(project);
-
   let currentBpm = bpm as Bpm;
 
   const setTempo = (bpm: Bpm) => {
