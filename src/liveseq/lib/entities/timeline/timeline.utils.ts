@@ -1,15 +1,15 @@
 import type { SerializableTimeline } from './timeline';
 import type { Beats } from '../../time/time';
 import type { Note } from '../../note/note';
+import { getUniqueSchedulingId } from '../../player/getUniqueSchedulingId';
+import type { BeatsRange } from '../../time/beatsRange';
 import {
   addToRange,
   createRangeFromDuration,
   getItemsInRange,
   getWrappedRanges,
   subtractFromRange,
-} from '../../time/timeRange.utils';
-import type { BeatsRange } from '../../time/timeRange';
-import { getUniqueSchedulingId } from '../../player/getUniqueSchedulingId';
+} from '../../time/beatsRange';
 
 export const getTimelineDuration = (timeline: SerializableTimeline): Beats => {
   return timeline.duration !== undefined
@@ -19,12 +19,6 @@ export const getTimelineDuration = (timeline: SerializableTimeline): Beats => {
       }, 0 as Beats);
 };
 
-export const getTimelineLength = (timeline: SerializableTimeline, loops = 0): Beats => {
-  return (getTimelineDuration(timeline) * (loops + 1)) as Beats;
-};
-
-// TODO: these returned notes need ids. The ids must be unique for every timeline loop
-// TODO: account for duration
 export const getTimelineNotesInRange = (
   range: BeatsRange,
   timeline: SerializableTimeline,
@@ -38,22 +32,19 @@ export const getTimelineNotesInRange = (
   const loopedRanges = getWrappedRanges(range, timelineRange, timelineLoops);
 
   return clipsInRange.flatMap((clip) => {
-    return loopedRanges.flatMap((loopedRange, iteration) => {
+    return loopedRanges.flatMap((loopedRange) => {
       const localRange = subtractFromRange(loopedRange, clip.start);
 
       return getItemsInRange(localRange, clip.notes).map((note) => {
         // adjust note timing
-        const noteWithTimelineTime = addToRange(
-          note,
-          (clip.start + clip.duration * iteration) as Beats,
-        );
+        const noteWithTimelineTime = addToRange(note, (clip.start + loopedRange.offset) as Beats);
 
         return {
           ...noteWithTimelineTime,
           // to easily know if note has been scheduled
           schedulingId: getUniqueSchedulingId({
             noteId: note.id,
-            iteration,
+            offset: loopedRange.offset,
             channelId,
             slotId,
             clipId: clip.id,

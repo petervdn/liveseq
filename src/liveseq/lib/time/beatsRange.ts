@@ -1,6 +1,18 @@
 import { timeToBeats } from './musicTime';
-import type { BeatsRange, TimeRange } from './timeRange';
+import type { TimeRange } from './timeRange';
 import type { Beats, Bpm } from './time';
+
+export type BeatsRange = {
+  start: Beats;
+  end: Beats;
+};
+
+export const createRange = (start: Beats, end: Beats): BeatsRange => {
+  return {
+    start,
+    end,
+  };
+};
 
 export const createRangeFromDuration = (duration: Beats, start = 0 as Beats) => {
   const end = (start + duration) as Beats;
@@ -39,17 +51,19 @@ export const splitRange = (range: BeatsRange, splitAt: Beats): Array<BeatsRange>
     : [range];
 };
 
-export const setStart = (range: BeatsRange, start: Beats): BeatsRange => {
+export const setStart = <T extends BeatsRange>(range: T, start: Beats): T => {
   return {
-    start: Math.min(start, range.end) as Beats,
-    end: range.end,
+    ...range,
+    start,
+    end: Math.max(range.end, start) as Beats,
   };
 };
 
-export const setEnd = (range: BeatsRange, end: Beats): BeatsRange => {
+export const setEnd = <T extends BeatsRange>(range: T, end: Beats): T => {
   return {
-    start: range.start,
-    end: Math.max(end, range.start) as Beats,
+    ...range,
+    start: Math.min(end, range.start) as Beats,
+    end,
   };
 };
 
@@ -93,7 +107,7 @@ export const getWrappedRanges = (
   rangeToWrap: BeatsRange,
   rangeLimit: BeatsRange,
   loops = 0,
-): Array<BeatsRange> => {
+): Array<BeatsRange & { offset: Beats }> => {
   const loopedLimit = getLoopedRange(rangeLimit, loops);
   const clampedRangeToWrap = clampRange(rangeToWrap, loopedLimit);
 
@@ -106,24 +120,34 @@ export const getWrappedRanges = (
   const coveredArea = (startDifference + clampedRangeDuration) / rangeLimitDuration;
 
   // how many ranges will need to be generated to cover the wrapped range
-  const iterations = Math.ceil(coveredArea);
+  const totalRanges = Math.ceil(coveredArea);
 
-  if (iterations < 1) return [];
+  if (totalRanges < 1) return [];
 
   // the result will be an array filled with rangeLimit
   // but the first item and last item are special cases
-  const result = new Array(iterations).fill(rangeLimit);
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const result = Array.from({ length: totalRanges }, (_, index) => {
+    return {
+      ...rangeLimit,
+      offset: (index * rangeLimitDuration) as Beats,
+    };
+  });
+
   // gotta set the start time of the first item...
+  // mutation!
   result[0] = setStart(result[0], clampedRangeToWrap.start);
 
   if (result.length === 1) return result;
 
   // ...and end time of the last item
   const durationFraction = coveredArea % 1 || 1;
-  result[result.length - 1] = createRangeFromDuration(
-    (rangeLimitDuration * durationFraction) as Beats,
-    rangeLimit.start,
-  );
+  const lastItem = result[result.length - 1];
+  // mutation!
+  result[result.length - 1] = {
+    ...lastItem,
+    ...createRangeFromDuration((rangeLimitDuration * durationFraction) as Beats, rangeLimit.start),
+  };
 
   return result;
 };
