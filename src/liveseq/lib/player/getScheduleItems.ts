@@ -1,10 +1,10 @@
 import type { Bpm, TimeInSeconds } from '../time/time';
 import type { ScheduleItem } from './player';
 import { timeRangeToBeatsRange } from '../time/timeRange.utils';
-import { getTimelineClips, getTimelineNotesInRange } from '../entities/timeline/timeline.utils';
+import { getTimelineNotesInRange } from '../entities/timeline/timeline.utils';
 import { beatsToTime } from '../time/musicTime';
 import type { Entities } from '../entities/entities';
-import { getChannelsBySlotId } from '../entities/entities';
+import { getChannelsBySlotId, getClipsByTimelineId } from '../entities/entities';
 
 export const getScheduleItems = (
   entities: Entities,
@@ -18,8 +18,8 @@ export const getScheduleItems = (
   return slotIds.flatMap((slotId) => {
     const slot = entities.slots[slotId];
     const timeline = entities.timelines[slot.timelineId];
-    const timelineClips = getTimelineClips(timeline, entities.clips);
-    const channels = getChannelsBySlotId(entities.channels, slot.id);
+    const timelineClips = getClipsByTimelineId(entities, timeline.id);
+    const channels = getChannelsBySlotId(entities, slot.id);
 
     return channels.reduce((accumulator, channel) => {
       const notes = getTimelineNotesInRange(

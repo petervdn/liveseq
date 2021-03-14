@@ -9,19 +9,7 @@ import {
   subtractFromRange,
 } from '../../time/timeRange.utils';
 import type { BeatsRange } from '../../time/timeRange';
-import type { NoteClipEntity } from '../clip/noteClip';
 import { getUniqueSchedulingId } from '../../player/getUniqueSchedulingId';
-
-export const getTimelineClips = (
-  timeline: SerializableTimeline,
-  clipsById: Record<string, NoteClipEntity>,
-) => {
-  return timeline.clips.map((clip) => ({
-    ...clip,
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    ...clipsById[clip.clipId],
-  }));
-};
 
 export const getTimelineDuration = (timeline: SerializableTimeline): Beats => {
   return timeline.duration !== undefined

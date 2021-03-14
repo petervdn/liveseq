@@ -48,16 +48,31 @@ export const createEntities = (project: SerializableProject): Entities => {
 
 // entity selectors
 export const getChannelsBySlotId = (
-  channelsById: Record<string, ChannelEntity>,
+  entities: Pick<Entities, 'channels'>,
   slotId: string,
 ): Array<ChannelEntity> => {
-  return Object.values(channelsById).filter((channel) => {
+  return Object.values(entities.channels).filter((channel) => {
     return channel.slotIds.includes(slotId);
   });
 };
 
+export const getClipsByTimelineId = (
+  entities: Pick<Entities, 'timelines' | 'clips'>,
+  timelineId: string,
+) => {
+  const timeline = entities.timelines[timelineId];
+  return timeline.clips.map((clip) => ({
+    ...clip,
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    ...entities.clips[clip.clipId],
+  }));
+};
+
 // TODO: consider already playing slots... right now works as if starting playing from scratch
-export const getSlotsByScenes = (sceneIds: Array<string>, entities: Entities) => {
+export const getSlotsBySceneIds = (
+  entities: Pick<Entities, 'scenes' | 'slots'>,
+  sceneIds: Array<string>,
+) => {
   const scenes = sceneIds.map((id) => entities.scenes[id]);
 
   return scenes.flatMap((scene) => {
