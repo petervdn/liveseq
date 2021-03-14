@@ -1,11 +1,23 @@
 import type { Bpm, TimeInSeconds } from '../time/time';
 import type { ScheduleItem } from './player';
-import { timeRangeToBeatsRange } from '../time/timeRange.utils';
 import { getTimelineNotesInRange } from '../entities/timeline/timeline.utils';
 import { beatsToTime } from '../time/musicTime';
 import type { Entities } from '../entities/entities';
 import { getChannelsBySlotId, getClipsByTimelineId } from '../entities/entities';
+import { timeRangeToBeatsRange } from '../time/beatsRange';
 
+// const testProject = abSwitch;
+// const entities = createEntities(testProject);
+// const scheduleItems = getScheduleItems(
+//   entities,
+//   ['slot_1'],
+//   0 as TimeInSeconds,
+//   2 as TimeInSeconds,
+//   60 as Bpm,
+// );
+// console.log(scheduleItems[0].notes);
+
+// seems like the range math is incorrect
 export const getScheduleItems = (
   entities: Entities,
   slotIds: Array<string>,

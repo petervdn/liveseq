@@ -50,7 +50,7 @@ export const createPlayer = ({
       const notesToSchedule = item.notes.filter(({ schedulingId }) => {
         const hasBeenScheduled = previouslyScheduledNoteIds.includes(schedulingId);
         // eslint-disable-next-line no-console
-        hasBeenScheduled && console.log('skipping scheduling of', schedulingId);
+        // hasBeenScheduled && console.log('skipping scheduling of', schedulingId);
         return !hasBeenScheduled;
       });
 
