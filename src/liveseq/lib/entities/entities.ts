@@ -9,12 +9,7 @@ import { createSamplerEntity, SamplerEntity } from './instrument/sampler';
 import { createSlotEntity, SlotEntity } from './slot/slot';
 import type { SceneEntity } from './scene/scene';
 import { createSceneEntity } from './scene/scene';
-
-export type LiveseqEntity = {
-  id: string;
-  name?: string;
-  isEnabled?: boolean;
-};
+import type { CommonProps } from '../liveseq';
 
 export type Entities = {
   channels: Record<string, ChannelEntity>;
@@ -25,7 +20,7 @@ export type Entities = {
   scenes: Record<string, SceneEntity>;
 };
 
-const getRecordById = <T extends Pick<LiveseqEntity, 'id'>>(
+const getRecordById = <T extends Pick<CommonProps, 'id'>>(
   entityConfig: Array<T>,
 ): Record<string, T> => {
   return entityConfig.reduce((accumulator, current) => {

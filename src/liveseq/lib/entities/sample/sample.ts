@@ -1,5 +1,5 @@
-import type { LiveseqEntity } from '../entities';
+import type { CommonProps } from '../../liveseq';
 
-export type SerializableSample = LiveseqEntity & {
+export type SerializableSample = CommonProps & {
   source: string;
 };

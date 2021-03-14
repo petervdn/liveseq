@@ -1,7 +1,7 @@
-import type { LiveseqEntity } from '../entities';
 import type { GlobalAction } from '../../store/globalStore';
+import type { CommonProps } from '../../liveseq';
 
-export type SerializableScene = LiveseqEntity & {
+export type SerializableScene = CommonProps & {
   eventActions: {
     enter?: Array<GlobalAction>; // when it becomes active
     leave?: Array<GlobalAction>; // when it becomes inactive

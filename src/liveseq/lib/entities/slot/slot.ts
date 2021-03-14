@@ -1,6 +1,6 @@
-import type { LiveseqEntity } from '../entities';
+import type { CommonProps } from '../../liveseq';
 
-export type TimelineSlot = LiveseqEntity & {
+export type TimelineSlot = CommonProps & {
   type: 'timelineSlot';
   timelineId: string;
   loops: number;

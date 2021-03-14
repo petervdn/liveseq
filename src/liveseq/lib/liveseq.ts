@@ -10,6 +10,12 @@ import { getScheduleItems } from './player/getScheduleItems';
 
 import { createEntities, getSlotsBySceneIds } from './entities/entities';
 
+export type CommonProps = {
+  id: string;
+  name?: string;
+  isEnabled?: boolean;
+};
+
 export type LiveseqProps = {
   initialState?: Partial<LiveseqState>;
   project?: SerializableProject;

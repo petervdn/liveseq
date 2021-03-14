@@ -1,8 +1,8 @@
-import type { LiveseqEntity } from '../entities';
 import type { Beats } from '../../time/time';
 import type { Note } from '../../note/note';
+import type { CommonProps } from '../../liveseq';
 
-export type NoteClip = LiveseqEntity & {
+export type NoteClip = CommonProps & {
   type: 'noteClip';
   duration: Beats;
   notes: Array<Note>;

@@ -1,6 +1,6 @@
-import type { LiveseqEntity } from '../entities';
+import type { CommonProps } from '../../liveseq';
 
-export type InstrumentChannel = LiveseqEntity & {
+export type InstrumentChannel = CommonProps & {
   type: 'instrumentChannel';
   instrumentId: string;
   slotIds: Array<string>;
