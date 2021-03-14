@@ -1,5 +1,5 @@
-import type { LiveseqEntityConfig } from '../entities';
+import type { LiveseqEntity } from '../entities';
 
-export type Sample = LiveseqEntityConfig & {
+export type SerializableSample = LiveseqEntity & {
   source: string;
 };

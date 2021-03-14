@@ -1,4 +1,4 @@
-import type { Project } from '../project/project';
+import type { SerializableProject } from '../project/project';
 import type { NoteClipEntity } from './clip/noteClip';
 import { createNoteClipEntity } from './clip/noteClip';
 import type { TimelineEntity } from './timeline/timeline';
@@ -10,7 +10,7 @@ import { createSlotEntity, SlotEntity } from './slot/slot';
 import type { SceneEntity } from './scene/scene';
 import { createSceneEntity } from './scene/scene';
 
-export type LiveseqEntityConfig = {
+export type LiveseqEntity = {
   id: string;
   name?: string;
   isEnabled?: boolean;
@@ -25,7 +25,7 @@ export type Entities = {
   scenes: Record<string, SceneEntity>;
 };
 
-const getRecordById = <T extends Pick<LiveseqEntityConfig, 'id'>>(
+const getRecordById = <T extends Pick<LiveseqEntity, 'id'>>(
   entityConfig: Array<T>,
 ): Record<string, T> => {
   return entityConfig.reduce((accumulator, current) => {
@@ -35,7 +35,7 @@ const getRecordById = <T extends Pick<LiveseqEntityConfig, 'id'>>(
 };
 
 // TODO: this is a work in progress
-export const createEntities = (project: Project): Entities => {
+export const createEntities = (project: SerializableProject): Entities => {
   return {
     channels: getRecordById(project.entities.channels.map(createInstrumentChannelEntity)),
     timelines: getRecordById(project.entities.timelines.map(createTimelineEntity)),

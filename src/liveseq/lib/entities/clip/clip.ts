@@ -2,7 +2,7 @@
 import type { NoteClip } from './noteClip';
 
 // ready to add more later
-export type Clip = NoteClip;
+export type SerializableClip = NoteClip;
 
 // export const addClip = (entities: Entities, clipConfig: NoteClip) => {
 //   return {

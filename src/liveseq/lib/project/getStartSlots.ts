@@ -1,7 +1,7 @@
-import type { Project } from './project';
+import type { SerializableProject } from './project';
 import { getSceneById, getSlotById } from './selectors';
 
-export const getStartSlots = (project: Project) => {
+export const getStartSlots = (project: SerializableProject) => {
   const startScenes = project.startScenes.map(getSceneById(project));
 
   return startScenes.flatMap((scene) => {

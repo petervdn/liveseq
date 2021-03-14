@@ -2,7 +2,7 @@ import { createGlobalStore, LiveseqState } from './store/globalStore';
 import { getAudioContext } from './utils/getAudioContext';
 import { createConnectedPlayer } from './player/connectedPlayer';
 
-import type { Project } from './project/project';
+import type { SerializableProject } from './project/project';
 import type { Bpm, TimeInSeconds } from './time/time';
 
 import { getDefaultProject } from './project/getDefaultProject';
@@ -12,7 +12,7 @@ import { createEntities } from './entities/entities';
 
 export type LiveseqProps = {
   initialState?: Partial<LiveseqState>;
-  project?: Project;
+  project?: SerializableProject;
   audioContext?: AudioContext;
   lookAheadTime?: TimeInSeconds;
   scheduleInterval?: TimeInSeconds;

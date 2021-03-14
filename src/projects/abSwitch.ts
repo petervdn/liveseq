@@ -1,4 +1,4 @@
-import type { Project } from '../liveseq';
+import type { SerializableProject } from '../liveseq';
 import { musicTimeToBeats } from '../liveseq/lib/time/musicTime';
 import type { NoteName } from '../liveseq/lib/note/note';
 
@@ -14,7 +14,7 @@ import type { NoteName } from '../liveseq/lib/note/note';
 //   - stops playing timeline_1 in channel_2 with synth_1
 //   - plays timeline_2 in channel_1 with sampler_1
 
-export const abSwitch: Project = {
+export const abSwitch: SerializableProject = {
   libraryVersion: 0,
   name: 'Project Name',
   startScenes: ['scene_1'],

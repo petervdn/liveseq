@@ -1,10 +1,10 @@
 import type { ScheduleNote } from '../../player/player';
 import { playTick } from '../../utils/playTick';
-import type { LiveseqEntityConfig } from '../entities';
+import type { LiveseqEntity } from '../entities';
 import { getFrequency } from '../../note/note';
 import type { InstrumentInstance } from './instrument';
 
-export type SamplerInstrument = LiveseqEntityConfig & {
+export type SamplerInstrument = LiveseqEntity & {
   type: 'samplerInstrument';
 };
 

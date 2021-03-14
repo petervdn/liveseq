@@ -7,7 +7,7 @@ import type { SamplerInstrument } from './sampler';
 //   type: 'simpleSynthInstrument';
 // };
 
-export type Instrument = SamplerInstrument; //  | SimpleSynthInstrument;
+export type SerializableInstrument = SamplerInstrument; //  | SimpleSynthInstrument;
 
 export type InstrumentInstance = {
   schedule: (context: AudioContext, notes: Array<ScheduleNote>) => void;

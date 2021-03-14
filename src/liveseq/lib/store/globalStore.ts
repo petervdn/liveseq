@@ -1,12 +1,12 @@
 import { createStore, Store } from './store';
 import { getDefaultProject } from '../project/getDefaultProject';
-import type { Project } from '../project/project';
+import type { SerializableProject } from '../project/project';
 import type { Bpm } from '../time/time';
 import { logDispatch } from './logDispatch';
 
 export type LiveseqState = {
   isPlaying: boolean;
-  project: Project;
+  project: SerializableProject;
   activeSceneIds: Array<string>;
   tempo: Bpm;
 };

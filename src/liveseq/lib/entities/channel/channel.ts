@@ -1,13 +1,13 @@
-import type { LiveseqEntityConfig } from '../entities';
+import type { LiveseqEntity } from '../entities';
 
-export type InstrumentChannel = LiveseqEntityConfig & {
+export type InstrumentChannel = LiveseqEntity & {
   type: 'instrumentChannel';
   instrumentId: string;
   slotIds: Array<string>;
 };
 
 // ready for adding more types of channels
-export type Channel = InstrumentChannel;
+export type SerializableChannel = InstrumentChannel;
 
 export type ChannelEntity = ReturnType<typeof createInstrumentChannelEntity>;
 

@@ -1,8 +1,8 @@
-import type { LiveseqEntityConfig } from '../entities';
+import type { LiveseqEntity } from '../entities';
 import type { Beats } from '../../time/time';
 import type { Note } from '../../note/note';
 
-export type NoteClip = LiveseqEntityConfig & {
+export type NoteClip = LiveseqEntity & {
   type: 'noteClip';
   duration: Beats;
   notes: Array<Note>;
