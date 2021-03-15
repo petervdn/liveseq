@@ -36,7 +36,7 @@ export const createLiveseq = ({
   scheduleInterval,
 }: LiveseqProps = {}) => {
   const store = createGlobalStore(initialState);
-  const entities = createEntities(project);
+  const entities = createEntities(project, audioContext);
 
   // TODO: we're always using start slots, should be able to switch with scenes
   const startSlots = getSlotsBySceneIds(entities, project.startScenes);

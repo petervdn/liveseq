@@ -13,7 +13,7 @@ export type ScheduleItem = {
   instrument: {
     // when the player calls instrument.schedule, it will already pass notes with time in seconds
     // TODO: maybe the instrument returns a "cancel" fn
-    schedule: (context: AudioContext, notes: Array<ScheduleNote>) => void;
+    schedule: (notes: Array<ScheduleNote>) => void;
   };
 };
 
@@ -68,7 +68,7 @@ export const createPlayer = ({
     );
 
     result.notesToScheduleForInstrument.forEach((item) => {
-      item.instrument.schedule(audioContext, item.notes);
+      item.instrument.schedule(item.notes);
     });
 
     timeoutId = window.setTimeout(() => schedule(), scheduleInterval * 1000);

@@ -1,8 +1,7 @@
 import { musicTimeToBeats } from '../time/musicTime';
 import type { NoteName } from '../note/note';
-import { createEntities } from '../entities/entities';
 
-export const testProject = createEntities({
+export const testProject = {
   libraryVersion: 0,
   name: 'Project Name',
   startScenes: ['scene_1'],
@@ -87,7 +86,7 @@ export const testProject = createEntities({
     samples: [],
     scenes: [],
   },
-});
+};
 
 it('should get notes in time range', () => {
   expect(true).toBe(true);

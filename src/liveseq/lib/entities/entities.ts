@@ -30,16 +30,20 @@ const createRecordById = <T extends Pick<CommonProps, 'id'>>(
 };
 
 // TODO: this is a work in progress
-export const createEntities = (project: SerializableProject): Entities => {
+export function createEntities(project: SerializableProject, audioContext: AudioContext): Entities {
   return {
     channels: createRecordById(project.entities.channels.map(createInstrumentChannelEntity)),
     timelines: createRecordById(project.entities.timelines.map(createTimelineEntity)),
     clips: createRecordById(project.entities.clips.map(createNoteClipEntity)),
-    instruments: createRecordById(project.entities.instruments.map(createSamplerEntity)),
     slots: createRecordById(project.entities.slots.map(createSlotEntity)),
     scenes: createRecordById(project.entities.scenes.map(createSceneEntity)),
+    instruments: createRecordById(
+      project.entities.instruments.map((instrument) =>
+        createSamplerEntity(audioContext, instrument),
+      ),
+    ),
   };
-};
+}
 
 // entity selectors
 export const getChannelsBySlotId = (
