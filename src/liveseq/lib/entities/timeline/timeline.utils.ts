@@ -27,15 +27,17 @@ export const getTimelineNotesInRange = (
   slotId: string,
   timelineLoops = 0,
 ) => {
-  const clipsInRange = getItemsInRange(range, clips);
   const timelineRange = createRangeFromDuration(getTimelineDuration(timeline));
   const loopedRanges = getWrappedRanges(range, timelineRange, timelineLoops);
 
-  return clipsInRange.flatMap((clip) => {
-    return loopedRanges.flatMap((loopedRange) => {
+  return loopedRanges.flatMap((loopedRange) => {
+    const clipsInRange = getItemsInRange(loopedRange, clips);
+    return clipsInRange.flatMap((clip) => {
       const localRange = subtractFromRange(loopedRange, clip.start);
 
       return getItemsInRange(localRange, clip.notes).map((note) => {
+        // eslint-disable-next-line no-console
+        console.log('offset', loopedRange.offset);
         // adjust note timing
         const noteWithTimelineTime = addToRange(note, (clip.start + loopedRange.offset) as Beats);
 
@@ -44,7 +46,7 @@ export const getTimelineNotesInRange = (
           // to easily know if note has been scheduled
           schedulingId: getUniqueSchedulingId({
             noteId: note.id,
-            start: note.start,
+            start: noteWithTimelineTime.start,
             channelId,
             slotId,
             clipId: clip.id,
