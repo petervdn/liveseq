@@ -76,9 +76,14 @@ export const getScheduleItems = (
   // get rid of the ones that have already been scheduled
   return notesInTimeRange.reduce<GetScheduleItemsResult>(
     (result, notesForInstrument) => {
-      const filteredNotes = notesForInstrument.notes.filter(
-        (note) => !result.previouslyScheduledNoteIds.includes(note.schedulingId),
-      );
+      const filteredNotes = notesForInstrument.notes.filter((note) => {
+        const hasBeenScheduled = result.previouslyScheduledNoteIds.includes(note.schedulingId);
+        if (hasBeenScheduled) {
+          // eslint-disable-next-line no-console
+          console.log('skipping', note.schedulingId);
+        }
+        return !hasBeenScheduled;
+      });
 
       return {
         previouslyScheduledNoteIds: [

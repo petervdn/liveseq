@@ -1,6 +1,7 @@
 import { timeToBeats } from './musicTime';
 import type { TimeRange } from './timeRange';
 import type { Beats, Bpm } from './time';
+import { wrapInRange } from '../utils/wrapInRange';
 
 export type BeatsRange = {
   start: Beats;
@@ -86,21 +87,25 @@ export const moveRange = (range: BeatsRange, newStart: Beats): BeatsRange => {
 // is rangeA intersecting rangeB
 export const isInRange = (rangeA: BeatsRange, rangeB: BeatsRange) => {
   // todo: btw this implies that starts are before the end, which might not be the case
-  return !(rangeA.end < rangeB.start || rangeB.end < rangeA.start);
+  return !(rangeA.end <= rangeB.start || rangeA.start >= rangeB.end);
 };
 
 // given a range and a number of loops, what is the resulting range?
-const getLoopedRange = (range: BeatsRange, loops: number): BeatsRange => {
+export const getLoopedRange = (range: BeatsRange, loops: number): BeatsRange => {
   const times = Math.max(0, loops + 1);
   const newDuration = (getRangeDuration(range) * times) as Beats;
   return createRangeFromDuration(newDuration, range.start);
 };
 
-const clampRange = (range: BeatsRange, rangeLimit: BeatsRange): BeatsRange => {
-  return {
+// might clamp to an invalid duration, so might return null
+export const clampRange = (range: BeatsRange, rangeLimit: BeatsRange): BeatsRange | null => {
+  const newRange = {
     start: Math.max(range.start, rangeLimit.start),
     end: Math.min(range.end, rangeLimit.end),
   } as BeatsRange;
+
+  const duration = getRangeDuration(newRange);
+  return duration > 0 ? newRange : null;
 };
 
 // TODO: this could be optimized
@@ -108,23 +113,39 @@ const clampRange = (range: BeatsRange, rangeLimit: BeatsRange): BeatsRange => {
 export const getWrappedRanges = (
   rangeToWrap: BeatsRange,
   rangeLimit: BeatsRange,
-  loops = 0,
+  limitLoops = 0,
 ): Array<BeatsRange & { offset: Beats }> => {
-  const loopedLimit = getLoopedRange(rangeLimit, loops);
+  const times = Math.max(0, limitLoops + 1);
+  const rangeLimitDuration = getRangeDuration(rangeLimit);
+  const loopedLimitDuration = (rangeLimitDuration * times) as Beats;
+  const loopedLimit = createRangeFromDuration(loopedLimitDuration, rangeLimit.start);
   const clampedRangeToWrap = clampRange(rangeToWrap, loopedLimit);
 
-  const startDifference = clampedRangeToWrap.start - rangeLimit.start;
+  if (!clampedRangeToWrap) return [];
 
   const clampedRangeDuration = getRangeDuration(clampedRangeToWrap);
-  const rangeLimitDuration = getRangeDuration(rangeLimit);
 
+  const startDifference = clampedRangeToWrap.start - rangeLimit.start;
+  const firstIteration = Math.floor(startDifference / rangeLimitDuration); // todo: might need to ceil or something
+  const wrappedStartDifference = wrapInRange(startDifference, rangeLimit);
   // if rangeLimit and clampedRangeToWrap start at the same time and have same duration, coveredArea will be 1
-  const coveredArea = (startDifference + clampedRangeDuration) / rangeLimitDuration;
+  const coveredArea = (wrappedStartDifference + clampedRangeDuration) / rangeLimitDuration;
 
   // how many ranges will need to be generated to cover the wrapped range
   const totalRanges = Math.ceil(coveredArea);
 
-  if (totalRanges < 1) return [];
+  // console.log({
+  //   startDifference,
+  //   rangeToWrap,
+  //   rangeLimit,
+  //   clampedRangeToWrap,
+  //   loopedLimit,
+  //   firstIteration,
+  //   coveredArea,
+  //   totalRanges,
+  //   // clampedRangeDuration,
+  //   // rangeLimitDuration,
+  // });
 
   // the result will be an array filled with rangeLimit
   // but the first item and last item are special cases
@@ -132,13 +153,14 @@ export const getWrappedRanges = (
   const result = Array.from({ length: totalRanges }, (_, index) => {
     return {
       ...rangeLimit,
-      offset: (index * rangeLimitDuration) as Beats,
+      offset: ((index + firstIteration) * rangeLimitDuration) as Beats,
     };
   });
 
+  // TODO: this was wrong, but must be included
   // gotta set the start time of the first item...
   // mutation!
-  result[0] = setStart(result[0], clampedRangeToWrap.start);
+  result[0] = setStart(result[0], wrappedStartDifference as Beats);
 
   if (result.length === 1) return result;
 

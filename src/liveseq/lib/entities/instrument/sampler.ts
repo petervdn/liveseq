@@ -17,6 +17,8 @@ export const createSamplerEntity = (props: SamplerInstrument): SamplerEntity => 
     ...props,
     schedule: (context: AudioContext, notes: Array<ScheduleNote>) => {
       notes.forEach((note) => {
+        // eslint-disable-next-line no-console
+        console.log('scheduling', note.schedulingId);
         playTick(context, getFrequency(note.pitch), note.startTime, note.endTime - note.startTime);
       });
     },

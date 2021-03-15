@@ -34,8 +34,8 @@ export type PlayerProps = {
 export const createPlayer = ({
   audioContext,
   getScheduleItems,
-  scheduleInterval = 1000 as TimeInSeconds,
-  lookAheadTime = 1200 as TimeInSeconds,
+  scheduleInterval = 1 as TimeInSeconds,
+  lookAheadTime = 1.2 as TimeInSeconds,
 }: PlayerProps) => {
   let playStartTime: number | null = null;
   let timeoutId: number | null = null;
@@ -58,11 +58,20 @@ export const createPlayer = ({
     );
 
     previouslyScheduledNoteIds = result.previouslyScheduledNoteIds;
-    result.notesToScheduleForInstrument.forEach(({ instrument, notes }) => {
-      instrument.schedule(audioContext, notes);
+
+    // eslint-disable-next-line no-console
+    console.log(
+      'requesting time range',
+      songTime,
+      songTime + lookAheadTime,
+      result.notesToScheduleForInstrument,
+    );
+
+    result.notesToScheduleForInstrument.forEach((item) => {
+      item.instrument.schedule(audioContext, item.notes);
     });
 
-    timeoutId = window.setTimeout(() => schedule(), scheduleInterval);
+    timeoutId = window.setTimeout(() => schedule(), scheduleInterval * 1000);
   };
 
   const play = () => {

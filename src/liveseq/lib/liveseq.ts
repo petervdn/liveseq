@@ -60,8 +60,7 @@ export const createLiveseq = ({
         currentBpm,
         previouslyScheduledNoteIds,
       );
-      // eslint-disable-next-line no-console
-      console.log(scheduleItems);
+
       return scheduleItems;
     },
     audioContext,
