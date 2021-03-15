@@ -44,7 +44,7 @@ export const getTimelineNotesInRange = (
           // to easily know if note has been scheduled
           schedulingId: getUniqueSchedulingId({
             noteId: note.id,
-            offset: loopedRange.offset,
+            start: note.start,
             channelId,
             slotId,
             clipId: clip.id,
