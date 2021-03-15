@@ -6,7 +6,8 @@ import type { Entities } from '../entities/entities';
 import { getChannelsBySlotId, getClipsByTimelineId } from '../entities/entities';
 import { timeRangeToBeatsRange } from '../time/beatsRange';
 
-export const getNotesInTimeRange = (
+//
+export const getNotesForInstrumentInTimeRange = (
   entities: Entities,
   activeSlotIds: Array<string>,
   startTime: TimeInSeconds,
@@ -51,21 +52,29 @@ export const getNotesInTimeRange = (
   });
 };
 
-export type SomeDataType = {
+export type GetScheduleItemsResult = {
   previouslyScheduledNoteIds: Array<string>;
   notesToScheduleForInstrument: Array<ScheduleItem>;
 };
-export const getNotesToScheduleInTimeRange = (
+export const getScheduleItems = (
   entities: Entities,
   activeSlotIds: Array<string>,
   startTime: TimeInSeconds,
   endTime: TimeInSeconds,
   bpm: Bpm,
   previouslyScheduledNoteIds: Array<string>,
-): SomeDataType => {
-  const notesInTimeRange = getNotesInTimeRange(entities, activeSlotIds, startTime, endTime, bpm);
+): GetScheduleItemsResult => {
+  // get all notes
+  const notesInTimeRange = getNotesForInstrumentInTimeRange(
+    entities,
+    activeSlotIds,
+    startTime,
+    endTime,
+    bpm,
+  );
 
-  return notesInTimeRange.reduce<SomeDataType>(
+  // get rid of the ones that have already been scheduled
+  return notesInTimeRange.reduce<GetScheduleItemsResult>(
     (result, notesForInstrument) => {
       const filteredNotes = notesForInstrument.notes.filter(
         (note) => !result.previouslyScheduledNoteIds.includes(note.schedulingId),

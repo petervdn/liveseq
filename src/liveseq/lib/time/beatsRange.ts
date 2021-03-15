@@ -7,6 +7,8 @@ export type BeatsRange = {
   end: Beats;
 };
 
+// todo: shouldnt a lot of these methods accept numbers regardless of them being beats?
+
 export const createRange = (start: Beats, end: Beats): BeatsRange => {
   return {
     start,
@@ -51,6 +53,7 @@ export const splitRange = (range: BeatsRange, splitAt: Beats): Array<BeatsRange>
     : [range];
 };
 
+// todo: why the generic?
 export const setStart = <T extends BeatsRange>(range: T, start: Beats): T => {
   return {
     ...range,
@@ -66,7 +69,6 @@ export const setEnd = <T extends BeatsRange>(range: T, end: Beats): T => {
     end,
   };
 };
-
 export const splitRangeByDuration = (range: BeatsRange, duration: Beats): Array<BeatsRange> => {
   return splitRange(range, (range.start + duration) as Beats);
 };

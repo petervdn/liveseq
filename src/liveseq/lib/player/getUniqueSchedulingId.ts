@@ -7,4 +7,5 @@ export type UniqueSchedulingIdProps = {
   clipId: string;
 };
 
+// todo: i dont think we can rely on the prop order when converting to string? most likely they will be the same, especially on the same client but i would just write them out fully
 export const getUniqueSchedulingId = (props: UniqueSchedulingIdProps) => JSON.stringify(props);

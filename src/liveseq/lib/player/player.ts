@@ -1,6 +1,6 @@
 import type { Note } from '../note/note';
 import type { TimeInSeconds } from '../time/time';
-import type { SomeDataType } from './schedule.utils';
+import type { GetScheduleItemsResult } from './schedule.utils';
 
 export type ScheduleNote = Note & {
   startTime: TimeInSeconds;
@@ -26,7 +26,7 @@ export type PlayerProps = {
     startTime: TimeInSeconds,
     endTime: TimeInSeconds,
     previouslyScheduledNoteIds: Array<string>,
-  ) => SomeDataType;
+  ) => GetScheduleItemsResult;
 };
 
 // export type Player = ReturnType<typeof createPlayer>;
@@ -39,6 +39,8 @@ export const createPlayer = ({
 }: PlayerProps) => {
   let playStartTime: number | null = null;
   let timeoutId: number | null = null;
+  // todo: probably make this an object for more efficient lookup
+  // todo: how does this work when slots are played again later on (and loop count is reset)
   let previouslyScheduledNoteIds: Array<string> = [];
 
   if (lookAheadTime <= scheduleInterval) {
@@ -56,19 +58,9 @@ export const createPlayer = ({
     );
 
     previouslyScheduledNoteIds = result.previouslyScheduledNoteIds;
-
-    // scheduleItems.forEach((item) => {
-    //   const notesToSchedule = item.notes.filter(({ schedulingId }) => {
-    //     const hasBeenScheduled = previouslyScheduledNoteIds.includes(schedulingId);
-    //     // eslint-disable-next-line no-console
-    //     hasBeenScheduled && console.log('skipping scheduling of', schedulingId);
-    //     return !hasBeenScheduled;
-    //   });
-    //
-    //   item.instrument.schedule(audioContext, notesToSchedule);
-    //
-    //   previouslyScheduledNoteIds = notesToSchedule.map(({ schedulingId }) => schedulingId);
-    // });
+    result.notesToScheduleForInstrument.forEach(({ instrument, notes }) => {
+      instrument.schedule(audioContext, notes);
+    });
 
     timeoutId = window.setTimeout(() => schedule(), scheduleInterval);
   };

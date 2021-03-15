@@ -8,7 +8,7 @@ import type { Bpm, TimeInSeconds } from './time/time';
 import { getDefaultProject } from './project/getDefaultProject';
 
 import { createEntities, getSlotsBySceneIds } from './entities/entities';
-import { getNotesToScheduleInTimeRange } from './player/schedule.utils';
+import { getScheduleItems } from './player/schedule.utils';
 
 export type CommonProps = {
   id: string;
@@ -52,7 +52,7 @@ export const createLiveseq = ({
   // just trying with a store setup
   const player = createConnectedPlayer({
     getScheduleItems: (startTime, endTime, previouslyScheduledNoteIds: Array<string>) => {
-      const scheduleItems = getNotesToScheduleInTimeRange(
+      const scheduleItems = getScheduleItems(
         entities,
         startSlotIds,
         startTime,
