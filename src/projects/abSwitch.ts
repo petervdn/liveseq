@@ -52,7 +52,7 @@ export const abSwitch: SerializableProject = {
         type: 'timelineSlot',
         name: 'Slot Name',
         timelineId: 'timeline_1',
-        loops: 10,
+        loops: Infinity,
       },
       {
         id: 'slot_2',
