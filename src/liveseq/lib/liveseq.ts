@@ -9,7 +9,7 @@ import { getDefaultProject } from './project/getDefaultProject';
 
 import { createEntities } from './entities/entities';
 import { getScheduleItems } from './player/schedule.utils';
-import { applyScenesToQueue, createQueue, getSlotsAtRange } from './queue/queue';
+import { applyScenesToQueue, createQueue, getSlotsWithinRange } from './queue/queue';
 import { timeRangeToBeatsRange } from './time/beatsRange';
 
 export type CommonProps = {
@@ -41,7 +41,7 @@ export const createLiveseq = ({
   const entities = createEntities(project, audioContext);
 
   const startScenes = project.startScenes.map((sceneId) => entities.scenes[sceneId]);
-  const initialQueue = applyScenesToQueue(startScenes, createQueue(), 0 as Beats);
+  const initialQueue = applyScenesToQueue(startScenes, entities, createQueue(), 0 as Beats);
 
   // TODO: must update the queue as time progresses
   const currentQueue = initialQueue;
@@ -58,7 +58,8 @@ export const createLiveseq = ({
       const beatsRange = timeRangeToBeatsRange(timeRange, currentBpm);
 
       // we must split the beatsRange into sections where the playing slots in the queue changes
-      const slotsRanges = getSlotsAtRange(beatsRange, currentQueue);
+      const slotsRanges = getSlotsWithinRange(beatsRange, currentQueue, entities);
+      // console.log(slotsRanges);
 
       // then we get schedule items according to those split ranges and their playing slots
       return slotsRanges.flatMap((slotRange) => {

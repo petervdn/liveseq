@@ -55,11 +55,12 @@ export const splitRange = (range: BeatsRange, splitAt: Beats): Array<BeatsRange>
 };
 
 // todo: why the generic?
+// ^ because we are keeping any extra properties from range
 export const setStart = <T extends BeatsRange>(range: T, start: Beats): T => {
   return {
     ...range,
     start,
-    end: Math.max(range.end, start) as Beats,
+    end: Math.max(range.end, start),
   };
 };
 
@@ -89,6 +90,10 @@ export const moveRange = (range: BeatsRange, newStart: Beats): BeatsRange => {
 export const isInRange = (rangeA: BeatsRange, rangeB: BeatsRange) => {
   // todo: btw this implies that starts are before the end, which might not be the case
   return !(rangeA.end <= rangeB.start || rangeA.start >= rangeB.end);
+};
+
+export const isTimeInRange = (time: Beats, range: BeatsRange) => {
+  return time >= range.start && time <= range.end;
 };
 
 // given a range and a number of loops, what is the resulting range?
