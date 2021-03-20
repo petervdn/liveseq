@@ -67,22 +67,4 @@ export const getClipsByTimelineId = (
   }));
 };
 
-// TODO: consider already playing slots... right now works as if starting playing from scratch
-export const getSlotsBySceneIds = (
-  entities: Pick<Entities, 'scenes' | 'slots'>,
-  sceneIds: Array<string>,
-) => {
-  const scenes = sceneIds.map((id) => entities.scenes[id]);
-
-  return scenes.flatMap((scene) => {
-    const playSlotsActions = (scene.eventActions.enter || []).filter((action) => {
-      return action.type === 'playSlots';
-    });
-
-    return playSlotsActions.flatMap((action) => {
-      return (action.slotIds || []).map((id) => entities.slots[id]);
-    });
-  });
-};
-
 // export const removeEntity = (entity: keyof Entities, id: string, entities: Entities) => {};

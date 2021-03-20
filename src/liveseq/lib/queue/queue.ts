@@ -1,6 +1,7 @@
 import type { Beats } from '../time/time';
 import type { BeatsRange } from '../time/beatsRange';
 import type { Entities } from '../entities/entities';
+import type { SceneEntity } from '../entities/scene/scene';
 
 type PlayingSlot = {
   slotId: string;
@@ -30,16 +31,33 @@ export const createQueue = (): Queue => {
   };
 };
 
-// get the resulting queue from immediately activating the given scene
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const applyScenesToQueue = (
-  sceneIds: Array<string>,
-  entities: Entities,
+  scenes: Array<SceneEntity>,
   queue: Queue,
+  start: Beats,
 ): Queue => {
-  // TODO
+  // TODO: incomplete implementation
+  const playingSlots = scenes.flatMap((scene) => {
+    const playSlotsActions = (scene.eventActions.enter || []).filter((action) => {
+      return action.type === 'playSlots';
+    });
+
+    return playSlotsActions.flatMap((action) => {
+      return (action.slotIds || []).map((id) => {
+        return {
+          slotId: id,
+          start,
+        };
+      });
+    });
+  });
+
+  const activeSceneIds = scenes.map((scene) => scene.id); // TODO: incomplete
+
   return {
     ...queue,
+    playingSlots,
+    activeSceneIds,
   };
 };
 

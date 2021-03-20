@@ -3,7 +3,7 @@ import { getAudioContext } from './utils/getAudioContext';
 import { createConnectedPlayer } from './player/connectedPlayer';
 
 import type { SerializableProject } from './project/project';
-import type { Bpm, TimeInSeconds } from './time/time';
+import type { Beats, Bpm, TimeInSeconds } from './time/time';
 
 import { getDefaultProject } from './project/getDefaultProject';
 
@@ -40,7 +40,8 @@ export const createLiveseq = ({
   const store = createGlobalStore(initialState);
   const entities = createEntities(project, audioContext);
 
-  const initialQueue = applyScenesToQueue(project.startScenes, entities, createQueue());
+  const startScenes = project.startScenes.map((sceneId) => entities.scenes[sceneId]);
+  const initialQueue = applyScenesToQueue(startScenes, createQueue(), 0 as Beats);
 
   // TODO: must update the queue as time progresses
   const currentQueue = initialQueue;
@@ -53,8 +54,8 @@ export const createLiveseq = ({
 
   // just trying with a store setup
   const player = createConnectedPlayer({
-    getScheduleItems: (startTime, endTime, previouslyScheduledNoteIds: Array<string>) => {
-      const beatsRange = timeRangeToBeatsRange({ start: startTime, end: endTime }, currentBpm);
+    getScheduleItems: (timeRange, previouslyScheduledNoteIds: Array<string>) => {
+      const beatsRange = timeRangeToBeatsRange(timeRange, currentBpm);
 
       const slotsRanges = getSlotsAtRange(beatsRange, entities, currentQueue);
 

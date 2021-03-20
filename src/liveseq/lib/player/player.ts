@@ -1,5 +1,6 @@
 import type { Note } from '../note/note';
 import type { TimeInSeconds } from '../time/time';
+import type { TimeRange } from '../time/timeRange';
 
 export type ScheduleNote = Note & {
   startTime: TimeInSeconds;
@@ -22,8 +23,7 @@ export type PlayerProps = {
   scheduleInterval?: TimeInSeconds;
   // called every time schedule runs to get "what" to schedule from the project
   getScheduleItems: (
-    startTime: TimeInSeconds,
-    endTime: TimeInSeconds,
+    timeRange: TimeRange,
     previouslyScheduledNoteIds: Array<string>,
   ) => Array<ScheduleItem>;
 };
@@ -52,8 +52,10 @@ export const createPlayer = ({
     const songTime = (audioContext.currentTime - playStartTime!) as TimeInSeconds; // playStartTime should always be defined when playing
 
     const scheduleItems = getScheduleItems(
-      songTime,
-      (songTime + lookAheadTime) as TimeInSeconds,
+      {
+        start: songTime,
+        end: (songTime + lookAheadTime) as TimeInSeconds,
+      },
       previouslyScheduledNoteIds,
     );
 
