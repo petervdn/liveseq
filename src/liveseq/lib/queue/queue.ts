@@ -40,20 +40,31 @@ export const applyScene = (scene: SceneEntity, queue: Queue): Queue => {
   };
 };
 
-// to know what a queue looks like in the future
-export const getQueueAt = (time: Beats, queue: Queue): Queue => {
-  // TODO: calculate the resulting Queue at the given time
-  return {
-    ...queue,
-  };
+// given a range and a queue, get an array of the queue looks like at the respective ranges
+export const getQueuesAtRange = (
+  beatsRange: BeatsRange,
+  queue: Queue,
+): Array<BeatsRange & Queue> => {
+  // TODO: calculate the resulting Queues at the given range
+  return [
+    {
+      ...beatsRange,
+      ...queue,
+    },
+  ];
 };
 
-// get the slots from queue at a given time
-export const getSlotsAt = (time: Beats, entities: Entities, queue: Queue) => {
-  const queueAtTime = getQueueAt(time, queue);
+export const getSlotsAtRange = (beatsRange: BeatsRange, entities: Entities, queue: Queue) => {
+  const queues = getQueuesAtRange(beatsRange, queue);
 
-  return queueAtTime.playingSlots.map((playingSlot) => {
-    return entities.slots[playingSlot.slotId];
+  return queues.map((queue) => {
+    return {
+      start: queue.start,
+      end: queue.end,
+      slots: queue.playingSlots.map((playingSlot) => {
+        return entities.slots[playingSlot.slotId];
+      }),
+    };
   });
 };
 
