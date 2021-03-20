@@ -62,15 +62,13 @@ export const createLiveseq = ({
       return slotsRanges.flatMap((slotRange) => {
         const slotIds = slotRange.slots.map((slot) => slot.slotId);
 
-        const scheduleItems = getScheduleItems(
+        return getScheduleItems(
           entities,
           slotIds,
           slotRange,
           currentBpm,
           previouslyScheduledNoteIds,
         );
-        // console.log(scheduleItems);
-        return scheduleItems;
       });
     },
     audioContext,
