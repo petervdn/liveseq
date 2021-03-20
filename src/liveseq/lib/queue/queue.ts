@@ -1,6 +1,5 @@
 import type { Beats } from '../time/time';
 import type { BeatsRange } from '../time/beatsRange';
-import type { Entities } from '../entities/entities';
 import type { SceneEntity } from '../entities/scene/scene';
 
 type PlayingSlot = {
@@ -75,16 +74,14 @@ export const getQueuesAtRange = (
   ];
 };
 
-export const getSlotsAtRange = (beatsRange: BeatsRange, entities: Entities, queue: Queue) => {
+export const getSlotsAtRange = (beatsRange: BeatsRange, queue: Queue) => {
   const queues = getQueuesAtRange(beatsRange, queue);
 
   return queues.map((queue) => {
     return {
       start: queue.start,
       end: queue.end,
-      slots: queue.playingSlots.map((playingSlot) => {
-        return entities.slots[playingSlot.slotId];
-      }),
+      slots: queue.playingSlots,
     };
   });
 };

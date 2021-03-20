@@ -57,11 +57,10 @@ export const createLiveseq = ({
     getScheduleItems: (timeRange, previouslyScheduledNoteIds: Array<string>) => {
       const beatsRange = timeRangeToBeatsRange(timeRange, currentBpm);
 
-      const slotsRanges = getSlotsAtRange(beatsRange, entities, currentQueue);
+      const slotsRanges = getSlotsAtRange(beatsRange, currentQueue);
 
       return slotsRanges.flatMap((slotRange) => {
-        // TODO: we already have the Slot entities, so we should refactor getScheduleItems to accept that instead
-        const slotIds = slotRange.slots.map(({ id }) => id);
+        const slotIds = slotRange.slots.map((slot) => slot.slotId);
 
         const scheduleItems = getScheduleItems(
           entities,
