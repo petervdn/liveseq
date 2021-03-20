@@ -57,8 +57,10 @@ export const createLiveseq = ({
     getScheduleItems: (timeRange, previouslyScheduledNoteIds: Array<string>) => {
       const beatsRange = timeRangeToBeatsRange(timeRange, currentBpm);
 
+      // we must split the beatsRange into sections where the playing slots in the queue changes
       const slotsRanges = getSlotsAtRange(beatsRange, currentQueue);
 
+      // then we get schedule items according to those split ranges and their playing slots
       return slotsRanges.flatMap((slotRange) => {
         const slotIds = slotRange.slots.map((slot) => slot.slotId);
 
