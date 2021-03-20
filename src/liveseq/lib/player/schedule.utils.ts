@@ -1,21 +1,17 @@
-import type { Bpm, TimeInSeconds } from '../time/time';
 import type { ScheduleItem } from './player';
 import { getTimelineNotesInRange } from '../entities/timeline/timeline.utils';
 import { beatsToTime } from '../time/musicTime';
 import type { Entities } from '../entities/entities';
 import { getChannelsBySlotId, getClipsByTimelineId } from '../entities/entities';
-import { timeRangeToBeatsRange } from '../time/beatsRange';
+import type { BeatsRange } from '../time/beatsRange';
+import type { Bpm } from '../time/time';
 
-//
 export const getNotesForInstrumentInTimeRange = (
   entities: Entities,
   activeSlotIds: Array<string>,
-  startTime: TimeInSeconds,
-  endTime: TimeInSeconds,
+  beatsRange: BeatsRange,
   bpm: Bpm,
 ): Array<ScheduleItem> => {
-  const beatsRange = timeRangeToBeatsRange({ start: startTime, end: endTime }, bpm);
-
   return activeSlotIds.flatMap((slotId) => {
     const slot = entities.slots[slotId];
     const timeline = entities.timelines[slot.timelineId];
@@ -52,53 +48,28 @@ export const getNotesForInstrumentInTimeRange = (
   });
 };
 
-export type GetScheduleItemsResult = {
-  previouslyScheduledNoteIds: Array<string>;
-  notesToScheduleForInstrument: Array<ScheduleItem>;
-};
 export const getScheduleItems = (
   entities: Entities,
   activeSlotIds: Array<string>,
-  startTime: TimeInSeconds,
-  endTime: TimeInSeconds,
+  beatsRange: BeatsRange,
   bpm: Bpm,
   previouslyScheduledNoteIds: Array<string>,
-): GetScheduleItemsResult => {
+): Array<ScheduleItem> => {
   // get all notes
   const notesInTimeRange = getNotesForInstrumentInTimeRange(
     entities,
     activeSlotIds,
-    startTime,
-    endTime,
+    beatsRange,
     bpm,
   );
 
   // get rid of the ones that have already been scheduled
-  return notesInTimeRange.reduce<GetScheduleItemsResult>(
-    (result, notesForInstrument) => {
-      const filteredNotes = notesForInstrument.notes.filter((note) => {
-        const hasBeenScheduled = result.previouslyScheduledNoteIds.includes(note.schedulingId);
-        if (hasBeenScheduled) {
-          // eslint-disable-next-line no-console
-          console.log('skipping', note.schedulingId);
-        }
-        return !hasBeenScheduled;
-      });
-
-      return {
-        previouslyScheduledNoteIds: [
-          ...result.previouslyScheduledNoteIds,
-          ...filteredNotes.map((note) => note.schedulingId),
-        ],
-        notesToScheduleForInstrument:
-          filteredNotes.length > 0
-            ? [
-                ...result.notesToScheduleForInstrument,
-                { notes: filteredNotes, instrument: notesForInstrument.instrument },
-              ]
-            : result.notesToScheduleForInstrument,
-      };
-    },
-    { previouslyScheduledNoteIds, notesToScheduleForInstrument: [] },
-  );
+  return notesInTimeRange.map((scheduleItem) => {
+    return {
+      ...scheduleItem,
+      notes: scheduleItem.notes.filter((note) => {
+        return !previouslyScheduledNoteIds.includes(note.schedulingId);
+      }),
+    };
+  });
 };

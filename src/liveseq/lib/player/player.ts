@@ -1,6 +1,5 @@
 import type { Note } from '../note/note';
 import type { TimeInSeconds } from '../time/time';
-import type { GetScheduleItemsResult } from './schedule.utils';
 
 export type ScheduleNote = Note & {
   startTime: TimeInSeconds;
@@ -26,7 +25,7 @@ export type PlayerProps = {
     startTime: TimeInSeconds,
     endTime: TimeInSeconds,
     previouslyScheduledNoteIds: Array<string>,
-  ) => GetScheduleItemsResult;
+  ) => Array<ScheduleItem>;
 };
 
 // export type Player = ReturnType<typeof createPlayer>;
@@ -47,27 +46,25 @@ export const createPlayer = ({
     throw new Error('LookAheadTime should be larger than the scheduleInterval');
   }
 
+  // filteredNotes.map((note) => note.schedulingId)
   const schedule = () => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const songTime = (audioContext.currentTime - playStartTime!) as TimeInSeconds; // playStartTime should always be defined when playing
 
-    const result = getScheduleItems(
+    const scheduleItems = getScheduleItems(
       songTime,
       (songTime + lookAheadTime) as TimeInSeconds,
       previouslyScheduledNoteIds,
     );
 
-    previouslyScheduledNoteIds = result.previouslyScheduledNoteIds;
-
-    // eslint-disable-next-line no-console
-    console.log(
-      'requesting time range',
-      songTime,
-      songTime + lookAheadTime,
-      result.notesToScheduleForInstrument,
+    // TODO: this will grow indefinitely so we need to clean up
+    previouslyScheduledNoteIds = previouslyScheduledNoteIds.concat(
+      scheduleItems.flatMap((scheduleItem) => {
+        return scheduleItem.notes.map((note) => note.schedulingId);
+      }),
     );
 
-    result.notesToScheduleForInstrument.forEach((item) => {
+    scheduleItems.forEach((item) => {
       item.instrument.schedule(item.notes);
     });
 

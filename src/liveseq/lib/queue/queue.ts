@@ -1,6 +1,5 @@
 import type { Beats } from '../time/time';
 import type { BeatsRange } from '../time/beatsRange';
-import type { SceneEntity } from '../entities/scene/scene';
 import type { Entities } from '../entities/entities';
 
 type PlayingSlot = {
@@ -12,7 +11,7 @@ type QueuedScene = BeatsRange & {
   sceneId: string;
 };
 
-type Queue = {
+export type Queue = {
   playingSlots: Array<PlayingSlot>;
   activeSceneIds: Array<string>;
   queuedScenes: Array<QueuedScene>;
@@ -33,7 +32,11 @@ export const createQueue = (): Queue => {
 
 // get the resulting queue from immediately activating the given scene
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const applyScene = (scene: SceneEntity, queue: Queue): Queue => {
+export const applyScenesToQueue = (
+  sceneIds: Array<string>,
+  entities: Entities,
+  queue: Queue,
+): Queue => {
   // TODO
   return {
     ...queue,

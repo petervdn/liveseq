@@ -70,6 +70,7 @@ export const setEnd = <T extends BeatsRange>(range: T, end: Beats): T => {
     end,
   };
 };
+
 export const splitRangeByDuration = (range: BeatsRange, duration: Beats): Array<BeatsRange> => {
   return splitRange(range, (range.start + duration) as Beats);
 };

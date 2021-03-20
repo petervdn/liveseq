@@ -7,8 +7,10 @@ import type { Bpm, TimeInSeconds } from './time/time';
 
 import { getDefaultProject } from './project/getDefaultProject';
 
-import { createEntities, getSlotsBySceneIds } from './entities/entities';
+import { createEntities } from './entities/entities';
 import { getScheduleItems } from './player/schedule.utils';
+import { applyScenesToQueue, createQueue, getSlotsAtRange } from './queue/queue';
+import { timeRangeToBeatsRange } from './time/beatsRange';
 
 export type CommonProps = {
   id: string;
@@ -38,10 +40,10 @@ export const createLiveseq = ({
   const store = createGlobalStore(initialState);
   const entities = createEntities(project, audioContext);
 
-  // TODO: we're always using start slots, should be able to switch with scenes
-  const startSlots = getSlotsBySceneIds(entities, project.startScenes);
-  const startSlotIds = startSlots.map(({ id }) => id);
+  const initialQueue = applyScenesToQueue(project.startScenes, entities, createQueue());
 
+  // TODO: must update the queue as time progresses
+  const currentQueue = initialQueue;
   let currentBpm = bpm as Bpm;
 
   const setTempo = (bpm: Bpm) => {
@@ -52,16 +54,24 @@ export const createLiveseq = ({
   // just trying with a store setup
   const player = createConnectedPlayer({
     getScheduleItems: (startTime, endTime, previouslyScheduledNoteIds: Array<string>) => {
-      const scheduleItems = getScheduleItems(
-        entities,
-        startSlotIds,
-        startTime,
-        endTime,
-        currentBpm,
-        previouslyScheduledNoteIds,
-      );
+      const beatsRange = timeRangeToBeatsRange({ start: startTime, end: endTime }, currentBpm);
 
-      return scheduleItems;
+      const slotsRanges = getSlotsAtRange(beatsRange, entities, currentQueue);
+
+      return slotsRanges.flatMap((slotRange) => {
+        // TODO: we already have the Slot entities, so we should refactor getScheduleItems to accept that instead
+        const slotIds = slotRange.slots.map(({ id }) => id);
+
+        const scheduleItems = getScheduleItems(
+          entities,
+          slotIds,
+          slotRange,
+          currentBpm,
+          previouslyScheduledNoteIds,
+        );
+        // console.log(scheduleItems);
+        return scheduleItems;
+      });
     },
     audioContext,
     store,
