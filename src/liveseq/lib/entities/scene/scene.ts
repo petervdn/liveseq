@@ -1,10 +1,21 @@
-import type { GlobalAction } from '../../store/globalStore';
 import type { CommonProps } from '../../liveseq';
+
+export type SceneAction =
+  | {
+      type: 'playSlots';
+      // optional, if not present means all
+      slotIds?: ReadonlyArray<string>;
+    }
+  | {
+      type: 'stopSlots';
+      // optional, if not present means all
+      slotIds?: ReadonlyArray<string>;
+    };
 
 export type SerializableScene = CommonProps & {
   eventActions: {
-    enter?: Array<GlobalAction>; // when it becomes active
-    leave?: Array<GlobalAction>; // when it becomes inactive
+    enter?: ReadonlyArray<SceneAction>; // when it becomes active
+    leave?: ReadonlyArray<SceneAction>; // when it becomes inactive
   };
 };
 
