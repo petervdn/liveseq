@@ -11,9 +11,6 @@ export type LiveseqState = {
   tempo: Bpm;
 };
 
-// TODO: define union for all action types
-// todo: how does global action relate to ActionType (are these type props even actiontypes?)
-
 export type ActionType = 'play' | 'stop' | 'pause' | 'playSlots' | 'stopSlots' | 'activateScenes';
 
 type GlobalStoreInstance = Store<LiveseqState, ActionType>;
