@@ -64,20 +64,22 @@ export const applyScenesToQueue = (
   // TODO: consider isEnabled
   // TODO: incomplete implementation, only plays
   const appliedScenes = scenes.flatMap((scene) => {
-    const playSlotsActions = (scene.eventActions.enter || []).filter((action) => {
-      return action.type === 'playSlots';
-    });
+    return (scene.eventActions.enter || []).flatMap((action) => {
+      if (action.type === 'playSlots') {
+        // if not specified we get all
+        const slotIds = action.slotIds || Object.keys(entities.slots);
 
-    return playSlotsActions.flatMap((action) => {
-      // if not specified we get all
-      const slotIds = action.slotIds || Object.keys(entities.slots);
-
-      return slotIds.map((id) => {
-        return {
-          slotId: id,
-          start,
-        };
-      });
+        return slotIds.map((id) => {
+          return {
+            slotId: id,
+            start,
+          };
+        });
+      }
+      if (action.type === 'stopSlots') {
+        // gotta stop em
+      }
+      return [];
     });
   });
 
@@ -176,6 +178,7 @@ export const getSlotsWithinRange = (
       start: queue.start,
       end: queue.end,
       slots: queue.playingSlots,
+      queue,
     };
   });
 };
