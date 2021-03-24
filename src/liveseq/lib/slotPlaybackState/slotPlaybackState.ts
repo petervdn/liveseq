@@ -9,7 +9,7 @@ type PlayingSlot = {
   start: Beats;
 };
 
-type QueuedScene = BeatsRange & {
+export type QueuedScene = BeatsRange & {
   sceneId: string;
 };
 
@@ -26,10 +26,7 @@ export const createSlotPlaybackState = (): SlotPlaybackState => {
     queuedScenes: [],
   };
 
-  return {
-    ...defaultSlotPlaybackState,
-    // TODO
-  };
+  return defaultSlotPlaybackState;
 };
 
 export const addScenesToQueue = (
@@ -101,7 +98,7 @@ export const applyScenesToSlotPlaybackState = (
 };
 
 // find the scenes that will get triggered in the beatsRange
-export const getSlotPlaybackStatedScenesWithinRange = (
+export const getQueuedScenesWithinRange = (
   beatsRange: BeatsRange,
   slotPlaybackState: SlotPlaybackState,
 ): Array<QueuedScene> => {
@@ -118,7 +115,7 @@ export const getSlotPlaybackStatesWithinRange = (
   slotPlaybackState: SlotPlaybackState,
 ): Array<BeatsRange & SlotPlaybackState> => {
   // 1. find the scenes that will get triggered within the beatsRange
-  const queuedScenes = getSlotPlaybackStatedScenesWithinRange(beatsRange, slotPlaybackState);
+  const queuedScenes = getQueuedScenesWithinRange(beatsRange, slotPlaybackState);
 
   // 2. group queuedScenes by start
   const queuedScenesByStart = queuedScenes.reduce<Record<number, Array<QueuedScene>>>(

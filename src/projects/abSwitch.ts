@@ -1,6 +1,8 @@
 import type { SerializableProject } from '../liveseq';
 import { musicTimeToBeats } from '../liveseq/lib/time/musicTime';
 import type { NoteName } from '../liveseq/lib/note/note';
+import { createSlotPlaybackState } from '../liveseq/lib/slotPlaybackState/slotPlaybackState';
+import type { Beats } from '../liveseq/lib/time/time';
 
 // TODO: make this file describe this example
 // Example switching
@@ -16,8 +18,22 @@ import type { NoteName } from '../liveseq/lib/note/note';
 
 export const abSwitch: SerializableProject = {
   libraryVersion: 0,
-  name: 'Project Name',
-  startScenes: ['scene_1'],
+  name: 'A-B Switch',
+  slotPlaybackState: {
+    ...createSlotPlaybackState(),
+    queuedScenes: [
+      {
+        start: 0 as Beats,
+        end: 8 as Beats,
+        sceneId: 'scene_1',
+      },
+      {
+        start: 8 as Beats,
+        end: 16 as Beats,
+        sceneId: 'scene_2',
+      },
+    ],
+  },
   entities: {
     channels: [
       {
@@ -33,10 +49,6 @@ export const abSwitch: SerializableProject = {
         id: 'sampler_1',
         type: 'samplerInstrument',
       },
-      // {
-      //   id: 'synth_1',
-      //   type: 'simpleSynthInstrument',
-      // },
     ],
     // global to allow same slot in multiple channels
     slots: [

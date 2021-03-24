@@ -5,11 +5,12 @@ import type { SerializableClip } from '../entities/clip/clip';
 import type { SerializableSlot } from '../entities/slot/slot';
 import type { SerializableScene } from '../entities/scene/scene';
 import type { SerializableSample } from '../entities/sample/sample';
+import type { SlotPlaybackState } from '../slotPlaybackState/slotPlaybackState';
 
 export type SerializableProject = {
   libraryVersion: number;
   name: string;
-  startScenes: Array<string>; // The scenes to trigger when liveseq is played (from stopped state)
+  slotPlaybackState: SlotPlaybackState; // The scenes to trigger when liveseq is played (from stopped state)
   entities: {
     channels: Array<SerializableChannel>;
     instruments: Array<SerializableInstrument>;

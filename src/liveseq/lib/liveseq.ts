@@ -3,18 +3,13 @@ import { getAudioContext } from './utils/getAudioContext';
 import { createConnectedPlayer } from './player/connectedPlayer';
 
 import type { SerializableProject } from './project/project';
-import type { Beats, Bpm, TimeInSeconds } from './time/time';
+import type { Bpm, TimeInSeconds } from './time/time';
 
 import { getDefaultProject } from './project/getDefaultProject';
 
 import { createEntities } from './entities/entities';
 import { getScheduleItems } from './player/schedule.utils';
-import {
-  addScenesToQueue,
-  applyScenesToSlotPlaybackState,
-  createSlotPlaybackState,
-  getSlotsWithinRange,
-} from './slotPlaybackState/slotPlaybackState';
+import { getSlotsWithinRange } from './slotPlaybackState/slotPlaybackState';
 import { timeRangeToBeatsRange } from './time/beatsRange';
 
 export type CommonProps = {
@@ -44,27 +39,7 @@ export const createLiveseq = ({
 }: LiveseqProps = {}) => {
   const store = createGlobalStore(initialState);
   const entities = createEntities(project, audioContext);
-
-  const startScenes = project.startScenes.map((sceneId) => entities.scenes[sceneId]);
-  const startSlotPlaybackState = applyScenesToSlotPlaybackState(
-    startScenes,
-    entities,
-    createSlotPlaybackState(),
-    0 as Beats,
-  );
-
-  // TODO: instead of startScenes we need a scenesSlotPlaybackState or some other way to place them
-  // to switch after some time
-  const initialSlotPlaybackState = addScenesToQueue(
-    [
-      {
-        start: 4 as Beats,
-        end: Infinity as Beats,
-        sceneId: 'scene_2',
-      },
-    ],
-    startSlotPlaybackState,
-  );
+  const initialSlotPlaybackState = project.slotPlaybackState;
 
   let currentSlotPlaybackState = initialSlotPlaybackState;
   let currentBpm = bpm as Bpm;

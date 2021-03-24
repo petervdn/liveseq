@@ -1,11 +1,12 @@
 import { libraryVersion } from '../../libraryVersion';
 import type { SerializableProject } from './project';
+import { createSlotPlaybackState } from '../slotPlaybackState/slotPlaybackState';
 
 export const getDefaultProject = (): SerializableProject => {
   return {
     libraryVersion,
     name: 'untitled',
-    startScenes: [],
+    slotPlaybackState: createSlotPlaybackState(),
     entities: {
       channels: [],
       instruments: [],
