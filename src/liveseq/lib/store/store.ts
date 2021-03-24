@@ -44,6 +44,8 @@ export const createStore = (
 
   // ACTIONS
   const play = () => {
+    if (state.isPlaying === true) return;
+
     setState({
       isPlaying: true,
     });
@@ -52,6 +54,8 @@ export const createStore = (
   };
 
   const stop = () => {
+    if (state.isPlaying === false) return;
+
     setState({
       isPlaying: false,
     });
@@ -60,6 +64,7 @@ export const createStore = (
   };
 
   const setTempo = (bpm: Bpm) => {
+    if (state.tempo === bpm) return;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     setState({
       tempo: bpm,
