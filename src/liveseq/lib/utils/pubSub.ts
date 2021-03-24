@@ -8,9 +8,21 @@
 // pubSub.dispatch('hello', {message: 'welcome'})
 // pubSub.dispose()
 
+import type { LiveseqState } from '../store/store';
+
+export type PubSub<EventName extends string, CallbackProps> = {
+  dispatch: (actionType: EventName, props: CallbackProps) => void;
+  subscribe: (actionType: EventName, callback: (props: CallbackProps) => void) => () => void;
+  dispose: () => void;
+};
+
+// These 2 types below are the concrete types for the pub sub, maybe move somewhere to keep this generic
+export type SubscriptionEvents = 'isPlaying';
+export type LiveseqPubSub = PubSub<SubscriptionEvents, LiveseqState>;
+
 export const createPubSub = <EventName extends string, CallbackProps>(
   onDispatch?: (actionType: EventName, props: CallbackProps) => void,
-) => {
+): PubSub<EventName, CallbackProps> => {
   // TODO: use an object to find by actionType without running through the whole array
   let subscriptions: Array<{
     actionType: EventName;

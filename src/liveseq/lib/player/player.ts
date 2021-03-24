@@ -26,6 +26,8 @@ export type PlayerProps = {
     timeRange: TimeRange,
     previouslyScheduledNoteIds: Array<string>,
   ) => Array<ScheduleItem>;
+  onPlay: () => void;
+  onStop: () => void;
 };
 
 // export type Player = ReturnType<typeof createPlayer>;
@@ -35,6 +37,8 @@ export const createPlayer = ({
   getScheduleItems,
   scheduleInterval = 1 as TimeInSeconds,
   lookAheadTime = 1.2 as TimeInSeconds,
+  onPlay,
+  onStop,
 }: PlayerProps) => {
   let playStartTime: number | null = null;
   let timeoutId: number | null = null;
@@ -73,14 +77,24 @@ export const createPlayer = ({
     timeoutId = window.setTimeout(() => schedule(), scheduleInterval * 1000);
   };
 
-  const play = () => {
-    if (audioContext.state === 'suspended') {
-      throw new Error('Cannot play, AudioContext is suspended');
-    }
-
+  const handlePlay = () => {
     playStartTime = audioContext.currentTime;
 
     schedule();
+    onPlay();
+  };
+
+  const play = () => {
+    audioContext.state === 'suspended'
+      ? audioContext
+          .resume()
+          .then(handlePlay)
+          .catch(() => {
+            if (audioContext.state === 'suspended') {
+              throw new Error('Cannot play, AudioContext is suspended');
+            }
+          })
+      : handlePlay();
   };
 
   const stop = () => {
@@ -88,6 +102,7 @@ export const createPlayer = ({
 
     playStartTime = null;
     timeoutId !== null && window.clearTimeout(timeoutId);
+    onStop();
   };
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function

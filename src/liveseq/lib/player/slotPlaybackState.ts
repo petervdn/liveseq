@@ -195,7 +195,7 @@ export const getSlotPlaybackStatesWithinRange = (
   );
 };
 
-export const getScheduleItems = (
+export const getScheduleItemsWithinRange = (
   beatsRange: BeatsRange,
   entities: Entities,
   bpm: Bpm,

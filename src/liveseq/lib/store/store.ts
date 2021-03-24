@@ -1,36 +1,39 @@
-import { createPubSub } from '../utils/pubSub';
+import { getDefaultProject } from '../project/getDefaultProject';
+import type { SerializableProject } from '../project/project';
+import type { Bpm } from '../time/time';
+import type { LiveseqPubSub } from '../utils/pubSub';
 
-// simple and lightweight store implementation tuned for this use
-
-type StateChange<State> = { state: State; previousState: State };
-
-export type Store<State, ActionType> = {
-  setState: (newState: State) => StateChange<State>;
-  subscribe: (actionType: ActionType, callback: (props: StateChange<State>) => void) => () => void;
-  dispatch: (actionType: ActionType, props: StateChange<State>) => void;
-  getState: () => State;
-  dispose: () => void;
+export type LiveseqState = {
+  isPlaying: boolean;
+  project: SerializableProject;
+  activeSceneIds: Array<string>;
+  tempo: Bpm;
 };
 
-export const createStore = <State, ActionType extends string>(
-  defaultState: State,
-  initialState: Partial<State>,
-  logger?: (actionType: string, props: unknown) => void,
-): Store<State, ActionType> => {
-  const pubSub = createPubSub<ActionType, StateChange<State>>(logger);
+export type ActionType = 'play' | 'stop' | 'pause' | 'playSlots' | 'stopSlots' | 'activateScenes';
 
-  let state: State = {
+export type Store = ReturnType<typeof createStore>;
+
+export const createStore = (initialState: Partial<LiveseqState> = {}, pubSub: LiveseqPubSub) => {
+  const defaultState: LiveseqState = {
+    isPlaying: false,
+    project: getDefaultProject(),
+    activeSceneIds: [],
+    tempo: 120 as Bpm,
+  };
+
+  let state = {
     ...defaultState,
     ...initialState,
   };
 
-  const setState = (newState: State) => {
-    const previousState = state;
-
+  const setState = (newState: Partial<LiveseqState>) => {
     // mutation!
-    state = newState;
-
-    return { state, previousState };
+    state = {
+      ...state,
+      ...newState,
+    };
+    return state;
   };
 
   const getState = () => {
@@ -38,14 +41,34 @@ export const createStore = <State, ActionType extends string>(
   };
 
   const dispose = () => {
-    pubSub.dispose();
+    // nothing to do here yet
+  };
+
+  // ACTIONS
+  const play = () => {
+    pubSub.dispatch(
+      'isPlaying',
+      setState({
+        isPlaying: true,
+      }),
+    );
+  };
+
+  const stop = () => {
+    pubSub.dispatch(
+      'isPlaying',
+      setState({
+        isPlaying: false,
+      }),
+    );
   };
 
   return {
-    subscribe: pubSub.subscribe,
-    dispatch: pubSub.dispatch,
-    setState,
-    getState,
+    actions: {
+      play,
+      stop,
+    },
     dispose,
+    getState,
   };
 };

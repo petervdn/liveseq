@@ -7,12 +7,8 @@ export const PlaybackButton: React.FunctionComponent = () => {
   const [isPlaying, setIsPlaying] = useState(liveseq.getState().isPlaying);
 
   useEffect(() => {
-    // TODO: allow multiple subs in one go, or improve how this is done
     const disposers = [
-      liveseq.subscribe('play', ({ state }) => {
-        setIsPlaying(state.isPlaying);
-      }),
-      liveseq.subscribe('stop', ({ state }) => {
+      liveseq.subscribe('isPlaying', (state) => {
         setIsPlaying(state.isPlaying);
       }),
     ];

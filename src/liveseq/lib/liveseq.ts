@@ -1,15 +1,16 @@
-import { createGlobalStore, LiveseqState } from './store/globalStore';
+import { createStore, LiveseqState } from './store/store';
 import { getAudioContext } from './utils/getAudioContext';
-import { createConnectedPlayer } from './player/connectedPlayer';
 
 import type { SerializableProject } from './project/project';
 import type { Bpm, TimeInSeconds } from './time/time';
 
 import { getDefaultProject } from './project/getDefaultProject';
 import { createEntities } from './entities/entities';
-import { getScheduleItems } from './player/slotPlaybackState';
+import { getScheduleItemsWithinRange } from './player/slotPlaybackState';
 import { timeRangeToBeatsRange } from './time/beatsRange';
 import type { TimeRange } from './time/timeRange';
+import { createPubSub, LiveseqPubSub } from './utils/pubSub';
+import { createPlayer } from './player/player';
 
 export type CommonProps = {
   id: string;
@@ -36,7 +37,9 @@ export const createLiveseq = ({
   audioContext = getAudioContext(),
   scheduleInterval,
 }: LiveseqProps = {}) => {
-  const store = createGlobalStore(initialState);
+  // TODO: move types somewhere else instead of inlining here
+  const pubSub = createPubSub() as LiveseqPubSub;
+  const store = createStore(initialState, pubSub);
   const entities = createEntities(project, audioContext);
   const initialSlotPlaybackState = project.slotPlaybackState;
 
@@ -48,12 +51,11 @@ export const createLiveseq = ({
     currentBpm = bpm;
   };
 
-  // just trying with a store setup
-  const player = createConnectedPlayer({
+  const player = createPlayer({
     getScheduleItems: (timeRange: TimeRange, previouslyScheduledNoteIds: Array<string>) => {
       const beatsRange = timeRangeToBeatsRange(timeRange, currentBpm);
 
-      const { nextSlotPlaybackState, scheduleItems } = getScheduleItems(
+      const { nextSlotPlaybackState, scheduleItems } = getScheduleItemsWithinRange(
         beatsRange,
         entities,
         currentBpm,
@@ -65,8 +67,13 @@ export const createLiveseq = ({
 
       return scheduleItems;
     },
+    onPlay: () => {
+      store.actions.play();
+    },
+    onStop: () => {
+      store.actions.stop();
+    },
     audioContext,
-    store,
     lookAheadTime,
     scheduleInterval,
   });
@@ -78,9 +85,10 @@ export const createLiveseq = ({
 
   // liveseq's API
   return {
-    subscribe: store.subscribe,
-    ...store.actions,
+    subscribe: pubSub.subscribe,
     getState: store.getState,
+    play: player.play,
+    stop: player.stop,
     setTempo,
     dispose,
     audioContext,
