@@ -5,7 +5,7 @@ import type { SerializableClip } from '../entities/clip/clip';
 import type { SerializableSlot } from '../entities/slot/slot';
 import type { SerializableScene } from '../entities/scene/scene';
 import type { SerializableSample } from '../entities/sample/sample';
-import type { SlotPlaybackState } from '../slotPlaybackState/slotPlaybackState';
+import type { SlotPlaybackState } from '../player/slotPlaybackState';
 
 export type SerializableProject = {
   libraryVersion: number;

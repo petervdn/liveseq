@@ -3,8 +3,8 @@ import type { BeatsRange } from '../time/beatsRange';
 import type { SceneEntity } from '../entities/scene/scene';
 import { createRange, isTimeInRange } from '../time/beatsRange';
 import type { Entities } from '../entities/entities';
-import type { ScheduleItem } from '../player/player';
-import { getNotesForInstrumentInTimeRange } from '../player/schedule.utils';
+import type { ScheduleItem } from './player';
+import { getNotesForInstrumentInTimeRange } from './schedule.utils';
 
 type PlayingSlot = {
   slotId: string;

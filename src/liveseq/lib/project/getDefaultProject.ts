@@ -1,6 +1,6 @@
 import { libraryVersion } from '../../libraryVersion';
 import type { SerializableProject } from './project';
-import { createSlotPlaybackState } from '../slotPlaybackState/slotPlaybackState';
+import { createSlotPlaybackState } from '../player/slotPlaybackState';
 
 export const getDefaultProject = (): SerializableProject => {
   return {

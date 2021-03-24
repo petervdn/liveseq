@@ -1,7 +1,7 @@
 import type { SerializableProject } from '../liveseq';
 import { musicTimeToBeats } from '../liveseq/lib/time/musicTime';
 import type { NoteName } from '../liveseq/lib/note/note';
-import { createSlotPlaybackState } from '../liveseq/lib/slotPlaybackState/slotPlaybackState';
+import { createSlotPlaybackState } from '../liveseq/lib/player/slotPlaybackState';
 import type { Beats } from '../liveseq/lib/time/time';
 
 // TODO: make this file describe this example

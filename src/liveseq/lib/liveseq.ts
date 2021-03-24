@@ -7,7 +7,7 @@ import type { Bpm, TimeInSeconds } from './time/time';
 
 import { getDefaultProject } from './project/getDefaultProject';
 import { createEntities } from './entities/entities';
-import { getScheduleItems } from './slotPlaybackState/slotPlaybackState';
+import { getScheduleItems } from './player/slotPlaybackState';
 import { timeRangeToBeatsRange } from './time/beatsRange';
 import type { TimeRange } from './time/timeRange';
 
