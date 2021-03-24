@@ -11,10 +11,10 @@ import { createEntities } from './entities/entities';
 import { getScheduleItems } from './player/schedule.utils';
 import {
   addScenesToQueue,
-  applyScenesToQueue,
-  createQueue,
+  applyScenesToSlotPlaybackState,
+  createSlotPlaybackState,
   getSlotsWithinRange,
-} from './queue/queue';
+} from './slotPlaybackState/slotPlaybackState';
 import { timeRangeToBeatsRange } from './time/beatsRange';
 
 export type CommonProps = {
@@ -46,11 +46,16 @@ export const createLiveseq = ({
   const entities = createEntities(project, audioContext);
 
   const startScenes = project.startScenes.map((sceneId) => entities.scenes[sceneId]);
-  const startQueue = applyScenesToQueue(startScenes, entities, createQueue(), 0 as Beats);
+  const startSlotPlaybackState = applyScenesToSlotPlaybackState(
+    startScenes,
+    entities,
+    createSlotPlaybackState(),
+    0 as Beats,
+  );
 
-  // TODO: instead of startScenes we need a scenesQueue or some other way to place them
+  // TODO: instead of startScenes we need a scenesSlotPlaybackState or some other way to place them
   // to switch after some time
-  const initialQueue = addScenesToQueue(
+  const initialSlotPlaybackState = addScenesToQueue(
     [
       {
         start: 4 as Beats,
@@ -58,10 +63,10 @@ export const createLiveseq = ({
         sceneId: 'scene_2',
       },
     ],
-    startQueue,
+    startSlotPlaybackState,
   );
 
-  let currentQueue = initialQueue;
+  let currentSlotPlaybackState = initialSlotPlaybackState;
   let currentBpm = bpm as Bpm;
 
   const setTempo = (bpm: Bpm) => {
@@ -74,11 +79,11 @@ export const createLiveseq = ({
     getScheduleItems: (timeRange, previouslyScheduledNoteIds: Array<string>) => {
       const beatsRange = timeRangeToBeatsRange(timeRange, currentBpm);
 
-      // we must split the beatsRange into sections where the playing slots in the queue changes
-      const slotsRanges = getSlotsWithinRange(beatsRange, entities, currentQueue);
+      // we must split the beatsRange into sections where the playing slots in the slotPlaybackState changes
+      const slotsRanges = getSlotsWithinRange(beatsRange, entities, currentSlotPlaybackState);
 
-      // the first queue becomes the new queue since we always move ahead in time
-      currentQueue = slotsRanges[0].queue;
+      // the first slotPlaybackState becomes the new slotPlaybackState since we always move ahead in time
+      currentSlotPlaybackState = slotsRanges[0].slotPlaybackState;
 
       // then we get schedule items according to those split ranges and their playing slots
       return slotsRanges.flatMap((slotRange) => {

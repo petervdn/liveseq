@@ -1,10 +1,10 @@
 import {
   addScenesToQueue,
-  applyScenesToQueue,
-  createQueue,
-  getQueuesWithinRange,
+  applyScenesToSlotPlaybackState,
+  createSlotPlaybackState,
+  getSlotPlaybackStatesWithinRange,
   getSlotsWithinRange,
-} from './queue';
+} from './slotPlaybackState';
 import type { Beats } from '../time/time';
 import type { BeatsRange } from '../time/beatsRange';
 
@@ -35,15 +35,17 @@ const entities = {
   },
 } as const;
 
-it('applyScenesToQueue', () => {
-  const queue = createQueue();
+it('applyScenesToSlotPlaybackState', () => {
+  const slotPlaybackState = createSlotPlaybackState();
 
   // doesn't do anything if array is empty
-  expect(applyScenesToQueue([], entities, queue, 0 as Beats)).toEqual(queue);
+  expect(applyScenesToSlotPlaybackState([], entities, slotPlaybackState, 0 as Beats)).toEqual(
+    slotPlaybackState,
+  );
 
   // play specific slots
   expect(
-    applyScenesToQueue(
+    applyScenesToSlotPlaybackState(
       [
         {
           id: 'scene1',
@@ -53,11 +55,11 @@ it('applyScenesToQueue', () => {
         },
       ],
       entities,
-      queue,
+      slotPlaybackState,
       0 as Beats,
     ),
   ).toEqual({
-    ...queue,
+    ...slotPlaybackState,
     activeSceneIds: ['scene1'],
     playingSlots: [
       {
@@ -69,7 +71,7 @@ it('applyScenesToQueue', () => {
 
   // play all slots
   expect(
-    applyScenesToQueue(
+    applyScenesToSlotPlaybackState(
       [
         {
           id: 'scene1',
@@ -79,11 +81,11 @@ it('applyScenesToQueue', () => {
         },
       ],
       entities,
-      queue,
+      slotPlaybackState,
       0 as Beats,
     ),
   ).toEqual({
-    ...queue,
+    ...slotPlaybackState,
     activeSceneIds: ['scene1'],
     playingSlots: [
       {
@@ -98,8 +100,8 @@ it('applyScenesToQueue', () => {
   });
 });
 
-it('getQueuesWithinRange', () => {
-  const queue = addScenesToQueue(
+it('getSlotPlaybackStatesWithinRange', () => {
+  const slotPlaybackState = addScenesToQueue(
     [
       {
         start: 2 as Beats,
@@ -107,17 +109,17 @@ it('getQueuesWithinRange', () => {
         sceneId: 'scene1',
       },
     ],
-    createQueue(),
+    createSlotPlaybackState(),
   );
 
   expect(
-    getQueuesWithinRange(
+    getSlotPlaybackStatesWithinRange(
       {
         start: 0,
         end: 10,
       } as BeatsRange,
       entities,
-      queue,
+      slotPlaybackState,
     ),
   ).toEqual([
     {
@@ -138,9 +140,9 @@ it('getQueuesWithinRange', () => {
 });
 
 it('getSlotsWithinRange', () => {
-  // without scenes in the queue
-  const queue = createQueue();
-  queue.playingSlots.push({ slotId: 'slot1', start: 0 as Beats });
+  // without scenes in the slotPlaybackState
+  const slotPlaybackState = createSlotPlaybackState();
+  slotPlaybackState.playingSlots.push({ slotId: 'slot1', start: 0 as Beats });
 
   expect(
     getSlotsWithinRange(
@@ -149,12 +151,12 @@ it('getSlotsWithinRange', () => {
         end: 10,
       } as BeatsRange,
       entities,
-      queue,
+      slotPlaybackState,
     ),
   ).toEqual([{ end: 10, slots: [{ slotId: 'slot1', start: 0 }], start: 0 }]);
 
-  // with scenes in the queue
-  const queueWithScenes = addScenesToQueue(
+  // with scenes in the slotPlaybackState
+  const slotPlaybackStateWithScenes = addScenesToQueue(
     [
       {
         start: 2 as Beats,
@@ -162,7 +164,7 @@ it('getSlotsWithinRange', () => {
         sceneId: 'scene1',
       },
     ],
-    createQueue(),
+    createSlotPlaybackState(),
   );
   expect(
     getSlotsWithinRange(
@@ -171,7 +173,7 @@ it('getSlotsWithinRange', () => {
         end: 10,
       } as BeatsRange,
       entities,
-      queueWithScenes,
+      slotPlaybackStateWithScenes,
     ),
   ).toEqual([
     { start: 0, end: 2, slots: [] },
