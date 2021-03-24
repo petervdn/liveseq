@@ -1,8 +1,10 @@
-import type { Beats } from '../time/time';
+import type { Beats, Bpm } from '../time/time';
 import type { BeatsRange } from '../time/beatsRange';
 import type { SceneEntity } from '../entities/scene/scene';
 import { createRange, isTimeInRange } from '../time/beatsRange';
 import type { Entities } from '../entities/entities';
+import type { ScheduleItem } from '../player/player';
+import { getNotesForInstrumentInTimeRange } from '../player/schedule.utils';
 
 type PlayingSlot = {
   slotId: string;
@@ -132,6 +134,7 @@ export const groupQueuedScenesByStart = (
 };
 
 // TODO: better naming
+// this is probably the reason it doesn't work at all right now
 export const getAppliedStatesForQueuedScenes = (
   beatsRange: BeatsRange,
   queuedScenesByStart: QueuedScenesByStart,
@@ -181,15 +184,10 @@ export const getSlotPlaybackStatesWithinRange = (
   entities: Pick<Entities, 'scenes' | 'slots'>,
   slotPlaybackState: SlotPlaybackState,
 ): Array<BeatsRange & SlotPlaybackState> => {
-  // 1. find the scenes that will get triggered within the beatsRange
   const queuedScenes = getQueuedScenesWithinRange(beatsRange, slotPlaybackState);
 
-  // 2. group queuedScenes by start
   const queuedScenesByStart = groupQueuedScenesByStart(beatsRange.start, queuedScenes);
 
-  // 3. map the result of step 2 into an array of slotPlaybackStates with ranges and the corresponding scenes applied
-  // this depends on ordering of the object keys, but they are already sorted when added since we probably read way more than write
-  // TODO: ^ make sure the order is correct
   return getAppliedStatesForQueuedScenes(
     beatsRange,
     queuedScenesByStart,
@@ -198,23 +196,60 @@ export const getSlotPlaybackStatesWithinRange = (
   );
 };
 
-export const getSlotsWithinRange = (
+export const getScheduleItems1 = (
+  entities: Entities,
+  activeSlotIds: Array<string>,
   beatsRange: BeatsRange,
-  entities: Pick<Entities, 'scenes' | 'slots'>,
+  bpm: Bpm,
+  previouslyScheduledNoteIds: Array<string>,
+): Array<ScheduleItem> => {
+  // get all notes
+  const notesInTimeRange = getNotesForInstrumentInTimeRange(
+    entities,
+    activeSlotIds,
+    beatsRange,
+    bpm,
+    previouslyScheduledNoteIds,
+  );
+
+  // get rid of the ones that have already been scheduled
+  return notesInTimeRange.map((scheduleItem) => {
+    return {
+      ...scheduleItem,
+      notes: scheduleItem.notes.filter((note) => {
+        return !previouslyScheduledNoteIds.includes(note.schedulingId);
+      }),
+    };
+  });
+};
+
+export const getScheduleItems = (
+  beatsRange: BeatsRange,
+  entities: Entities,
+  currentBpm: Bpm,
   slotPlaybackState: SlotPlaybackState,
+  previouslyScheduledNoteIds: Array<string>,
 ) => {
+  // we must split the beatsRange into sections where the playing slots in the slotPlaybackState changes
   const slotPlaybackStates = getSlotPlaybackStatesWithinRange(
     beatsRange,
     entities,
     slotPlaybackState,
   );
 
-  return slotPlaybackStates.map((slotPlaybackState) => {
-    return {
-      start: slotPlaybackState.start,
-      end: slotPlaybackState.end,
-      slots: slotPlaybackState.playingSlots,
-      slotPlaybackState,
-    };
+  // the first slotPlaybackState becomes the new slotPlaybackState assuming we always move ahead in time
+  // TODO: make sure this is correct
+  const nextSlotPlaybackState = slotPlaybackStates[0];
+
+  // then we get schedule items according to those split ranges and their playing slots
+  const scheduleItems = slotPlaybackStates.flatMap((slotRange) => {
+    const slotIds = slotRange.playingSlots.map((slot) => slot.slotId);
+
+    return getScheduleItems1(entities, slotIds, slotRange, currentBpm, previouslyScheduledNoteIds);
   });
+
+  return {
+    nextSlotPlaybackState,
+    scheduleItems,
+  };
 };

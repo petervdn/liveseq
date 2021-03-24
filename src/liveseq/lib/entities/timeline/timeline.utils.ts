@@ -25,7 +25,8 @@ export const getTimelineNotesInRange = (
   clips: Array<BeatsRange & { id: string; duration: Beats; notes: Array<Note> }>, // todo: this isnt a clip?
   channelId: string,
   slotId: string,
-  timelineLoops = 0,
+  timelineLoops: number,
+  previouslyScheduledNoteIds: Array<string>,
 ) => {
   const timelineRange = createRangeFromDuration(getTimelineDuration(timeline));
   const loopedRanges = getWrappedRanges(range, timelineRange, timelineLoops);
@@ -35,24 +36,33 @@ export const getTimelineNotesInRange = (
     return clipsInRange.flatMap((clip) => {
       const localRange = subtractFromRange(loopedRange, clip.start);
 
-      return getItemsInRange(localRange, clip.notes).map((note) => {
-        // eslint-disable-next-line no-console
-        console.log('offset', loopedRange.offset);
-        // adjust note timing
-        const noteWithTimelineTime = addToRange(note, (clip.start + loopedRange.offset) as Beats);
+      return getItemsInRange(localRange, clip.notes).reduce<Array<Note & { schedulingId: string }>>(
+        (accumulator, note) => {
+          // adjust note timing
+          const noteWithTimelineTime = addToRange(note, (clip.start + loopedRange.offset) as Beats);
 
-        return {
-          ...noteWithTimelineTime,
-          // to easily know if note has been scheduled
-          schedulingId: getUniqueSchedulingId({
+          const schedulingId = getUniqueSchedulingId({
             noteId: note.id,
             start: noteWithTimelineTime.start,
             channelId,
             slotId,
             clipId: clip.id,
-          }),
-        };
-      });
+          });
+
+          const hasBeenScheduled = previouslyScheduledNoteIds.includes(schedulingId);
+
+          if (!hasBeenScheduled) {
+            accumulator.push({
+              ...noteWithTimelineTime,
+              // to easily know if note has been scheduled
+              schedulingId,
+            });
+          }
+
+          return accumulator;
+        },
+        [],
+      );
     });
   });
 };

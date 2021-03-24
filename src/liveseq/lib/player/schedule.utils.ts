@@ -11,6 +11,7 @@ export const getNotesForInstrumentInTimeRange = (
   activeSlotIds: Array<string>,
   beatsRange: BeatsRange,
   bpm: Bpm,
+  previouslyScheduledNoteIds: Array<string>,
 ): Array<ScheduleItem> => {
   return activeSlotIds.flatMap((slotId) => {
     const slot = entities.slots[slotId];
@@ -26,6 +27,7 @@ export const getNotesForInstrumentInTimeRange = (
         channel.id,
         slot.id,
         slot.loops,
+        previouslyScheduledNoteIds,
       );
 
       if (notes.length === 0) return accumulator;
@@ -45,31 +47,5 @@ export const getNotesForInstrumentInTimeRange = (
 
       return accumulator;
     }, [] as Array<ScheduleItem>);
-  });
-};
-
-export const getScheduleItems = (
-  entities: Entities,
-  activeSlotIds: Array<string>,
-  beatsRange: BeatsRange,
-  bpm: Bpm,
-  previouslyScheduledNoteIds: Array<string>,
-): Array<ScheduleItem> => {
-  // get all notes
-  const notesInTimeRange = getNotesForInstrumentInTimeRange(
-    entities,
-    activeSlotIds,
-    beatsRange,
-    bpm,
-  );
-
-  // get rid of the ones that have already been scheduled
-  return notesInTimeRange.map((scheduleItem) => {
-    return {
-      ...scheduleItem,
-      notes: scheduleItem.notes.filter((note) => {
-        return !previouslyScheduledNoteIds.includes(note.schedulingId);
-      }),
-    };
   });
 };

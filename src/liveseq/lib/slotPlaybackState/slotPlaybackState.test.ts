@@ -3,7 +3,6 @@ import {
   applyScenesToSlotPlaybackState,
   createSlotPlaybackState,
   getSlotPlaybackStatesWithinRange,
-  getSlotsWithinRange,
 } from './slotPlaybackState';
 import type { Beats } from '../time/time';
 import type { BeatsRange } from '../time/beatsRange';
@@ -136,47 +135,5 @@ it('getSlotPlaybackStatesWithinRange', () => {
       playingSlots: [{ slotId: 'slot1', start: 2 }],
       queuedScenes: [],
     },
-  ]);
-});
-
-it('getSlotsWithinRange', () => {
-  // without scenes in the slotPlaybackState
-  const slotPlaybackState = createSlotPlaybackState();
-  slotPlaybackState.playingSlots.push({ slotId: 'slot1', start: 0 as Beats });
-
-  expect(
-    getSlotsWithinRange(
-      {
-        start: 0,
-        end: 10,
-      } as BeatsRange,
-      entities,
-      slotPlaybackState,
-    ),
-  ).toEqual([{ end: 10, slots: [{ slotId: 'slot1', start: 0 }], start: 0 }]);
-
-  // with scenes in the slotPlaybackState
-  const slotPlaybackStateWithScenes = addScenesToQueue(
-    [
-      {
-        start: 2 as Beats,
-        end: Infinity as Beats,
-        sceneId: 'scene1',
-      },
-    ],
-    createSlotPlaybackState(),
-  );
-  expect(
-    getSlotsWithinRange(
-      {
-        start: 0,
-        end: 10,
-      } as BeatsRange,
-      entities,
-      slotPlaybackStateWithScenes,
-    ),
-  ).toEqual([
-    { start: 0, end: 2, slots: [] },
-    { start: 2, end: 10, slots: [{ slotId: 'slot1', start: 2 }] },
   ]);
 });

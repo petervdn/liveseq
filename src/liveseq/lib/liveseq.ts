@@ -6,11 +6,10 @@ import type { SerializableProject } from './project/project';
 import type { Bpm, TimeInSeconds } from './time/time';
 
 import { getDefaultProject } from './project/getDefaultProject';
-
 import { createEntities } from './entities/entities';
-import { getScheduleItems } from './player/schedule.utils';
-import { getSlotsWithinRange } from './slotPlaybackState/slotPlaybackState';
+import { getScheduleItems } from './slotPlaybackState/slotPlaybackState';
 import { timeRangeToBeatsRange } from './time/beatsRange';
+import type { TimeRange } from './time/timeRange';
 
 export type CommonProps = {
   id: string;
@@ -51,27 +50,20 @@ export const createLiveseq = ({
 
   // just trying with a store setup
   const player = createConnectedPlayer({
-    getScheduleItems: (timeRange, previouslyScheduledNoteIds: Array<string>) => {
+    getScheduleItems: (timeRange: TimeRange, previouslyScheduledNoteIds: Array<string>) => {
       const beatsRange = timeRangeToBeatsRange(timeRange, currentBpm);
 
-      // we must split the beatsRange into sections where the playing slots in the slotPlaybackState changes
-      const slotsRanges = getSlotsWithinRange(beatsRange, entities, currentSlotPlaybackState);
+      const { nextSlotPlaybackState, scheduleItems } = getScheduleItems(
+        beatsRange,
+        entities,
+        currentBpm,
+        currentSlotPlaybackState,
+        previouslyScheduledNoteIds,
+      );
 
-      // the first slotPlaybackState becomes the new slotPlaybackState since we always move ahead in time
-      currentSlotPlaybackState = slotsRanges[0].slotPlaybackState;
+      currentSlotPlaybackState = nextSlotPlaybackState;
 
-      // then we get schedule items according to those split ranges and their playing slots
-      return slotsRanges.flatMap((slotRange) => {
-        const slotIds = slotRange.slots.map((slot) => slot.slotId);
-
-        return getScheduleItems(
-          entities,
-          slotIds,
-          slotRange,
-          currentBpm,
-          previouslyScheduledNoteIds,
-        );
-      });
+      return scheduleItems;
     },
     audioContext,
     store,

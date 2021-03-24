@@ -1,6 +1,7 @@
 import { musicTimeToBeats } from '../time/musicTime';
 import type { NoteName } from '../note/note';
 
+// TODO: move this to /projects/testProject
 export const testProject = {
   libraryVersion: 0,
   name: 'Project Name',
