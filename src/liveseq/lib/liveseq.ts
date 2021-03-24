@@ -1,4 +1,4 @@
-import { createStore, LiveseqState } from './store/store';
+import { createStore } from './store/store';
 import { getAudioContext } from './utils/getAudioContext';
 
 import type { SerializableProject } from './project/project';
@@ -19,9 +19,6 @@ export type CommonProps = {
 };
 
 export type LiveseqProps = {
-  // Omitting because that comes from the project
-  // TODO: maybe should just add initialState to the project file
-  initialState?: Partial<Omit<LiveseqState, 'slotPlaybackState'>>;
   project?: SerializableProject;
   audioContext?: AudioContext;
   lookAheadTime?: TimeInSeconds;
@@ -31,20 +28,13 @@ export type LiveseqProps = {
 export type Liveseq = ReturnType<typeof createLiveseq>;
 
 export const createLiveseq = ({
-  initialState,
   lookAheadTime,
   project = getDefaultProject(),
   audioContext = getAudioContext(),
   scheduleInterval,
 }: LiveseqProps = {}) => {
   const pubSub = createPubSub() as LiveseqPubSub;
-  const store = createStore(
-    {
-      ...initialState,
-      slotPlaybackState: project.slotPlaybackState,
-    },
-    pubSub,
-  );
+  const store = createStore(project.initialState, pubSub);
   const entities = createEntities(project, audioContext);
 
   const player = createPlayer({

@@ -19,20 +19,22 @@ import type { Beats } from '../liveseq/lib/time/time';
 export const abSwitch: SerializableProject = {
   libraryVersion: 0,
   name: 'A-B Switch',
-  slotPlaybackState: {
-    ...createSlotPlaybackState(),
-    queuedScenes: [
-      {
-        start: 0 as Beats,
-        end: 4 as Beats,
-        sceneId: 'scene_1',
-      },
-      {
-        start: 4 as Beats,
-        end: 8 as Beats,
-        sceneId: 'scene_2',
-      },
-    ],
+  initialState: {
+    slotPlaybackState: {
+      ...createSlotPlaybackState(),
+      queuedScenes: [
+        {
+          start: 0 as Beats,
+          end: 4 as Beats,
+          sceneId: 'scene_1',
+        },
+        {
+          start: 4 as Beats,
+          end: 8 as Beats,
+          sceneId: 'scene_2',
+        },
+      ],
+    },
   },
   entities: {
     channels: [

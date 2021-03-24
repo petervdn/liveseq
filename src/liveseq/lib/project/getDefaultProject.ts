@@ -6,7 +6,9 @@ export const getDefaultProject = (): SerializableProject => {
   return {
     libraryVersion,
     name: 'untitled',
-    slotPlaybackState: createSlotPlaybackState(),
+    initialState: {
+      slotPlaybackState: createSlotPlaybackState(),
+    },
     entities: {
       channels: [],
       instruments: [],
