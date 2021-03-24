@@ -24,12 +24,12 @@ export const abSwitch: SerializableProject = {
     queuedScenes: [
       {
         start: 0 as Beats,
-        end: 8 as Beats,
+        end: 4 as Beats,
         sceneId: 'scene_1',
       },
       {
-        start: 8 as Beats,
-        end: 16 as Beats,
+        start: 4 as Beats,
+        end: 8 as Beats,
         sceneId: 'scene_2',
       },
     ],
@@ -57,7 +57,7 @@ export const abSwitch: SerializableProject = {
         type: 'timelineSlot',
         name: 'Slot Name',
         timelineId: 'timeline_1',
-        loops: Infinity,
+        loops: 0,
       },
       {
         id: 'slot_2',
