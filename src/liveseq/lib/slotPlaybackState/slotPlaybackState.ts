@@ -108,17 +108,13 @@ export const getQueuedScenesWithinRange = (
   });
 };
 
-// given a range and a slotPlaybackState, get an array of slotPlaybackState with the respective sub ranges
-export const getSlotPlaybackStatesWithinRange = (
-  beatsRange: BeatsRange,
-  entities: Pick<Entities, 'scenes' | 'slots'>,
-  slotPlaybackState: SlotPlaybackState,
-): Array<BeatsRange & SlotPlaybackState> => {
-  // 1. find the scenes that will get triggered within the beatsRange
-  const queuedScenes = getQueuedScenesWithinRange(beatsRange, slotPlaybackState);
+type QueuedScenesByStart = Record<number, Array<QueuedScene>>;
 
-  // 2. group queuedScenes by start
-  const queuedScenesByStart = queuedScenes.reduce<Record<number, Array<QueuedScene>>>(
+export const groupQueuedScenesByStart = (
+  start: Beats,
+  queuedScenes: Array<QueuedScene>,
+): QueuedScenesByStart => {
+  return queuedScenes.reduce<QueuedScenesByStart>(
     (accumulator, current) => {
       const start = current.start as number;
 
@@ -131,12 +127,17 @@ export const getSlotPlaybackStatesWithinRange = (
       return accumulator;
     },
     // we need it to always contain the start as that is just the slotPlaybackState unmodified
-    { [beatsRange.start]: [] },
+    { [start]: [] },
   );
+};
 
-  // 3. map the result of step 2 into an array of slotPlaybackStates with ranges and the corresponding scenes applied
-  // this depends on ordering of the object keys, but they are already sorted when added since we probably read way more than write
-  // TODO: ^ make sure the order is correct
+// TODO: better naming
+export const getAppliedStatesForQueuedScenes = (
+  beatsRange: BeatsRange,
+  queuedScenesByStart: QueuedScenesByStart,
+  entities: Pick<Entities, 'scenes' | 'slots'>,
+  slotPlaybackState: SlotPlaybackState,
+) => {
   return Object.entries(queuedScenesByStart)
     .map(([key, value]) => {
       // TODO: see if we can remove this parseInt
@@ -172,6 +173,29 @@ export const getSlotPlaybackStatesWithinRange = (
 
       return accumulator;
     }, []);
+};
+
+// given a range and a slotPlaybackState, get an array of slotPlaybackState with the respective sub ranges
+export const getSlotPlaybackStatesWithinRange = (
+  beatsRange: BeatsRange,
+  entities: Pick<Entities, 'scenes' | 'slots'>,
+  slotPlaybackState: SlotPlaybackState,
+): Array<BeatsRange & SlotPlaybackState> => {
+  // 1. find the scenes that will get triggered within the beatsRange
+  const queuedScenes = getQueuedScenesWithinRange(beatsRange, slotPlaybackState);
+
+  // 2. group queuedScenes by start
+  const queuedScenesByStart = groupQueuedScenesByStart(beatsRange.start, queuedScenes);
+
+  // 3. map the result of step 2 into an array of slotPlaybackStates with ranges and the corresponding scenes applied
+  // this depends on ordering of the object keys, but they are already sorted when added since we probably read way more than write
+  // TODO: ^ make sure the order is correct
+  return getAppliedStatesForQueuedScenes(
+    beatsRange,
+    queuedScenesByStart,
+    entities,
+    slotPlaybackState,
+  );
 };
 
 export const getSlotsWithinRange = (
