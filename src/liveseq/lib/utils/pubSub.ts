@@ -17,7 +17,7 @@ export type PubSub<EventName extends string, CallbackProps> = {
 };
 
 // These 2 types below are the concrete types for the pub sub, maybe move somewhere to keep this generic
-export type SubscriptionEvents = 'isPlaying';
+export type SubscriptionEvents = 'playbackChange' | 'tempoChange';
 export type LiveseqPubSub = PubSub<SubscriptionEvents, LiveseqState>;
 
 export const createPubSub = <EventName extends string, CallbackProps>(

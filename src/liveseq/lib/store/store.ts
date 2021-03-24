@@ -10,10 +10,6 @@ export type LiveseqState = {
   tempo: Bpm;
 };
 
-export type ActionType = 'play' | 'stop' | 'pause' | 'playSlots' | 'stopSlots' | 'activateScenes';
-
-export type Store = ReturnType<typeof createStore>;
-
 export const createStore = (initialState: Partial<LiveseqState> = {}, pubSub: LiveseqPubSub) => {
   const defaultState: LiveseqState = {
     isPlaying: false,
@@ -36,10 +32,6 @@ export const createStore = (initialState: Partial<LiveseqState> = {}, pubSub: Li
     return state;
   };
 
-  const getState = () => {
-    return state;
-  };
-
   const dispose = () => {
     // nothing to do here yet
   };
@@ -47,7 +39,7 @@ export const createStore = (initialState: Partial<LiveseqState> = {}, pubSub: Li
   // ACTIONS
   const play = () => {
     pubSub.dispatch(
-      'isPlaying',
+      'playbackChange',
       setState({
         isPlaying: true,
       }),
@@ -56,19 +48,42 @@ export const createStore = (initialState: Partial<LiveseqState> = {}, pubSub: Li
 
   const stop = () => {
     pubSub.dispatch(
-      'isPlaying',
+      'playbackChange',
       setState({
         isPlaying: false,
       }),
     );
   };
 
+  const setTempo = (bpm: Bpm) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    pubSub.dispatch(
+      'tempoChange',
+      setState({
+        tempo: bpm,
+      }),
+    );
+  };
+
+  // SELECTORS
+  const getTempo = () => {
+    return state.tempo;
+  };
+
+  const getIsPlaying = () => {
+    return state.isPlaying;
+  };
+
   return {
     actions: {
       play,
       stop,
+      setTempo,
+    },
+    selectors: {
+      getTempo,
+      getIsPlaying,
     },
     dispose,
-    getState,
   };
 };

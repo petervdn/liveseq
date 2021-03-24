@@ -2,7 +2,7 @@ import { createStore, LiveseqState } from './store/store';
 import { getAudioContext } from './utils/getAudioContext';
 
 import type { SerializableProject } from './project/project';
-import type { Bpm, TimeInSeconds } from './time/time';
+import type { TimeInSeconds } from './time/time';
 
 import { getDefaultProject } from './project/getDefaultProject';
 import { createEntities } from './entities/entities';
@@ -24,35 +24,27 @@ export type LiveseqProps = {
   audioContext?: AudioContext;
   lookAheadTime?: TimeInSeconds;
   scheduleInterval?: TimeInSeconds;
-  bpm?: Bpm;
 };
 
 export type Liveseq = ReturnType<typeof createLiveseq>;
 
 export const createLiveseq = ({
-  bpm = 120 as Bpm,
   initialState,
   lookAheadTime,
   project = getDefaultProject(),
   audioContext = getAudioContext(),
   scheduleInterval,
 }: LiveseqProps = {}) => {
-  // TODO: move types somewhere else instead of inlining here
   const pubSub = createPubSub() as LiveseqPubSub;
   const store = createStore(initialState, pubSub);
   const entities = createEntities(project, audioContext);
   const initialSlotPlaybackState = project.slotPlaybackState;
 
   let currentSlotPlaybackState = initialSlotPlaybackState;
-  let currentBpm = bpm as Bpm;
-
-  const setTempo = (bpm: Bpm) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    currentBpm = bpm;
-  };
 
   const player = createPlayer({
     getScheduleItems: (timeRange: TimeRange, previouslyScheduledNoteIds: Array<string>) => {
+      const currentBpm = store.selectors.getTempo();
       const beatsRange = timeRangeToBeatsRange(timeRange, currentBpm);
 
       const { nextSlotPlaybackState, scheduleItems } = getScheduleItemsWithinRange(
@@ -86,10 +78,10 @@ export const createLiveseq = ({
   // liveseq's API
   return {
     subscribe: pubSub.subscribe,
-    getState: store.getState,
+    ...store.selectors,
     play: player.play,
     stop: player.stop,
-    setTempo,
+    setTempo: store.actions.setTempo,
     dispose,
     audioContext,
   };
