@@ -1,10 +1,10 @@
 import { createContext, useContext, useMemo } from 'react';
 
-import type { Liveseq, LiveseqProps } from '../lib/liveseq';
-import { createLiveseq } from '../lib/liveseq';
+import type { LiveseqProps } from '../lib/liveseq';
+import type { SubscribableLiveseq } from '../lib/subscribableLiveseq';
+import { createSubscribableLiveseq } from '../lib/subscribableLiveseq';
 
-// TODO: remove the "as Liveseq" cast
-const liveseqContext = createContext<Liveseq>({} as Liveseq);
+const liveseqContext = createContext<SubscribableLiveseq>({} as SubscribableLiveseq);
 
 type LiveseqProvider = ({ children }: { children: React.ReactNode }) => JSX.Element;
 
@@ -13,8 +13,8 @@ export const useLiveseq = (props: LiveseqProps) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const initialProps = useMemo(() => props, []);
 
-  const liveseq = useMemo<Liveseq>(() => {
-    return createLiveseq(initialProps);
+  const liveseq = useMemo<SubscribableLiveseq>(() => {
+    return createSubscribableLiveseq(initialProps);
   }, [initialProps]);
 
   const LiveseqProvider = useMemo<LiveseqProvider>(() => {

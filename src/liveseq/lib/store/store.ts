@@ -1,8 +1,8 @@
 import { getDefaultProject } from '../project/getDefaultProject';
 import type { SerializableProject } from '../project/project';
 import type { Bpm } from '../time/time';
-import type { LiveseqPubSub } from '../utils/pubSub';
 import { createSlotPlaybackState, SlotPlaybackState } from '../player/slotPlaybackState';
+import type { LiveseqCallbacks } from '../liveseq';
 
 export type LiveseqState = {
   isPlaying: boolean;
@@ -12,7 +12,10 @@ export type LiveseqState = {
   slotPlaybackState: SlotPlaybackState;
 };
 
-export const createStore = (initialState: Partial<LiveseqState> = {}, pubSub: LiveseqPubSub) => {
+export const createStore = (
+  initialState: Partial<LiveseqState> = {},
+  callbacks: LiveseqCallbacks,
+) => {
   const defaultState: LiveseqState = {
     isPlaying: false,
     project: getDefaultProject(),
@@ -41,31 +44,28 @@ export const createStore = (initialState: Partial<LiveseqState> = {}, pubSub: Li
 
   // ACTIONS
   const play = () => {
-    pubSub.dispatch(
-      'playbackChange',
-      setState({
-        isPlaying: true,
-      }),
-    );
+    setState({
+      isPlaying: true,
+    });
+
+    callbacks.onPlay();
   };
 
   const stop = () => {
-    pubSub.dispatch(
-      'playbackChange',
-      setState({
-        isPlaying: false,
-      }),
-    );
+    setState({
+      isPlaying: false,
+    });
+
+    callbacks.onStop();
   };
 
   const setTempo = (bpm: Bpm) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    pubSub.dispatch(
-      'tempoChange',
-      setState({
-        tempo: bpm,
-      }),
-    );
+    setState({
+      tempo: bpm,
+    });
+
+    callbacks.onTempoChange();
   };
 
   const setSlotPlaybackState = (slotPlaybackState: SlotPlaybackState) => {

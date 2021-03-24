@@ -8,28 +8,22 @@
 // pubSub.dispatch('hello', {message: 'welcome'})
 // pubSub.dispose()
 
-import type { LiveseqState } from '../store/store';
-
-export type PubSub<EventName extends string, CallbackProps> = {
-  dispatch: (eventName: EventName, props: CallbackProps) => void;
-  subscribe: (eventName: EventName, callback: (props: CallbackProps) => void) => () => void;
+export type PubSub<EventName extends string> = {
+  dispatch: (eventName: EventName) => void;
+  subscribe: (eventName: EventName, callback: () => void) => () => void;
   dispose: () => void;
 };
 
-// These 2 types below are the concrete types for the pub sub, maybe move somewhere to keep this generic
-export type SubscriptionEvents = 'playbackChange' | 'tempoChange';
-export type LiveseqPubSub = PubSub<SubscriptionEvents, LiveseqState>;
-
-export const createPubSub = <EventName extends string, CallbackProps>(
-  onDispatch?: (eventName: EventName, props: CallbackProps) => void,
-): PubSub<EventName, CallbackProps> => {
+export const createPubSub = <EventName extends string>(
+  onDispatch?: (eventName: EventName) => void,
+): PubSub<EventName> => {
   // TODO: use an object to find by eventName without running through the whole array
   let subscriptions: Array<{
     eventName: EventName;
-    callback: (props: CallbackProps) => void;
+    callback: () => void;
   }> = [];
 
-  const subscribe = (eventName: EventName, callback: (props: CallbackProps) => void) => {
+  const subscribe = (eventName: EventName, callback: () => void) => {
     const subscription = {
       eventName,
       callback,
@@ -46,13 +40,13 @@ export const createPubSub = <EventName extends string, CallbackProps>(
     return unsubscribe;
   };
 
-  const dispatch = (eventName: EventName, props: CallbackProps) => {
-    onDispatch && onDispatch(eventName, props);
+  const dispatch = (eventName: EventName) => {
+    onDispatch && onDispatch(eventName);
 
     subscriptions.forEach((subscription) => {
       if (subscription.eventName !== eventName) return;
 
-      subscription.callback(props);
+      subscription.callback();
     });
   };
 

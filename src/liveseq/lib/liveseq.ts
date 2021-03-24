@@ -9,8 +9,9 @@ import { createEntities } from './entities/entities';
 import { getScheduleItemsWithinRange } from './player/slotPlaybackState';
 import { timeRangeToBeatsRange } from './time/beatsRange';
 import type { TimeRange } from './time/timeRange';
-import { createPubSub, LiveseqPubSub } from './utils/pubSub';
+
 import { createPlayer } from './player/player';
+import { noop } from './utils/noop';
 
 export type CommonProps = {
   id: string;
@@ -18,7 +19,13 @@ export type CommonProps = {
   isEnabled?: boolean;
 };
 
-export type LiveseqProps = {
+export type LiveseqCallbacks = {
+  onPlay: () => void;
+  onStop: () => void;
+  onTempoChange: () => void;
+};
+
+export type LiveseqProps = Partial<LiveseqCallbacks> & {
   project?: SerializableProject;
   audioContext?: AudioContext;
   lookAheadTime?: TimeInSeconds;
@@ -27,14 +34,24 @@ export type LiveseqProps = {
 
 export type Liveseq = ReturnType<typeof createLiveseq>;
 
+const defaultCallbacks: LiveseqCallbacks = {
+  onPlay: noop,
+  onStop: noop,
+  onTempoChange: noop,
+};
+
 export const createLiveseq = ({
   lookAheadTime,
   project = getDefaultProject(),
   audioContext = getAudioContext(),
   scheduleInterval,
+  ...callbacksRest
 }: LiveseqProps = {}) => {
-  const pubSub = createPubSub() as LiveseqPubSub;
-  const store = createStore(project.initialState, pubSub);
+  const callbacks = {
+    ...defaultCallbacks,
+    ...callbacksRest,
+  };
+  const store = createStore(project.initialState, callbacks);
   const entities = createEntities(project, audioContext);
 
   const player = createPlayer({
@@ -73,7 +90,6 @@ export const createLiveseq = ({
 
   // liveseq's API
   return {
-    subscribe: pubSub.subscribe,
     ...store.selectors,
     play: player.play,
     stop: player.stop,
