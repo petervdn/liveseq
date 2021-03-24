@@ -2,12 +2,14 @@ import { getDefaultProject } from '../project/getDefaultProject';
 import type { SerializableProject } from '../project/project';
 import type { Bpm } from '../time/time';
 import type { LiveseqPubSub } from '../utils/pubSub';
+import { createSlotPlaybackState, SlotPlaybackState } from '../player/slotPlaybackState';
 
 export type LiveseqState = {
   isPlaying: boolean;
   project: SerializableProject;
   activeSceneIds: Array<string>;
   tempo: Bpm;
+  slotPlaybackState: SlotPlaybackState;
 };
 
 export const createStore = (initialState: Partial<LiveseqState> = {}, pubSub: LiveseqPubSub) => {
@@ -16,6 +18,7 @@ export const createStore = (initialState: Partial<LiveseqState> = {}, pubSub: Li
     project: getDefaultProject(),
     activeSceneIds: [],
     tempo: 120 as Bpm,
+    slotPlaybackState: createSlotPlaybackState(),
   };
 
   let state = {
@@ -65,6 +68,12 @@ export const createStore = (initialState: Partial<LiveseqState> = {}, pubSub: Li
     );
   };
 
+  const setSlotPlaybackState = (slotPlaybackState: SlotPlaybackState) => {
+    setState({
+      slotPlaybackState,
+    });
+  };
+
   // SELECTORS
   const getTempo = () => {
     return state.tempo;
@@ -74,15 +83,21 @@ export const createStore = (initialState: Partial<LiveseqState> = {}, pubSub: Li
     return state.isPlaying;
   };
 
+  const getSlotPlaybackState = () => {
+    return state.slotPlaybackState;
+  };
+
   return {
     actions: {
       play,
       stop,
       setTempo,
+      setSlotPlaybackState,
     },
     selectors: {
       getTempo,
       getIsPlaying,
+      getSlotPlaybackState,
     },
     dispose,
   };

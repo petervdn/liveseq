@@ -11,8 +11,8 @@
 import type { LiveseqState } from '../store/store';
 
 export type PubSub<EventName extends string, CallbackProps> = {
-  dispatch: (actionType: EventName, props: CallbackProps) => void;
-  subscribe: (actionType: EventName, callback: (props: CallbackProps) => void) => () => void;
+  dispatch: (eventName: EventName, props: CallbackProps) => void;
+  subscribe: (eventName: EventName, callback: (props: CallbackProps) => void) => () => void;
   dispose: () => void;
 };
 
@@ -21,17 +21,17 @@ export type SubscriptionEvents = 'playbackChange' | 'tempoChange';
 export type LiveseqPubSub = PubSub<SubscriptionEvents, LiveseqState>;
 
 export const createPubSub = <EventName extends string, CallbackProps>(
-  onDispatch?: (actionType: EventName, props: CallbackProps) => void,
+  onDispatch?: (eventName: EventName, props: CallbackProps) => void,
 ): PubSub<EventName, CallbackProps> => {
-  // TODO: use an object to find by actionType without running through the whole array
+  // TODO: use an object to find by eventName without running through the whole array
   let subscriptions: Array<{
-    actionType: EventName;
+    eventName: EventName;
     callback: (props: CallbackProps) => void;
   }> = [];
 
-  const subscribe = (actionType: EventName, callback: (props: CallbackProps) => void) => {
+  const subscribe = (eventName: EventName, callback: (props: CallbackProps) => void) => {
     const subscription = {
-      actionType,
+      eventName,
       callback,
     };
 
@@ -46,11 +46,11 @@ export const createPubSub = <EventName extends string, CallbackProps>(
     return unsubscribe;
   };
 
-  const dispatch = (actionType: EventName, props: CallbackProps) => {
-    onDispatch && onDispatch(actionType, props);
+  const dispatch = (eventName: EventName, props: CallbackProps) => {
+    onDispatch && onDispatch(eventName, props);
 
     subscriptions.forEach((subscription) => {
-      if (subscription.actionType !== actionType) return;
+      if (subscription.eventName !== eventName) return;
 
       subscription.callback(props);
     });

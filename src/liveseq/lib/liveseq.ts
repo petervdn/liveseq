@@ -19,7 +19,9 @@ export type CommonProps = {
 };
 
 export type LiveseqProps = {
-  initialState?: Partial<LiveseqState>;
+  // Omitting because that comes from the project
+  // TODO: maybe should just add initialState to the project file
+  initialState?: Partial<Omit<LiveseqState, 'slotPlaybackState'>>;
   project?: SerializableProject;
   audioContext?: AudioContext;
   lookAheadTime?: TimeInSeconds;
@@ -36,15 +38,19 @@ export const createLiveseq = ({
   scheduleInterval,
 }: LiveseqProps = {}) => {
   const pubSub = createPubSub() as LiveseqPubSub;
-  const store = createStore(initialState, pubSub);
+  const store = createStore(
+    {
+      ...initialState,
+      slotPlaybackState: project.slotPlaybackState,
+    },
+    pubSub,
+  );
   const entities = createEntities(project, audioContext);
-  const initialSlotPlaybackState = project.slotPlaybackState;
-
-  let currentSlotPlaybackState = initialSlotPlaybackState;
 
   const player = createPlayer({
     getScheduleItems: (timeRange: TimeRange, previouslyScheduledNoteIds: Array<string>) => {
       const currentBpm = store.selectors.getTempo();
+      const currentSlotPlaybackState = store.selectors.getSlotPlaybackState();
       const beatsRange = timeRangeToBeatsRange(timeRange, currentBpm);
 
       const { nextSlotPlaybackState, scheduleItems } = getScheduleItemsWithinRange(
@@ -55,7 +61,7 @@ export const createLiveseq = ({
         previouslyScheduledNoteIds,
       );
 
-      currentSlotPlaybackState = nextSlotPlaybackState;
+      store.actions.setSlotPlaybackState(nextSlotPlaybackState);
 
       return scheduleItems;
     },
