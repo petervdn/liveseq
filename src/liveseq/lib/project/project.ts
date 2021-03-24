@@ -10,7 +10,7 @@ import type { SlotPlaybackState } from '../slotPlaybackState/slotPlaybackState';
 export type SerializableProject = {
   libraryVersion: number;
   name: string;
-  slotPlaybackState: SlotPlaybackState; // The scenes to trigger when liveseq is played (from stopped state)
+  slotPlaybackState: SlotPlaybackState;
   entities: {
     channels: Array<SerializableChannel>;
     instruments: Array<SerializableInstrument>;
