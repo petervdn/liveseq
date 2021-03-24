@@ -3,7 +3,6 @@ import type { BeatsRange } from '../time/beatsRange';
 import type { SceneEntity } from '../entities/scene/scene';
 import { createRange, isTimeInRange } from '../time/beatsRange';
 import type { Entities } from '../entities/entities';
-import type { ScheduleItem } from './player';
 import { getNotesForInstrumentInTimeRange } from './schedule.utils';
 
 type PlayingSlot = {
@@ -196,37 +195,10 @@ export const getSlotPlaybackStatesWithinRange = (
   );
 };
 
-export const getScheduleItems1 = (
-  entities: Entities,
-  activeSlotIds: Array<string>,
-  beatsRange: BeatsRange,
-  bpm: Bpm,
-  previouslyScheduledNoteIds: Array<string>,
-): Array<ScheduleItem> => {
-  // get all notes
-  const notesInTimeRange = getNotesForInstrumentInTimeRange(
-    entities,
-    activeSlotIds,
-    beatsRange,
-    bpm,
-    previouslyScheduledNoteIds,
-  );
-
-  // get rid of the ones that have already been scheduled
-  return notesInTimeRange.map((scheduleItem) => {
-    return {
-      ...scheduleItem,
-      notes: scheduleItem.notes.filter((note) => {
-        return !previouslyScheduledNoteIds.includes(note.schedulingId);
-      }),
-    };
-  });
-};
-
 export const getScheduleItems = (
   beatsRange: BeatsRange,
   entities: Entities,
-  currentBpm: Bpm,
+  bpm: Bpm,
   slotPlaybackState: SlotPlaybackState,
   previouslyScheduledNoteIds: Array<string>,
 ) => {
@@ -245,7 +217,13 @@ export const getScheduleItems = (
   const scheduleItems = slotPlaybackStates.flatMap((slotRange) => {
     const slotIds = slotRange.playingSlots.map((slot) => slot.slotId);
 
-    return getScheduleItems1(entities, slotIds, slotRange, currentBpm, previouslyScheduledNoteIds);
+    return getNotesForInstrumentInTimeRange(
+      entities,
+      slotIds,
+      beatsRange,
+      bpm,
+      previouslyScheduledNoteIds,
+    );
   });
 
   return {
