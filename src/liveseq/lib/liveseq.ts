@@ -25,6 +25,12 @@ export type LiveseqCallbacks = {
   onTempoChange: () => void;
 };
 
+const defaultCallbacks: LiveseqCallbacks = {
+  onPlay: noop,
+  onStop: noop,
+  onTempoChange: noop,
+};
+
 export type LiveseqProps = Partial<LiveseqCallbacks> & {
   project?: SerializableProject;
   audioContext?: AudioContext;
@@ -33,12 +39,6 @@ export type LiveseqProps = Partial<LiveseqCallbacks> & {
 };
 
 export type Liveseq = ReturnType<typeof createLiveseq>;
-
-const defaultCallbacks: LiveseqCallbacks = {
-  onPlay: noop,
-  onStop: noop,
-  onTempoChange: noop,
-};
 
 export const createLiveseq = ({
   lookAheadTime,
@@ -54,23 +54,29 @@ export const createLiveseq = ({
   const store = createStore(project.initialState, callbacks);
   const entities = createEntities(project, audioContext);
 
+  // TODO: better naming
+  // separate function so we can make it part of the API (useful for testing as well)
+  const getScheduleItems = (
+    timeRange: TimeRange,
+    previouslyScheduledNoteIds: Array<string> = [],
+  ) => {
+    const currentBpm = store.selectors.getTempo();
+    const currentSlotPlaybackState = store.selectors.getSlotPlaybackState();
+    const beatsRange = timeRangeToBeatsRange(timeRange, currentBpm);
+
+    return getScheduleItemsWithinRange(
+      beatsRange,
+      entities,
+      currentBpm,
+      currentSlotPlaybackState,
+      previouslyScheduledNoteIds,
+    );
+  };
+
   const player = createPlayer({
-    getScheduleItems: (timeRange: TimeRange, previouslyScheduledNoteIds: Array<string>) => {
-      const currentBpm = store.selectors.getTempo();
-      const currentSlotPlaybackState = store.selectors.getSlotPlaybackState();
-      const beatsRange = timeRangeToBeatsRange(timeRange, currentBpm);
-
-      const { nextSlotPlaybackState, scheduleItems } = getScheduleItemsWithinRange(
-        beatsRange,
-        entities,
-        currentBpm,
-        currentSlotPlaybackState,
-        previouslyScheduledNoteIds,
-      );
-
+    getScheduleItems,
+    onSchedule: ({ nextSlotPlaybackState }) => {
       store.actions.setSlotPlaybackState(nextSlotPlaybackState);
-
-      return scheduleItems;
     },
     onPlay: () => {
       store.actions.play();
@@ -91,6 +97,7 @@ export const createLiveseq = ({
   // liveseq's API
   return {
     ...store.selectors,
+    getScheduleItems,
     play: player.play,
     stop: player.stop,
     setTempo: store.actions.setTempo,

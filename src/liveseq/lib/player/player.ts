@@ -1,6 +1,7 @@
 import type { Note } from '../note/note';
 import type { TimeInSeconds } from '../time/time';
 import type { TimeRange } from '../time/timeRange';
+import type { getScheduleItemsWithinRange } from './slotPlaybackState';
 
 export type ScheduleNote = Note & {
   startTime: TimeInSeconds;
@@ -25,9 +26,10 @@ export type PlayerProps = {
   getScheduleItems: (
     timeRange: TimeRange,
     previouslyScheduledNoteIds: Array<string>,
-  ) => Array<ScheduleItem>;
+  ) => ReturnType<typeof getScheduleItemsWithinRange>;
   onPlay: () => void;
   onStop: () => void;
+  onSchedule: (value: ReturnType<typeof getScheduleItemsWithinRange>) => void;
 };
 
 // export type Player = ReturnType<typeof createPlayer>;
@@ -39,6 +41,7 @@ export const createPlayer = ({
   lookAheadTime = 1.2 as TimeInSeconds,
   onPlay,
   onStop,
+  onSchedule,
 }: PlayerProps) => {
   let playStartTime: number | null = null;
   let timeoutId: number | null = null;
@@ -55,13 +58,17 @@ export const createPlayer = ({
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const songTime = (audioContext.currentTime - playStartTime!) as TimeInSeconds; // playStartTime should always be defined when playing
 
-    const scheduleItems = getScheduleItems(
+    // TODO: naming
+    const stuff = getScheduleItems(
       {
         start: songTime,
         end: (songTime + lookAheadTime) as TimeInSeconds,
       },
       previouslyScheduledNoteIds,
     );
+    const { scheduleItems } = stuff;
+
+    onSchedule(stuff);
 
     // TODO: this will grow indefinitely so we need to clean up
     previouslyScheduledNoteIds = previouslyScheduledNoteIds.concat(
