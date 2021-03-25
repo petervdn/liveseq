@@ -73,6 +73,16 @@ export const createLiveseq = ({
     );
   };
 
+  // TODO: better naming
+  const getScheduleItemsInfo = (timeRange: TimeRange) => {
+    return getScheduleItems(timeRange).scheduleItems.map((scheduleItem) => {
+      return {
+        notes: scheduleItem.notes,
+        // TODO: add SerializableInstrument here as well
+      };
+    });
+  };
+
   const player = createPlayer({
     getScheduleItems,
     onSchedule: ({ nextSlotPlaybackState }) => {
@@ -97,7 +107,7 @@ export const createLiveseq = ({
   // liveseq's API
   return {
     ...store.selectors,
-    getScheduleItems,
+    getScheduleItemsInfo,
     play: player.play,
     stop: player.stop,
     setTempo: store.actions.setTempo,
