@@ -3,18 +3,53 @@ import { musicTimeToBeats } from '../liveseq/lib/time/musicTime';
 import type { NoteName } from '../liveseq/lib/note/note';
 import { createSlotPlaybackState } from '../liveseq/lib/player/slotPlaybackState';
 import type { Beats } from '../liveseq/lib/time/time';
+import { getIdGenerator } from '../liveseq/lib/utils/getIdGenerator';
+import { createNote } from '../liveseq/lib/note/note';
 
-// TODO: make this file describe this example
-// Example switching
-// Scene A:
-//   - plays timeline_1 in channel_1 with sampler_1
-//   - plays timeline_1 in channel_2 with synth_1
+const getNoteId = getIdGenerator('note');
+const getClipId = getIdGenerator('clip');
 
-// Go from A to B automatically after timeline_1 has played 4 times
+const getMetronome = (isAlternative: boolean) => {
+  const notes = isAlternative
+    ? { emphasis: 'C5' as NoteName, regular: 'C4' as NoteName }
+    : { emphasis: 'G5' as NoteName, regular: 'G6' as NoteName };
 
-// Scene B:
-//   - stops playing timeline_1 in channel_2 with synth_1
-//   - plays timeline_2 in channel_1 with sampler_1
+  return {
+    id: getClipId(),
+    type: 'noteClip' as const,
+    name: 'Clip Name',
+    duration: musicTimeToBeats([1, 0, 0]),
+    notes: [
+      createNote({
+        id: getNoteId(),
+        start: musicTimeToBeats([0, 0, 0]),
+        end: musicTimeToBeats([0, 1, 0]),
+        pitch: notes.emphasis,
+      }),
+      createNote({
+        id: getNoteId(),
+        start: musicTimeToBeats([0, 1, 0]),
+        end: musicTimeToBeats([0, 2, 0]),
+        pitch: notes.regular,
+      }),
+      createNote({
+        id: getNoteId(),
+        start: musicTimeToBeats([0, 2, 0]),
+        end: musicTimeToBeats([0, 3, 0]),
+        pitch: notes.regular,
+      }),
+      createNote({
+        id: getNoteId(),
+        start: musicTimeToBeats([0, 3, 0]),
+        end: musicTimeToBeats([0, 4, 0]),
+        pitch: notes.regular,
+      }),
+    ],
+  };
+};
+
+const clipA = getMetronome(false);
+const clipB = getMetronome(true);
 
 export const abSwitch: SerializableProject = {
   libraryVersion: 0,
@@ -70,80 +105,7 @@ export const abSwitch: SerializableProject = {
       },
     ],
     // global to allow same clip being used multiple times in timelines
-    clips: [
-      {
-        id: 'clip_1',
-        type: 'noteClip',
-        name: 'Clip Name',
-        duration: musicTimeToBeats([1, 0, 0]),
-        notes: [
-          {
-            id: 'note_1',
-            start: musicTimeToBeats([0, 0, 0]),
-            end: musicTimeToBeats([0, 1, 0]),
-            velocity: 0.75,
-            pitch: 'C6' as NoteName,
-          },
-          {
-            id: 'note_2',
-            start: musicTimeToBeats([0, 1, 0]),
-            end: musicTimeToBeats([0, 2, 0]),
-            velocity: 0.75,
-            pitch: 'C5' as NoteName,
-          },
-          {
-            id: 'note_3',
-            start: musicTimeToBeats([0, 2, 0]),
-            end: musicTimeToBeats([0, 3, 0]),
-            velocity: 0.75,
-            pitch: 'C5' as NoteName,
-          },
-          {
-            id: 'note_4',
-            start: musicTimeToBeats([0, 3, 0]),
-            end: musicTimeToBeats([0, 4, 0]),
-            velocity: 0.75,
-            pitch: 'C5' as NoteName,
-          },
-        ],
-      },
-      {
-        id: 'clip_2',
-        type: 'noteClip',
-        name: 'Clip Name',
-        duration: musicTimeToBeats([1, 0, 0]),
-        notes: [
-          {
-            id: 'note_1',
-            start: musicTimeToBeats([0, 0, 0]),
-            end: musicTimeToBeats([0, 1, 0]),
-            velocity: 0.75,
-            pitch: 'G5' as NoteName,
-          },
-          {
-            id: 'note_2',
-            start: musicTimeToBeats([0, 1, 0]),
-            end: musicTimeToBeats([0, 2, 0]),
-            velocity: 0.75,
-            pitch: 'G6' as NoteName,
-          },
-          {
-            id: 'note_3',
-            start: musicTimeToBeats([0, 2, 0]),
-            end: musicTimeToBeats([0, 3, 0]),
-            velocity: 0.75,
-            pitch: 'G6' as NoteName,
-          },
-          {
-            id: 'note_4',
-            start: musicTimeToBeats([0, 3, 0]),
-            end: musicTimeToBeats([0, 4, 0]),
-            velocity: 0.75,
-            pitch: 'G6' as NoteName,
-          },
-        ],
-      },
-    ],
+    clips: [clipA, clipB],
     // global to allow same timeline being used in multiple channels or slots
     timelines: [
       {
@@ -152,7 +114,7 @@ export const abSwitch: SerializableProject = {
         duration: musicTimeToBeats([1, 0, 0]),
         clips: [
           {
-            clipId: 'clip_1',
+            clipId: clipA.id,
             start: musicTimeToBeats([0, 0, 0]),
             end: musicTimeToBeats([1, 0, 0]),
           },
@@ -164,7 +126,7 @@ export const abSwitch: SerializableProject = {
         duration: musicTimeToBeats([1, 0, 0]),
         clips: [
           {
-            clipId: 'clip_2',
+            clipId: clipB.id,
             start: musicTimeToBeats([0, 0, 0]),
             end: musicTimeToBeats([1, 0, 0]),
           },

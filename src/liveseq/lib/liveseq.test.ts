@@ -2,8 +2,6 @@ import { createLiveseq } from './liveseq';
 import { abSwitch } from '../../projects/abSwitch';
 import type { TimeRange } from './time/timeRange';
 
-export {};
-
 it('liveseq', () => {
   const liveseq = createLiveseq({ project: abSwitch, audioContext: {} as never });
 

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import type { Opaque } from 'type-fest';
 import type { BeatsRange } from '../time/beatsRange';
+import type { Beats } from '../time/time';
 
 export type Hertz = Opaque<number, 'Hertz'>;
 
@@ -10,6 +11,21 @@ export type Note = BeatsRange & {
   id: string;
   velocity: number;
   pitch: NoteName;
+};
+
+const defaultNote: Note = {
+  id: '',
+  start: 0 as Beats,
+  end: 1 as Beats,
+  velocity: 0.75,
+  pitch: 'C5' as NoteName,
+};
+
+export const createNote = (note: Partial<Note>) => {
+  return {
+    ...defaultNote,
+    ...note,
+  };
 };
 
 // the frequency of the middle C (C4)
