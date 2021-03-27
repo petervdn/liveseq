@@ -1,5 +1,5 @@
-import { createLiveseq } from '../liveseq';
-import { libraryVersion } from '../../libraryVersion';
+import { createLiveseq } from '../lib/liveseq';
+import { libraryVersion } from '../lib/meta';
 
 it('has correct defaults', () => {
   expect(createLiveseq().getTempo()).toBe(120);

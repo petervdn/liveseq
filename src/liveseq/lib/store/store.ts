@@ -1,8 +1,8 @@
-import { getDefaultProject } from '../project/getDefaultProject';
 import type { SerializableProject } from '../project/project';
 import type { Bpm } from '../time/time';
 import { createSlotPlaybackState, SlotPlaybackState } from '../player/slotPlaybackState';
 import type { LiveseqCallbacks } from '../liveseq';
+import { createProject } from '../project/project';
 
 export type LiveseqState = {
   isPlaying: boolean;
@@ -18,7 +18,7 @@ export const createStore = (
 ) => {
   const defaultState: LiveseqState = {
     isPlaying: false,
-    project: getDefaultProject(),
+    project: createProject(),
     activeSceneIds: [],
     tempo: 120 as Bpm,
     slotPlaybackState: createSlotPlaybackState(),

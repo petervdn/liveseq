@@ -2,6 +2,8 @@ import type { Note } from '../note/note';
 import type { TimeInSeconds } from '../time/time';
 import type { TimeRange } from '../time/timeRange';
 import type { getScheduleItemsWithinRange } from './slotPlaybackState';
+import type { Errors } from '../errors';
+import { isContextSuspended } from '../utils/isContextSuspended';
 
 export type ScheduleNote = Note & {
   startTime: TimeInSeconds;
@@ -20,8 +22,8 @@ export type ScheduleItem = {
 
 export type PlayerProps = {
   audioContext: AudioContext;
-  lookAheadTime?: TimeInSeconds;
-  scheduleInterval?: TimeInSeconds;
+  lookAheadTime: TimeInSeconds;
+  scheduleInterval: TimeInSeconds;
   // called every time schedule runs to get "what" to schedule from the project
   getScheduleItems: (
     timeRange: TimeRange,
@@ -30,6 +32,7 @@ export type PlayerProps = {
   onPlay: () => void;
   onStop: () => void;
   onSchedule: (value: ReturnType<typeof getScheduleItemsWithinRange>) => void;
+  errors: Pick<Errors, 'contextSuspended' | 'invalidLookahead'>;
 };
 
 // export type Player = ReturnType<typeof createPlayer>;
@@ -37,11 +40,12 @@ export type PlayerProps = {
 export const createPlayer = ({
   audioContext,
   getScheduleItems,
-  scheduleInterval = 1 as TimeInSeconds,
-  lookAheadTime = 1.2 as TimeInSeconds,
+  scheduleInterval,
+  lookAheadTime,
   onPlay,
   onStop,
   onSchedule,
+  errors,
 }: PlayerProps) => {
   let playStartTime: number | null = null;
   let timeoutId: number | null = null;
@@ -50,10 +54,9 @@ export const createPlayer = ({
   let previouslyScheduledNoteIds: Array<string> = [];
 
   if (lookAheadTime <= scheduleInterval) {
-    throw new Error('LookAheadTime should be larger than the scheduleInterval');
+    errors.invalidLookahead();
   }
 
-  // filteredNotes.map((note) => note.schedulingId)
   const schedule = () => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const songTime = (audioContext.currentTime - playStartTime!) as TimeInSeconds; // playStartTime should always be defined when playing
@@ -92,14 +95,12 @@ export const createPlayer = ({
   };
 
   const play = () => {
-    audioContext.state === 'suspended'
+    isContextSuspended(audioContext)
       ? audioContext
           .resume()
           .then(handlePlay)
           .catch(() => {
-            if (audioContext.state === 'suspended') {
-              throw new Error('Cannot play, AudioContext is suspended');
-            }
+            isContextSuspended(audioContext) && errors.contextSuspended();
           })
       : handlePlay();
   };
