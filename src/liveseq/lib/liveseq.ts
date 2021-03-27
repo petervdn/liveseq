@@ -99,6 +99,11 @@ export const createLiveseq = ({
     scheduleInterval,
   });
 
+  const getProject = () => {
+    // TODO: process the current state and
+    return project;
+  };
+
   const dispose = () => {
     player.dispose();
     store.dispose();
@@ -106,11 +111,13 @@ export const createLiveseq = ({
 
   // liveseq's API
   return {
-    ...store.selectors,
     getScheduleItemsInfo,
     play: player.play,
     stop: player.stop,
     setTempo: store.actions.setTempo,
+    getTempo: store.selectors.getTempo,
+    getIsPlaying: store.selectors.getIsPlaying,
+    getProject,
     dispose,
     audioContext,
   };
