@@ -1,22 +1,9 @@
 import { createLiveseq } from '../lib/liveseq';
-import { libraryVersion } from '../lib/meta';
+import { createProject } from '../lib/project/project';
 
 it('has correct defaults', () => {
   expect(createLiveseq().getTempo()).toBe(120);
   expect(createLiveseq().audioContext).toBeDefined();
   expect(createLiveseq().getIsPlaying()).toBe(false);
-  expect(createLiveseq().getProject()).toEqual({
-    name: 'untitled',
-    libraryVersion,
-    initialState: { slotPlaybackState: { activeSceneIds: [], playingSlots: [], queuedScenes: [] } },
-    entities: {
-      channels: [],
-      clips: [],
-      instruments: [],
-      samples: [],
-      scenes: [],
-      slots: [],
-      timelines: [],
-    },
-  });
+  expect(createLiveseq().getProject()).toEqual(createProject());
 });
