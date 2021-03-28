@@ -1,7 +1,6 @@
 import { createLiveseq } from '../lib/liveseq';
 import { errorMessages } from '../lib/errors';
 import { createProject } from '../lib/project/project';
-import { libraryVersion } from '../lib/meta';
 import type { TimeInSeconds } from '..';
 
 it('throws when lookahead time is smaller than interval', () => {
@@ -17,13 +16,12 @@ it('throws when lookahead time is smaller than interval', () => {
 });
 
 it('throws when project version is incompatible', () => {
-  // error
-  const invalidProject = createProject({ libraryVersion: libraryVersion + 1 });
-
-  expect(() => createLiveseq({ project: invalidProject })).toThrowError(
-    errorMessages.invalidProjectVersion(invalidProject.libraryVersion, libraryVersion),
-  );
+  // TODO: add this case below
+  // // error
+  // const invalidProject = createProject({ libraryVersion: 1 });
+  //
+  // expect(() => createLiveseq({ project: invalidProject })).toThrow();
 
   // ok
-  expect(() => createLiveseq({ project: createProject({ libraryVersion }) })).not.toThrow();
+  expect(() => createLiveseq({ project: createProject({ libraryVersion: 0 }) })).not.toThrow();
 });

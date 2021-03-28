@@ -11,3 +11,14 @@ it('exports all the public members from index', () => {
   expect(useLiveseq).toBeDefined();
   expect(libraryVersion).toBeDefined();
 });
+
+it('has all the public members from createLiveseq', () => {
+  const liveseq = createLiveseq();
+  expect(liveseq.getTempo).toBeDefined();
+  expect(liveseq.getScheduleItemsInfo).toBeDefined();
+  expect(liveseq.getIsPlaying).toBeDefined();
+  expect(liveseq.getIsPaused).toBeDefined();
+  expect(liveseq.getIsStopped).toBeDefined();
+  expect(liveseq.getProject).toBeDefined();
+  expect(liveseq.getAudioContext).toBeDefined();
+});

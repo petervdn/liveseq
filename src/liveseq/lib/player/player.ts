@@ -1,9 +1,9 @@
 import type { Note } from '../note/note';
 import type { TimeRange } from '../time/timeRange';
 import type { getScheduleItemsWithinRange } from './slotPlaybackState';
-import type { Errors } from '../errors';
 import { isContextSuspended } from '../utils/isContextSuspended';
 import type { TimeInSeconds } from '../types';
+import { errorMessages } from '../errors';
 
 export type ScheduleNote = Note & {
   startTime: TimeInSeconds;
@@ -33,7 +33,6 @@ export type PlayerProps = {
   onPause: () => void;
   onStop: () => void;
   onSchedule: (value: ReturnType<typeof getScheduleItemsWithinRange>) => void;
-  errors: Pick<Errors, 'contextSuspended' | 'invalidLookahead'>;
 };
 
 export type PlayerActions = {
@@ -56,7 +55,6 @@ export const createPlayer = ({
   onPause,
   onStop,
   onSchedule,
-  errors,
 }: PlayerProps): Player => {
   let playStartTime: number | null = null;
   let timeoutId: number | null = null;
@@ -65,12 +63,13 @@ export const createPlayer = ({
   let previouslyScheduledNoteIds: Array<string> = [];
 
   if (lookAheadTime <= scheduleInterval) {
-    errors.invalidLookahead();
+    throw new Error(errorMessages.invalidLookahead());
   }
 
   const schedule = () => {
+    // playStartTime should always be defined when playing
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const songTime = (audioContext.currentTime - playStartTime!) as TimeInSeconds; // playStartTime should always be defined when playing
+    const songTime = (audioContext.currentTime - playStartTime!) as TimeInSeconds;
 
     // TODO: naming
     const stuff = getScheduleItems(
@@ -111,7 +110,9 @@ export const createPlayer = ({
           .resume()
           .then(handlePlay)
           .catch(() => {
-            isContextSuspended(audioContext) && errors.contextSuspended();
+            if (isContextSuspended(audioContext)) {
+              throw new Error(errorMessages.contextSuspended());
+            }
           })
       : handlePlay();
   };

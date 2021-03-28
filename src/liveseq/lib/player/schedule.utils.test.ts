@@ -1,9 +1,10 @@
 import { musicTimeToBeats } from '../time/musicTime';
 import type { NoteName } from '../note/note';
+import { libraryVersion } from '../meta';
 
 // TODO: move this to /projects/testProject
 export const testProject = {
-  libraryVersion: 0,
+  libraryVersion,
   name: 'Project Name',
   startScenes: ['scene_1'],
   entities: {

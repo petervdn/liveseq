@@ -18,20 +18,9 @@ it('can create empty project with createProject', () => {
 });
 
 it('can create a project with partial configuration', () => {
-  const partialProject = { name: 'test', libraryVersion: 1 };
   // TODO: add more cases
-  expect(createProject(partialProject)).toEqual({
-    name: partialProject.name,
-    libraryVersion: partialProject.libraryVersion,
-    initialState: { slotPlaybackState: { activeSceneIds: [], playingSlots: [], queuedScenes: [] } },
-    entities: {
-      channels: [],
-      clips: [],
-      instruments: [],
-      samples: [],
-      scenes: [],
-      slots: [],
-      timelines: [],
-    },
+  expect(createProject({ name: 'test' })).toEqual({
+    ...createProject(),
+    name: 'test',
   });
 });

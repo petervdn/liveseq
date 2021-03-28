@@ -6,7 +6,6 @@ type PlaybackStates = 'playing' | 'paused' | 'stopped';
 
 export type LiveseqState = {
   playbackState: PlaybackStates;
-  activeSceneIds: Array<string>;
   tempo: Bpm;
   slotPlaybackState: SlotPlaybackState;
 };
@@ -17,7 +16,6 @@ export const createStore = (
 ) => {
   const defaultState: LiveseqState = {
     playbackState: 'stopped',
-    activeSceneIds: [],
     tempo: 120 as Bpm,
     slotPlaybackState: createSlotPlaybackState(),
   };
@@ -27,6 +25,7 @@ export const createStore = (
     ...initialState,
   };
 
+  // UTILS
   const setState = (newState: Partial<LiveseqState>) => {
     // mutation!
     state = {
@@ -36,8 +35,25 @@ export const createStore = (
     return state;
   };
 
-  const dispose = () => {
-    // nothing to do here yet
+  // SELECTORS
+  const getTempo = () => {
+    return state.tempo;
+  };
+
+  const getIsPlaying = () => {
+    return state.playbackState === 'playing';
+  };
+
+  const getIsPaused = () => {
+    return state.playbackState === 'paused';
+  };
+
+  const getIsStopped = () => {
+    return state.playbackState === 'stopped';
+  };
+
+  const getSlotPlaybackState = () => {
+    return state.slotPlaybackState;
   };
 
   // ACTIONS
@@ -87,41 +103,25 @@ export const createStore = (
     });
   };
 
-  // SELECTORS
-  const getTempo = () => {
-    return state.tempo;
-  };
-
-  const getIsPlaying = () => {
-    return state.playbackState === 'playing';
-  };
-
-  const getIsPaused = () => {
-    return state.playbackState === 'paused';
-  };
-
-  const getIsStopped = () => {
-    return state.playbackState === 'stopped';
-  };
-
-  const getSlotPlaybackState = () => {
-    return state.slotPlaybackState;
+  // CORE
+  const dispose = () => {
+    // nothing to do here yet
   };
 
   return {
-    actions: {
-      play,
-      pause,
-      stop,
-      setTempo,
-      setSlotPlaybackState,
-    },
     selectors: {
       getTempo,
       getIsPlaying,
       getIsPaused,
       getIsStopped,
       getSlotPlaybackState,
+    },
+    actions: {
+      play,
+      pause,
+      stop,
+      setTempo,
+      setSlotPlaybackState,
     },
     dispose,
   };

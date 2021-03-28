@@ -5,7 +5,6 @@ import { getScheduleItemsWithinRange } from './player/slotPlaybackState';
 import { timeRangeToBeatsRange } from './time/beatsRange';
 import type { TimeRange } from './time/timeRange';
 import { createPlayer, PlayerActions, ScheduleNote } from './player/player';
-import { errors } from './errors';
 import { getDefaultProps } from './utils/getDefaultProps';
 import { createEntityManager, EntityManagerActions } from './entities/entityManager';
 import type { Bpm, TimeInSeconds } from './types';
@@ -104,7 +103,6 @@ export const createLiveseq = (props: PartialLiveseqProps = {}): Liveseq => {
     audioContext,
     lookAheadTime,
     scheduleInterval,
-    errors,
   });
 
   const getProject = () => {

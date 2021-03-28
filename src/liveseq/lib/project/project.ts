@@ -2,7 +2,7 @@ import type { LiveseqState } from '../store/store';
 import { libraryVersion } from '../meta';
 import { createSlotPlaybackState } from '../player/slotPlaybackState';
 import { validateProject } from './validateProject';
-import { errors } from '../errors';
+
 import type { SerializableEntities } from '../entities/entities';
 
 export type SerializableProject = {
@@ -33,7 +33,7 @@ export const createProject = (project: Partial<SerializableProject> = {}): Seria
     },
   };
 
-  validateProject(projectWithDefaults, errors);
+  validateProject(projectWithDefaults);
 
   return projectWithDefaults;
 };
