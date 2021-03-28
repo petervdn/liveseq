@@ -1,6 +1,5 @@
 import { createStore } from './store/store';
 import type { SerializableProject } from './project/project';
-import type { Bpm, TimeInSeconds } from './time/time';
 import { createEntities } from './entities/entities';
 import { getScheduleItemsWithinRange } from './player/slotPlaybackState';
 import { timeRangeToBeatsRange } from './time/beatsRange';
@@ -9,6 +8,8 @@ import { createPlayer, ScheduleNote } from './player/player';
 import { errors } from './errors';
 import { validateProject } from './project/validateProject';
 import { getDefaultProps } from './utils/getDefaultProps';
+import { createEntityManager } from './entities/entityManager';
+import type { Bpm, TimeInSeconds } from './types';
 
 export type CommonProps = {
   id: string;
@@ -53,7 +54,7 @@ export const createLiveseq = (props: PartialLiveseqProps = {}): Liveseq => {
   validateProject(project, errors);
 
   const store = createStore(project.initialState, callbacks);
-  const entities = createEntities(project, audioContext);
+  const { getEntities } = createEntityManager(createEntities(project, audioContext));
 
   // TODO: better naming
   // separate function so we can make it part of the API (useful for testing as well)
@@ -67,7 +68,7 @@ export const createLiveseq = (props: PartialLiveseqProps = {}): Liveseq => {
 
     return getScheduleItemsWithinRange(
       beatsRange,
-      entities,
+      getEntities(),
       currentBpm,
       currentSlotPlaybackState,
       previouslyScheduledNoteIds,
@@ -107,7 +108,6 @@ export const createLiveseq = (props: PartialLiveseqProps = {}): Liveseq => {
     store.dispose();
   };
 
-  // liveseq's API
   return {
     getScheduleItemsInfo,
     play: player.play,

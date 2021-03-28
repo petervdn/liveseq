@@ -1,4 +1,4 @@
-import type { TimeInSeconds } from './time';
+import type { TimeInSeconds } from '../types';
 
 export type TimeRange = {
   start: TimeInSeconds;

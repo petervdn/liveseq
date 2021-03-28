@@ -1,6 +1,6 @@
-import type { Beats } from '../../time/time';
 import type { Note } from '../../note/note';
 import type { CommonProps } from '../../liveseq';
+import type { Beats } from '../../types';
 
 export type NoteClip = CommonProps & {
   type: 'noteClip';

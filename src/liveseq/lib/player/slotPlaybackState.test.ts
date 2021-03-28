@@ -4,8 +4,8 @@ import {
   createSlotPlaybackState,
   getSlotPlaybackStatesWithinRange,
 } from './slotPlaybackState';
-import type { Beats } from '../time/time';
 import type { BeatsRange } from '../time/beatsRange';
+import type { Beats } from '../types';
 
 export {};
 

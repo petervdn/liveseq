@@ -1,7 +1,7 @@
 import { timeToBeats } from './musicTime';
 import type { TimeRange } from './timeRange';
-import type { Beats, Bpm } from './time';
 import { wrapInRange } from '../utils/wrapInRange';
+import type { Beats, Bpm } from '../types';
 
 export type BeatsRange = {
   start: Beats;

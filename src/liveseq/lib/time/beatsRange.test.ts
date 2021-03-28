@@ -14,8 +14,8 @@ import {
   splitRangeByDuration,
   timeRangeToBeatsRange,
 } from './beatsRange';
-import type { Beats, Bpm } from './time';
 import type { TimeRange } from './timeRange';
+import type { Beats, Bpm } from '../types';
 
 export {};
 

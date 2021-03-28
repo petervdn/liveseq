@@ -4,7 +4,7 @@ import { beatsToTime } from '../time/musicTime';
 import type { Entities } from '../entities/entities';
 import { getChannelsBySlotId, getClipsByTimelineId } from '../entities/entities';
 import type { BeatsRange } from '../time/beatsRange';
-import type { Bpm } from '../time/time';
+import type { Bpm } from '../types';
 
 export const getNotesForInstrumentInTimeRange = (
   entities: Entities,

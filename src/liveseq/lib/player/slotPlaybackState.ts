@@ -1,9 +1,9 @@
-import type { Beats, Bpm } from '../time/time';
 import type { BeatsRange } from '../time/beatsRange';
 import type { SceneEntity } from '../entities/scene/scene';
 import { createRange, isTimeInRange } from '../time/beatsRange';
 import type { Entities } from '../entities/entities';
 import { getNotesForInstrumentInTimeRange } from './schedule.utils';
+import type { Beats, Bpm } from '../types';
 
 type PlayingSlot = {
   slotId: string;

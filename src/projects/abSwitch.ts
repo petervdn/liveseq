@@ -2,9 +2,9 @@ import type { SerializableProject } from '../liveseq';
 import { musicTimeToBeats } from '../liveseq/lib/time/musicTime';
 import type { NoteName } from '../liveseq/lib/note/note';
 import { createSlotPlaybackState } from '../liveseq/lib/player/slotPlaybackState';
-import type { Beats } from '../liveseq/lib/time/time';
 import { getIdGenerator } from '../liveseq/lib/utils/getIdGenerator';
 import { createNote } from '../liveseq/lib/note/note';
+import type { Beats } from '../liveseq/lib/types';
 
 const getNoteId = getIdGenerator('note');
 const getClipId = getIdGenerator('clip');

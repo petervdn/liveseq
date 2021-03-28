@@ -6,7 +6,7 @@ import {
   normalizeMusicTime,
   timeToBeats,
 } from './musicTime';
-import type { Beats, Bpm, TimeInSeconds } from './time';
+import type { Beats, Bpm, TimeInSeconds } from '../types';
 
 export {};
 

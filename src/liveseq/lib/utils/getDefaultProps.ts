@@ -2,7 +2,7 @@ import { createProject } from '../project/project';
 import { noop } from './noop';
 import { getAudioContext } from './getAudioContext';
 import type { LiveseqProps, PartialLiveseqProps } from '../liveseq';
-import type { TimeInSeconds } from '../time/time';
+import type { TimeInSeconds } from '../types';
 
 export const getDefaultProps = ({
   project,

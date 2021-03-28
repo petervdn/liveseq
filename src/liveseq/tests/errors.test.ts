@@ -2,7 +2,7 @@ import { createLiveseq } from '../lib/liveseq';
 import { errorMessages } from '../lib/errors';
 import { createProject } from '../lib/project/project';
 import { libraryVersion } from '../lib/meta';
-import type { TimeInSeconds } from '../lib/time/time';
+import type { TimeInSeconds } from '..';
 
 it('throws when lookahead time is smaller than interval', () => {
   // error

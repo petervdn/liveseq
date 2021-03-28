@@ -9,7 +9,7 @@ import { createSamplerEntity, SamplerEntity } from './instrument/sampler';
 import { createSlotEntity, SlotEntity } from './slot/slot';
 import type { SceneEntity } from './scene/scene';
 import { createSceneEntity } from './scene/scene';
-import type { CommonProps } from '../liveseq';
+import { createRecordById } from '../utils/createRecordById';
 
 export type Entities = {
   channels: Record<string, ChannelEntity>;
@@ -20,16 +20,6 @@ export type Entities = {
   scenes: Record<string, SceneEntity>;
 };
 
-const createRecordById = <T extends Pick<CommonProps, 'id'>>(
-  entityConfig: Array<T>,
-): Record<string, T> => {
-  return entityConfig.reduce((accumulator, current) => {
-    accumulator[current.id as keyof typeof accumulator] = current;
-    return accumulator;
-  }, {} as Record<string, T>);
-};
-
-// TODO: this is a work in progress
 export function createEntities(project: SerializableProject, audioContext: AudioContext): Entities {
   return {
     channels: createRecordById(project.entities.channels.map(createInstrumentChannelEntity)),
@@ -66,5 +56,3 @@ export const getClipsByTimelineId = (
     ...entities.clips[clip.clipId],
   }));
 };
-
-// export const removeEntity = (entity: keyof Entities, id: string, entities: Entities) => {};
