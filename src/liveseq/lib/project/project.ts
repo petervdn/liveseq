@@ -1,4 +1,3 @@
-import { isAny, isNumber, isString, shape } from 'isntnt';
 import type { SerializableChannel } from '../entities/channel/channel';
 import type { SerializableInstrument } from '../entities/instrument/instrument';
 import type { SerializableTimeline } from '../entities/timeline/timeline';
@@ -9,6 +8,8 @@ import type { SerializableSample } from '../entities/sample/sample';
 import type { LiveseqState } from '../store/store';
 import { libraryVersion } from '../meta';
 import { createSlotPlaybackState } from '../player/slotPlaybackState';
+import { validateProject } from './validateProject';
+import { errors } from '../errors';
 
 export type SerializableProject = {
   libraryVersion: number;
@@ -25,24 +26,8 @@ export type SerializableProject = {
   };
 };
 
-export const isSerializableProject = shape({
-  libraryVersion: isNumber,
-  name: isString,
-  // TODO: remove isAny
-  initialState: isAny,
-  entities: shape({
-    channels: isAny, // TODO: remove isAny
-    instruments: isAny,
-    timelines: isAny,
-    clips: isAny,
-    scenes: isAny,
-    samples: isAny,
-    slots: isAny,
-  }),
-});
-
 export const createProject = (project: Partial<SerializableProject> = {}): SerializableProject => {
-  return {
+  const projectWithDefaults: SerializableProject = {
     libraryVersion,
     name: 'untitled',
     ...project,
@@ -61,4 +46,8 @@ export const createProject = (project: Partial<SerializableProject> = {}): Seria
       ...(project.entities || {}),
     },
   };
+
+  validateProject(projectWithDefaults, errors);
+
+  return projectWithDefaults;
 };

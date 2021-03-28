@@ -10,7 +10,6 @@ export const errorMessages = {
     return `Library version must be greater than the project version.
             Project version is ${projectVersion} and ${libraryName} version is ${libraryVersion}.`;
   },
-  invalidProjectShape: always('Invalid project shape.'),
   invalidIds: always('Invalid ids in project.'),
   contextSuspended: always('Cannot play, AudioContext is suspended.'),
 };

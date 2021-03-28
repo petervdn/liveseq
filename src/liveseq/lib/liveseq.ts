@@ -6,7 +6,6 @@ import { timeRangeToBeatsRange } from './time/beatsRange';
 import type { TimeRange } from './time/timeRange';
 import { createPlayer, ScheduleNote } from './player/player';
 import { errors } from './errors';
-import { validateProject } from './project/validateProject';
 import { getDefaultProps } from './utils/getDefaultProps';
 import { createEntityManager } from './entities/entityManager';
 import type { Bpm, TimeInSeconds } from './types';
@@ -50,8 +49,6 @@ export const createLiveseq = (props: PartialLiveseqProps = {}): Liveseq => {
   const { project, audioContext, lookAheadTime, scheduleInterval, ...callbacks } = getDefaultProps(
     props,
   );
-  // TODO: consider moving inside createProject
-  validateProject(project, errors);
 
   const store = createStore(project.initialState, callbacks);
   const { getEntities } = createEntityManager(createEntities(project, audioContext));
