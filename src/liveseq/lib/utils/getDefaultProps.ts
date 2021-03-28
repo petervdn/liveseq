@@ -14,6 +14,7 @@ export const getDefaultProps = ({
     onPlay: noop,
     onPause: noop,
     onStop: noop,
+    onSchedule: noop,
     onTempoChange: noop,
     lookAheadTime: 1.2 as TimeInSeconds,
     scheduleInterval: 1 as TimeInSeconds,

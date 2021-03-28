@@ -1,6 +1,5 @@
-import type { CommonProps } from '../../liveseq';
 import type { Entities } from '../entities';
-import type { OmitId } from '../../types';
+import type { CommonProps, OmitId } from '../../types';
 
 export type TimelineSlot = CommonProps & {
   type: 'timelineSlot';

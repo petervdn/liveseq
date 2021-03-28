@@ -97,14 +97,14 @@ export const createPlayer = ({
     timeoutId = window.setTimeout(() => schedule(), scheduleInterval * 1000);
   };
 
-  const handlePlay = () => {
-    playStartTime = audioContext.currentTime;
-
-    schedule();
-    onPlay();
-  };
-
   const play = () => {
+    const handlePlay = () => {
+      playStartTime = audioContext.currentTime;
+
+      schedule();
+      onPlay();
+    };
+
     isContextSuspended(audioContext)
       ? audioContext
           .resume()

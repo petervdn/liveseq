@@ -3,7 +3,7 @@ import { playTick } from '../../utils/playTick';
 
 import { getFrequency } from '../../note/note';
 import type { InstrumentInstance } from './instrument';
-import type { CommonProps } from '../../liveseq';
+import type { CommonProps } from '../../types';
 
 export type SamplerInstrument = CommonProps & {
   type: 'samplerInstrument';

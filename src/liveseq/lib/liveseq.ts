@@ -9,17 +9,12 @@ import { getDefaultProps } from './utils/getDefaultProps';
 import { createEntityManager, EntityManagerActions } from './entities/entityManager';
 import type { Bpm, TimeInSeconds } from './types';
 
-export type CommonProps = {
-  id: string;
-  name?: string;
-  isEnabled?: boolean;
-};
-
 export type LiveseqCallbacks = {
   onPlay: () => void;
   onPause: () => void;
   onStop: () => void;
   onTempoChange: () => void;
+  onSchedule: (info: ReturnType<typeof getScheduleItemsWithinRange>) => void;
 };
 
 export type LiveseqProps = LiveseqCallbacks & {
@@ -87,8 +82,9 @@ export const createLiveseq = (props: PartialLiveseqProps = {}): Liveseq => {
 
   const player = createPlayer({
     getScheduleItems,
-    onSchedule: ({ nextSlotPlaybackState }) => {
-      store.actions.setSlotPlaybackState(nextSlotPlaybackState);
+    onSchedule: (info) => {
+      store.actions.setSlotPlaybackState(info.nextSlotPlaybackState);
+      callbacks.onSchedule(info);
     },
     onPlay: () => store.actions.setPlaybackState('playing'),
     onPause: () => store.actions.setPlaybackState('paused'),

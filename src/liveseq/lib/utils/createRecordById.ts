@@ -1,4 +1,4 @@
-import type { CommonProps } from '../liveseq';
+import type { CommonProps } from '../types';
 
 export const createRecordById = <T extends Pick<CommonProps, 'id'>>(
   entityConfig: Array<T>,
