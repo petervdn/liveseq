@@ -1,8 +1,6 @@
 import { libraryName } from './meta';
 import { always } from './utils/always';
 
-export type Errors = typeof errorMessages;
-
 // so we can test the errors
 export const errorMessages = {
   invalidLookahead: always('LookAheadTime should be larger than the scheduleInterval.'),
