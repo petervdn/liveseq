@@ -2,29 +2,24 @@ import type { ScheduleNote } from '../../player/player';
 import type { SamplerInstrument } from './sampler';
 import type { Entities } from '../entities';
 import type { OmitId } from '../../types';
+import { createSamplerEntity } from './sampler';
 
 export type SerializableInstrument = SamplerInstrument; //  | SimpleSynthInstrument;
 
 export type InstrumentInstance = {
-  schedule: (notes: Array<ScheduleNote>) => void;
+  schedule: (notes: Array<ScheduleNote>, audioContext: AudioContext) => void;
 };
 
 export const addInstrument = (
   entities: Entities,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   props: OmitId<SerializableInstrument>,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  getId: () => string,
+  id: string,
 ): Entities => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  // const id = getId();
-
   return {
     ...entities,
     instruments: {
       ...entities.instruments,
-      // TODO: fix props as this asks for audioContext :`|
-      // [id]: createSamplerEntity({ ...props, id }),
+      [id]: createSamplerEntity({ ...props, id }),
     },
   };
 };

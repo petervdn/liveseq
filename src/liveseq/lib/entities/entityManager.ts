@@ -8,8 +8,10 @@ import { addTimeline, removeTimeline, SerializableTimeline } from './timeline/ti
 import { getIdGenerators } from './getIdGenerators';
 import type { OmitId } from '../types';
 import type { SerializableSample } from './sample/sample';
+import type { SerializableProject } from '../..';
+import { createEntities } from './entities';
 
-type AddEntity<Props> = (props: OmitId<Props & { id: string }>) => void;
+type AddEntity<Props> = (props: OmitId<Props & { id: string }>) => string;
 type RemoveEntity = (id: string) => void;
 
 // use literal string types for the keys
@@ -43,48 +45,66 @@ type EntityManager = {
   actions: EntityManagerActions;
 };
 
-export const createEntityManager = (entities: Entities): EntityManager => {
-  let currentEntities = entities;
-  const idGenerators = getIdGenerators(entities);
+export const createEntityManager = (project: SerializableProject): EntityManager => {
+  let currentEntities = createEntities(project);
+  const idGenerators = getIdGenerators(currentEntities);
 
+  // TODO: see if we can DRY this
   return {
     actions: {
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      addSample: () => {
+        // TODO:
+        return idGenerators.getSampleId();
+      },
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      removeSample: () => {
+        // TODO:
+      },
       addChannel: (channel) => {
-        currentEntities = addChannel(currentEntities, channel, idGenerators.getChannelId);
+        const id = idGenerators.getChannelId();
+        currentEntities = addChannel(currentEntities, channel, id);
+        return id;
       },
       removeChannel: (id) => {
         currentEntities = removeChannel(currentEntities, id);
       },
       addClip: (channel) => {
-        currentEntities = addClip(currentEntities, channel, idGenerators.getChannelId);
+        const id = idGenerators.getClipId();
+        currentEntities = addClip(currentEntities, channel, id);
+        return id;
       },
       removeClip: (id) => {
         currentEntities = removeClip(currentEntities, id);
       },
       addInstrument: (instrument) => {
-        currentEntities = addInstrument(currentEntities, instrument, idGenerators.getInstrumentId);
+        const id = idGenerators.getInstrumentId();
+        currentEntities = addInstrument(currentEntities, instrument, id);
+        return id;
       },
       removeInstrument: (id) => {
         currentEntities = removeInstrument(currentEntities, id);
       },
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      addSample: () => {},
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      removeSample: () => {},
       addScene: (scene) => {
-        currentEntities = addScene(currentEntities, scene, idGenerators.getSceneId);
+        const id = idGenerators.getSceneId();
+        currentEntities = addScene(currentEntities, scene, id);
+        return id;
       },
       removeScene: (id) => {
         currentEntities = removeScene(currentEntities, id);
       },
       addSlot: (slot) => {
-        currentEntities = addSlot(currentEntities, slot, idGenerators.getSlotId);
+        const id = idGenerators.getSlotId();
+        currentEntities = addSlot(currentEntities, slot, id);
+        return id;
       },
       removeSlot: (id) => {
         currentEntities = removeSlot(currentEntities, id);
       },
       addTimeline: (timeline) => {
-        currentEntities = addTimeline(currentEntities, timeline, idGenerators.getTimelineId);
+        const id = idGenerators.getTimelineId();
+        currentEntities = addTimeline(currentEntities, timeline, id);
+        return id;
       },
       removeTimeline: (id) => {
         currentEntities = removeTimeline(currentEntities, id);

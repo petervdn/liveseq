@@ -20,10 +20,8 @@ export const createSlotEntity = (props: SerializableSlot): SerializableSlot => {
 export const addSlot = (
   entities: Entities,
   props: OmitId<SerializableSlot>,
-  getId: () => string,
+  id: string,
 ): Entities => {
-  const id = getId();
-
   return {
     ...entities,
     slots: {

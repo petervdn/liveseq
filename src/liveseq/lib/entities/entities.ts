@@ -23,18 +23,14 @@ export type Entities = {
   scenes: Record<string, SceneEntity>;
 };
 
-export function createEntities(project: SerializableProject, audioContext: AudioContext): Entities {
+export function createEntities(project: SerializableProject): Entities {
   return {
     channels: createRecordById(project.entities.channels.map(createInstrumentChannelEntity)),
     timelines: createRecordById(project.entities.timelines.map(createTimelineEntity)),
     clips: createRecordById(project.entities.clips.map(createNoteClipEntity)),
     slots: createRecordById(project.entities.slots.map(createSlotEntity)),
     scenes: createRecordById(project.entities.scenes.map(createSceneEntity)),
-    instruments: createRecordById(
-      project.entities.instruments.map((instrument) =>
-        createSamplerEntity(audioContext, instrument),
-      ),
-    ),
+    instruments: createRecordById(project.entities.instruments.map(createSamplerEntity)),
   };
 }
 
@@ -47,6 +43,21 @@ export type SerializableEntities = {
   scenes: Array<SerializableScene>;
   slots: Array<SerializableSlot>;
   samples: Array<SerializableSample>;
+};
+
+export const serializeEntities = (entities: Entities): SerializableEntities => {
+  return {
+    channels: Object.values(entities.channels),
+    clips: Object.values(entities.clips),
+    instruments: Object.values(entities.instruments).map((instrument) => {
+      const { schedule, ...withoutSchedule } = instrument;
+      return withoutSchedule;
+    }),
+    samples: [],
+    scenes: Object.values(entities.scenes),
+    slots: Object.values(entities.slots),
+    timelines: Object.values(entities.timelines),
+  };
 };
 
 // entity selectors

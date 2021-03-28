@@ -20,10 +20,8 @@ export const createInstrumentChannelEntity = (props: SerializableChannel): Instr
 export const addChannel = (
   entities: Entities,
   props: OmitId<SerializableChannel>,
-  getId: () => string,
+  id: string,
 ): Entities => {
-  const id = getId();
-
   return {
     ...entities,
     channels: {

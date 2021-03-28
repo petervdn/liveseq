@@ -9,10 +9,8 @@ export type SerializableClip = NoteClip;
 export const addClip = (
   entities: Entities,
   props: OmitId<SerializableClip>,
-  getId: () => string,
+  id: string,
 ): Entities => {
-  const id = getId();
-
   return {
     ...entities,
     clips: {

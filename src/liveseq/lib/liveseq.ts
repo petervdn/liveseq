@@ -1,6 +1,6 @@
 import { createStore, StoreActions } from './store/store';
 import type { SerializableProject } from './project/project';
-import { createEntities } from './entities/entities';
+import { serializeEntities } from './entities/entities';
 import { getScheduleItemsWithinRange } from './player/slotPlaybackState';
 import { timeRangeToBeatsRange } from './time/beatsRange';
 import type { TimeRange } from './time/timeRange';
@@ -8,6 +8,7 @@ import { createPlayer, PlayerActions, ScheduleNote } from './player/player';
 import { getDefaultProps } from './utils/getDefaultProps';
 import { createEntityManager, EntityManagerActions } from './entities/entityManager';
 import type { Bpm, TimeInSeconds } from './types';
+import { createProject } from './project/project';
 
 export type LiveseqCallbacks = {
   onPlay: () => void;
@@ -58,7 +59,7 @@ export const createLiveseq = (props: PartialLiveseqProps = {}): Liveseq => {
   );
 
   const store = createStore(project.initialState, callbacks);
-  const entityManager = createEntityManager(createEntities(project, audioContext));
+  const entityManager = createEntityManager(project);
 
   // UTILS
   // TODO: better naming
@@ -96,8 +97,13 @@ export const createLiveseq = (props: PartialLiveseqProps = {}): Liveseq => {
 
   // SELECTORS
   const getProject = () => {
+    const serializableEntities = serializeEntities(entityManager.selectors.getEntities());
+    const slotPlaybackState = store.selectors.getSlotPlaybackState();
     // TODO: generate from entities and current state
-    return project;
+    return createProject({
+      initialState: { slotPlaybackState },
+      entities: serializableEntities,
+    });
   };
 
   const getAudioContext = () => {

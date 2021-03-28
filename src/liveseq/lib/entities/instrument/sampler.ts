@@ -12,13 +12,10 @@ export type SamplerInstrument = CommonProps & {
 export type SamplerEntity = InstrumentInstance & SamplerInstrument;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const createSamplerEntity = (
-  audioContext: AudioContext,
-  props: SamplerInstrument,
-): SamplerEntity => {
+export const createSamplerEntity = (props: SamplerInstrument): SamplerEntity => {
   return {
     ...props,
-    schedule: (notes: Array<ScheduleNote>) => {
+    schedule: (notes: Array<ScheduleNote>, audioContext: AudioContext) => {
       notes.forEach((note) => {
         // eslint-disable-next-line no-console
         console.log('scheduling', note.schedulingId);

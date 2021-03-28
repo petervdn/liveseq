@@ -30,10 +30,8 @@ export const createSceneEntity = (props: SerializableScene): SerializableScene =
 export const addScene = (
   entities: Entities,
   props: OmitId<SerializableScene>,
-  getId: () => string,
+  id: string,
 ): Entities => {
-  const id = getId();
-
   return {
     ...entities,
     scenes: {

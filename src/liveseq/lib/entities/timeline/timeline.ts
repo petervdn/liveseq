@@ -20,10 +20,8 @@ export const createTimelineEntity = (props: SerializableTimeline): SerializableT
 export const addTimeline = (
   entities: Entities,
   props: OmitId<SerializableTimeline>,
-  getId: () => string,
+  id: string,
 ): Entities => {
-  const id = getId();
-
   return {
     ...entities,
     timelines: {
