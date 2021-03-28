@@ -13,7 +13,7 @@ type AddEntity<Props> = (props: OmitId<Props & { id: string }>) => void;
 type RemoveEntity = (id: string) => void;
 
 // use literal string types for the keys
-type EntityManagerActions = {
+export type EntityManagerActions = {
   addChannel: AddEntity<SerializableChannel>;
   removeChannel: RemoveEntity;
 
@@ -37,56 +37,63 @@ type EntityManagerActions = {
 };
 
 type EntityManager = {
-  getEntities: () => Entities;
-} & EntityManagerActions;
+  selectors: {
+    getEntities: () => Entities;
+  };
+  actions: EntityManagerActions;
+};
 
 export const createEntityManager = (entities: Entities): EntityManager => {
   let currentEntities = entities;
   const idGenerators = getIdGenerators(entities);
 
   return {
-    getEntities: () => {
-      return currentEntities;
+    actions: {
+      addChannel: (channel) => {
+        currentEntities = addChannel(currentEntities, channel, idGenerators.getChannelId);
+      },
+      removeChannel: (id) => {
+        currentEntities = removeChannel(currentEntities, id);
+      },
+      addClip: (channel) => {
+        currentEntities = addClip(currentEntities, channel, idGenerators.getChannelId);
+      },
+      removeClip: (id) => {
+        currentEntities = removeClip(currentEntities, id);
+      },
+      addInstrument: (instrument) => {
+        currentEntities = addInstrument(currentEntities, instrument, idGenerators.getInstrumentId);
+      },
+      removeInstrument: (id) => {
+        currentEntities = removeInstrument(currentEntities, id);
+      },
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      addSample: () => {},
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      removeSample: () => {},
+      addScene: (scene) => {
+        currentEntities = addScene(currentEntities, scene, idGenerators.getSceneId);
+      },
+      removeScene: (id) => {
+        currentEntities = removeScene(currentEntities, id);
+      },
+      addSlot: (slot) => {
+        currentEntities = addSlot(currentEntities, slot, idGenerators.getSlotId);
+      },
+      removeSlot: (id) => {
+        currentEntities = removeSlot(currentEntities, id);
+      },
+      addTimeline: (timeline) => {
+        currentEntities = addTimeline(currentEntities, timeline, idGenerators.getTimelineId);
+      },
+      removeTimeline: (id) => {
+        currentEntities = removeTimeline(currentEntities, id);
+      },
     },
-    addChannel: (channel) => {
-      currentEntities = addChannel(currentEntities, channel, idGenerators.getChannelId);
-    },
-    removeChannel: (id) => {
-      currentEntities = removeChannel(currentEntities, id);
-    },
-    addClip: (channel) => {
-      currentEntities = addClip(currentEntities, channel, idGenerators.getChannelId);
-    },
-    removeClip: (id) => {
-      currentEntities = removeClip(currentEntities, id);
-    },
-    addInstrument: (instrument) => {
-      currentEntities = addInstrument(currentEntities, instrument, idGenerators.getInstrumentId);
-    },
-    removeInstrument: (id) => {
-      currentEntities = removeInstrument(currentEntities, id);
-    },
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    addSample: () => {},
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    removeSample: () => {},
-    addScene: (scene) => {
-      currentEntities = addScene(currentEntities, scene, idGenerators.getSceneId);
-    },
-    removeScene: (id) => {
-      currentEntities = removeScene(currentEntities, id);
-    },
-    addSlot: (slot) => {
-      currentEntities = addSlot(currentEntities, slot, idGenerators.getSlotId);
-    },
-    removeSlot: (id) => {
-      currentEntities = removeSlot(currentEntities, id);
-    },
-    addTimeline: (timeline) => {
-      currentEntities = addTimeline(currentEntities, timeline, idGenerators.getTimelineId);
-    },
-    removeTimeline: (id) => {
-      currentEntities = removeTimeline(currentEntities, id);
+    selectors: {
+      getEntities: () => {
+        return currentEntities;
+      },
     },
   };
 };

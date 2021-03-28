@@ -30,12 +30,22 @@ export type PlayerProps = {
     previouslyScheduledNoteIds: Array<string>,
   ) => ReturnType<typeof getScheduleItemsWithinRange>;
   onPlay: () => void;
+  onPause: () => void;
   onStop: () => void;
   onSchedule: (value: ReturnType<typeof getScheduleItemsWithinRange>) => void;
   errors: Pick<Errors, 'contextSuspended' | 'invalidLookahead'>;
 };
 
-// export type Player = ReturnType<typeof createPlayer>;
+export type PlayerActions = {
+  play: () => void;
+  pause: () => void;
+  stop: () => void;
+};
+
+export type Player = {
+  actions: PlayerActions;
+  dispose: () => void;
+};
 
 export const createPlayer = ({
   audioContext,
@@ -43,10 +53,11 @@ export const createPlayer = ({
   scheduleInterval,
   lookAheadTime,
   onPlay,
+  onPause,
   onStop,
   onSchedule,
   errors,
-}: PlayerProps) => {
+}: PlayerProps): Player => {
   let playStartTime: number | null = null;
   let timeoutId: number | null = null;
   // todo: probably make this an object for more efficient lookup
@@ -114,15 +125,19 @@ export const createPlayer = ({
   };
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  const pause = () => {};
+  const pause = () => {
+    onPause();
+  };
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
   const dispose = () => {};
 
   return {
-    play,
-    stop,
-    pause,
+    actions: {
+      play,
+      stop,
+      pause,
+    },
     dispose,
   };
 };

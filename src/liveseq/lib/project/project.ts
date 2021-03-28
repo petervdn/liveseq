@@ -1,29 +1,15 @@
-import type { SerializableChannel } from '../entities/channel/channel';
-import type { SerializableInstrument } from '../entities/instrument/instrument';
-import type { SerializableTimeline } from '../entities/timeline/timeline';
-import type { SerializableClip } from '../entities/clip/clip';
-import type { SerializableSlot } from '../entities/slot/slot';
-import type { SerializableScene } from '../entities/scene/scene';
-import type { SerializableSample } from '../entities/sample/sample';
 import type { LiveseqState } from '../store/store';
 import { libraryVersion } from '../meta';
 import { createSlotPlaybackState } from '../player/slotPlaybackState';
 import { validateProject } from './validateProject';
 import { errors } from '../errors';
+import type { SerializableEntities } from '../entities/entities';
 
 export type SerializableProject = {
   libraryVersion: number;
   name: string;
   initialState: Partial<LiveseqState>;
-  entities: {
-    channels: Array<SerializableChannel>;
-    instruments: Array<SerializableInstrument>;
-    timelines: Array<SerializableTimeline>;
-    clips: Array<SerializableClip>;
-    scenes: Array<SerializableScene>;
-    slots: Array<SerializableSlot>;
-    samples: Array<SerializableSample>;
-  };
+  entities: SerializableEntities;
 };
 
 export const createProject = (project: Partial<SerializableProject> = {}): SerializableProject => {

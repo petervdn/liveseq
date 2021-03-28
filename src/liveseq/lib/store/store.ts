@@ -1,12 +1,11 @@
-import type { SerializableProject } from '../project/project';
 import { createSlotPlaybackState, SlotPlaybackState } from '../player/slotPlaybackState';
 import type { LiveseqCallbacks } from '../liveseq';
-import { createProject } from '../project/project';
 import type { Bpm } from '../types';
 
+type PlaybackStates = 'playing' | 'paused' | 'stopped';
+
 export type LiveseqState = {
-  isPlaying: boolean;
-  project: SerializableProject;
+  playbackState: PlaybackStates;
   activeSceneIds: Array<string>;
   tempo: Bpm;
   slotPlaybackState: SlotPlaybackState;
@@ -17,8 +16,7 @@ export const createStore = (
   callbacks: LiveseqCallbacks,
 ) => {
   const defaultState: LiveseqState = {
-    isPlaying: false,
-    project: createProject(),
+    playbackState: 'stopped',
     activeSceneIds: [],
     tempo: 120 as Bpm,
     slotPlaybackState: createSlotPlaybackState(),
@@ -44,20 +42,30 @@ export const createStore = (
 
   // ACTIONS
   const play = () => {
-    if (state.isPlaying === true) return;
+    if (state.playbackState === 'playing') return;
 
     setState({
-      isPlaying: true,
+      playbackState: 'playing',
     });
 
     callbacks.onPlay();
   };
 
-  const stop = () => {
-    if (state.isPlaying === false) return;
+  const pause = () => {
+    if (state.playbackState === 'paused') return;
 
     setState({
-      isPlaying: false,
+      playbackState: 'paused',
+    });
+
+    callbacks.onPause();
+  };
+
+  const stop = () => {
+    if (state.playbackState === 'stopped') return;
+
+    setState({
+      playbackState: 'stopped',
     });
 
     callbacks.onStop();
@@ -85,7 +93,15 @@ export const createStore = (
   };
 
   const getIsPlaying = () => {
-    return state.isPlaying;
+    return state.playbackState === 'playing';
+  };
+
+  const getIsPaused = () => {
+    return state.playbackState === 'paused';
+  };
+
+  const getIsStopped = () => {
+    return state.playbackState === 'stopped';
   };
 
   const getSlotPlaybackState = () => {
@@ -95,6 +111,7 @@ export const createStore = (
   return {
     actions: {
       play,
+      pause,
       stop,
       setTempo,
       setSlotPlaybackState,
@@ -102,6 +119,8 @@ export const createStore = (
     selectors: {
       getTempo,
       getIsPlaying,
+      getIsPaused,
+      getIsStopped,
       getSlotPlaybackState,
     },
     dispose,

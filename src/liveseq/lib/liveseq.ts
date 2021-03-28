@@ -4,10 +4,10 @@ import { createEntities } from './entities/entities';
 import { getScheduleItemsWithinRange } from './player/slotPlaybackState';
 import { timeRangeToBeatsRange } from './time/beatsRange';
 import type { TimeRange } from './time/timeRange';
-import { createPlayer, ScheduleNote } from './player/player';
+import { createPlayer, PlayerActions, ScheduleNote } from './player/player';
 import { errors } from './errors';
 import { getDefaultProps } from './utils/getDefaultProps';
-import { createEntityManager } from './entities/entityManager';
+import { createEntityManager, EntityManagerActions } from './entities/entityManager';
 import type { Bpm, TimeInSeconds } from './types';
 
 export type CommonProps = {
@@ -18,6 +18,7 @@ export type CommonProps = {
 
 export type LiveseqCallbacks = {
   onPlay: () => void;
+  onPause: () => void;
   onStop: () => void;
   onTempoChange: () => void;
 };
@@ -29,17 +30,27 @@ export type LiveseqProps = LiveseqCallbacks & {
   scheduleInterval: TimeInSeconds;
 };
 
-export type Liveseq = {
-  play: () => void;
-  audioContext: AudioContext;
-  stop: () => void;
-  setTempo: (bpm: Bpm) => void;
+export type LiveseqActions = PlayerActions &
+  EntityManagerActions & {
+    setTempo: (bpm: Bpm) => void;
+  };
+
+// TODO: do similar to LiveseqActions
+export type LiveseqSelectors = {
   getTempo: () => Bpm;
-  dispose: () => void;
   getScheduleItemsInfo: (timeRange: TimeRange) => Array<{ notes: Array<ScheduleNote> }>;
   getIsPlaying: () => boolean;
+  getIsPaused: () => boolean;
+  getIsStopped: () => boolean;
   getProject: () => SerializableProject;
+  getAudioContext: () => AudioContext;
 };
+
+// for now it's flat, maybe could use the same pattern as used internally of having actions and selectors in their own keys
+export type Liveseq = LiveseqActions &
+  LiveseqSelectors & {
+    dispose: () => void;
+  };
 
 export type PartialLiveseqProps = Partial<
   Omit<LiveseqProps, 'project'> & { project: Partial<SerializableProject> }
@@ -51,10 +62,10 @@ export const createLiveseq = (props: PartialLiveseqProps = {}): Liveseq => {
   );
 
   const store = createStore(project.initialState, callbacks);
-  const { getEntities } = createEntityManager(createEntities(project, audioContext));
+  const entityManager = createEntityManager(createEntities(project, audioContext));
 
   // TODO: better naming
-  // separate function so we can make it part of the API (useful for testing as well)
+  // separate function so we can use for getScheduleItemsInfo below as it's part of the API
   const getScheduleItems = (
     timeRange: TimeRange,
     previouslyScheduledNoteIds: Array<string> = [],
@@ -65,7 +76,7 @@ export const createLiveseq = (props: PartialLiveseqProps = {}): Liveseq => {
 
     return getScheduleItemsWithinRange(
       beatsRange,
-      getEntities(),
+      entityManager.selectors.getEntities(),
       currentBpm,
       currentSlotPlaybackState,
       previouslyScheduledNoteIds,
@@ -89,6 +100,7 @@ export const createLiveseq = (props: PartialLiveseqProps = {}): Liveseq => {
     },
     onPlay: store.actions.play,
     onStop: store.actions.stop,
+    onPause: store.actions.pause,
     audioContext,
     lookAheadTime,
     scheduleInterval,
@@ -96,8 +108,12 @@ export const createLiveseq = (props: PartialLiveseqProps = {}): Liveseq => {
   });
 
   const getProject = () => {
-    // TODO: process the current state and
+    // TODO: generate from entities and current state
     return project;
+  };
+
+  const getAudioContext = () => {
+    return audioContext;
   };
 
   const dispose = () => {
@@ -106,14 +122,19 @@ export const createLiveseq = (props: PartialLiveseqProps = {}): Liveseq => {
   };
 
   return {
-    getScheduleItemsInfo,
-    play: player.play,
-    stop: player.stop,
+    // actions
+    ...entityManager.actions,
+    ...player.actions,
     setTempo: store.actions.setTempo,
+    // selectors
+    getScheduleItemsInfo,
     getTempo: store.selectors.getTempo,
     getIsPlaying: store.selectors.getIsPlaying,
+    getIsPaused: store.selectors.getIsPaused,
+    getIsStopped: store.selectors.getIsStopped,
     getProject,
+    getAudioContext,
+    // core
     dispose,
-    audioContext,
   };
 };

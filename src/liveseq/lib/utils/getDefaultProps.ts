@@ -12,6 +12,7 @@ export const getDefaultProps = ({
   return {
     project: createProject(project),
     onPlay: noop,
+    onPause: noop,
     onStop: noop,
     onTempoChange: noop,
     lookAheadTime: 1.2 as TimeInSeconds,

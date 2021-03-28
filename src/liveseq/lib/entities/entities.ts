@@ -3,13 +3,16 @@ import type { NoteClipEntity } from './clip/noteClip';
 import { createNoteClipEntity } from './clip/noteClip';
 import type { TimelineEntity } from './timeline/timeline';
 import type { ChannelEntity } from './channel/channel';
-import { createTimelineEntity } from './timeline/timeline';
-import { createInstrumentChannelEntity } from './channel/channel';
+import { createTimelineEntity, SerializableTimeline } from './timeline/timeline';
+import { createInstrumentChannelEntity, SerializableChannel } from './channel/channel';
 import { createSamplerEntity, SamplerEntity } from './instrument/sampler';
-import { createSlotEntity, SlotEntity } from './slot/slot';
+import { createSlotEntity, SerializableSlot, SlotEntity } from './slot/slot';
 import type { SceneEntity } from './scene/scene';
-import { createSceneEntity } from './scene/scene';
+import { createSceneEntity, SerializableScene } from './scene/scene';
 import { createRecordById } from '../utils/createRecordById';
+import type { SerializableInstrument } from './instrument/instrument';
+import type { SerializableClip } from './clip/clip';
+import type { SerializableSample } from './sample/sample';
 
 export type Entities = {
   channels: Record<string, ChannelEntity>;
@@ -34,6 +37,17 @@ export function createEntities(project: SerializableProject, audioContext: Audio
     ),
   };
 }
+
+// Serialization
+export type SerializableEntities = {
+  channels: Array<SerializableChannel>;
+  instruments: Array<SerializableInstrument>;
+  timelines: Array<SerializableTimeline>;
+  clips: Array<SerializableClip>;
+  scenes: Array<SerializableScene>;
+  slots: Array<SerializableSlot>;
+  samples: Array<SerializableSample>;
+};
 
 // entity selectors
 export const getChannelsBySlotId = (
