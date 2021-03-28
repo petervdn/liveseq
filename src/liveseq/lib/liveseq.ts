@@ -31,14 +31,14 @@ export type LiveseqProps = LiveseqCallbacks & {
 
 export type Liveseq = {
   play: () => void;
-  audioContext: AudioContext | undefined;
+  audioContext: AudioContext;
   stop: () => void;
   setTempo: (bpm: Bpm) => void;
   getTempo: () => Bpm;
   dispose: () => void;
   getScheduleItemsInfo: (timeRange: TimeRange) => Array<{ notes: Array<ScheduleNote> }>;
   getIsPlaying: () => boolean;
-  getProject: () => SerializableProject | undefined;
+  getProject: () => SerializableProject;
 };
 
 export type PartialLiveseqProps = Partial<
