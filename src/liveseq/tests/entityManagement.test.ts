@@ -1,10 +1,7 @@
-import { Beats, createLiveseq, libraryVersion } from '..';
+import { Beats, createLiveseq, Liveseq } from '..';
 import { musicTimeToBeats } from '../lib/time/musicTime';
-import { defaultProjectName } from '../lib/project/project';
 
-it('adds instrument channels', () => {
-  const liveseq = createLiveseq();
-
+const addAllTypesOfEntities = (liveseq: Liveseq) => {
   const clipId = liveseq.addClip({
     type: 'noteClip',
     duration: 10 as Beats,
@@ -47,35 +44,16 @@ it('adds instrument channels', () => {
     }),
     slotIds: [slotId],
   });
+};
 
-  expect(liveseq.getProject()).toEqual({
-    entities: {
-      channels: [
-        {
-          id: 'channel_0',
-          instrumentId: 'instrument_0',
-          slotIds: ['slot_0'],
-          type: 'instrumentChannel',
-        },
-      ],
-      clips: [{ duration: 10, id: 'clip_0', notes: [], type: 'noteClip' }],
-      instruments: [{ id: 'instrument_0', type: 'samplerInstrument' }],
-      samples: [],
-      scenes: [
-        { eventActions: { enter: [{ slotIds: ['slot_0'], type: 'playSlots' }] }, id: 'scene_0' },
-      ],
-      slots: [{ id: 'slot_0', loops: 0, timelineId: 'timeline_0', type: 'timelineSlot' }],
-      timelines: [
-        {
-          clips: [{ clipId: 'clip_0', end: 4, start: 0 }],
-          duration: 4,
-          id: 'timeline_0',
-          name: 'Timeline Name',
-        },
-      ],
-    },
-    initialState: { slotPlaybackState: { activeSceneIds: [], playingSlots: [], queuedScenes: [] } },
-    libraryVersion,
-    name: defaultProjectName,
-  });
+it('adds all types of entities correctly', () => {
+  const liveseq = createLiveseq();
+
+  addAllTypesOfEntities(liveseq);
+
+  expect(liveseq.getProject().entities).toMatchSnapshot();
+
+  addAllTypesOfEntities(liveseq);
+
+  expect(liveseq.getProject().entities).toMatchSnapshot();
 });
