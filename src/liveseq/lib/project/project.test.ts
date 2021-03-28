@@ -1,8 +1,8 @@
-import { createProject } from './project';
+import { createProject, defaultProjectName } from './project';
 
 it('can create empty project with createProject', () => {
   expect(createProject()).toEqual({
-    name: 'untitled',
+    name: defaultProjectName,
     libraryVersion: 0,
     initialState: { slotPlaybackState: { activeSceneIds: [], playingSlots: [], queuedScenes: [] } },
     entities: {

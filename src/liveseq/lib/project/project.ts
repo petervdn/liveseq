@@ -12,10 +12,12 @@ export type SerializableProject = {
   entities: SerializableEntities;
 };
 
+export const defaultProjectName = 'untitled';
+
 export const createProject = (project: Partial<SerializableProject> = {}): SerializableProject => {
   const projectWithDefaults: SerializableProject = {
     libraryVersion,
-    name: 'untitled',
+    name: defaultProjectName,
     ...project,
     initialState: {
       slotPlaybackState: createSlotPlaybackState(),

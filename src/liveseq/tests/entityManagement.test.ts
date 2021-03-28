@@ -1,5 +1,6 @@
-import { Beats, createLiveseq } from '..';
+import { Beats, createLiveseq, libraryVersion } from '..';
 import { musicTimeToBeats } from '../lib/time/musicTime';
+import { defaultProjectName } from '../lib/project/project';
 
 it('adds instrument channels', () => {
   const liveseq = createLiveseq();
@@ -74,7 +75,7 @@ it('adds instrument channels', () => {
       ],
     },
     initialState: { slotPlaybackState: { activeSceneIds: [], playingSlots: [], queuedScenes: [] } },
-    libraryVersion: 0,
-    name: 'untitled',
+    libraryVersion,
+    name: defaultProjectName,
   });
 });
