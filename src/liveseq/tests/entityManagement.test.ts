@@ -1,6 +1,7 @@
 import { Beats, createLiveseq, Liveseq } from '..';
 import { musicTimeToBeats } from '../lib/time/musicTime';
 
+// TODO: add samples isn't tested
 it('adds all types of entities correctly', () => {
   const liveseq = createLiveseq();
 

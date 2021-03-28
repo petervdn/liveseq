@@ -1,5 +1,5 @@
 import { createSlotPlaybackState, SlotPlaybackState } from '../player/slotPlaybackState';
-import type { LiveseqCallbacks } from '../liveseq';
+import type { EngineCallbacks } from '../engine';
 import type { Bpm } from '../types';
 
 // TODO: better naming (rename some keys in objs as well)
@@ -36,7 +36,7 @@ export type Store = {
 
 export const createStore = (
   initialState: Partial<LiveseqState> = {},
-  callbacks: LiveseqCallbacks,
+  callbacks: EngineCallbacks,
 ): Store => {
   const defaultState: LiveseqState = {
     playbackState: 'stopped',
