@@ -1,5 +1,4 @@
 import { createStore } from './store/store';
-import { getAudioContext } from './utils/getAudioContext';
 
 import type { SerializableProject } from './project/project';
 import type { Bpm, TimeInSeconds } from './time/time';
@@ -10,10 +9,11 @@ import { timeRangeToBeatsRange } from './time/beatsRange';
 import type { TimeRange } from './time/timeRange';
 
 import { createPlayer, ScheduleNote } from './player/player';
-import { noop } from './utils/noop';
+
 import { errors } from './errors';
 import { validateProject } from './project/validateProject';
-import { createProject } from './project/project';
+
+import { getDefaultProps } from './utils/getDefaultProps';
 
 export type CommonProps = {
   id: string;
@@ -27,17 +27,11 @@ export type LiveseqCallbacks = {
   onTempoChange: () => void;
 };
 
-const defaultCallbacks: LiveseqCallbacks = {
-  onPlay: noop,
-  onStop: noop,
-  onTempoChange: noop,
-};
-
-export type LiveseqProps = Partial<LiveseqCallbacks> & {
-  project?: SerializableProject;
-  audioContext?: AudioContext;
-  lookAheadTime?: TimeInSeconds;
-  scheduleInterval?: TimeInSeconds;
+export type LiveseqProps = LiveseqCallbacks & {
+  project: SerializableProject;
+  audioContext: AudioContext;
+  lookAheadTime: TimeInSeconds;
+  scheduleInterval: TimeInSeconds;
 };
 
 export type Liveseq = {
@@ -52,19 +46,17 @@ export type Liveseq = {
   getProject: () => SerializableProject | undefined;
 };
 
-export const createLiveseq = ({
-  project = createProject(),
-  audioContext = getAudioContext(),
-  lookAheadTime = 1.2 as TimeInSeconds,
-  scheduleInterval = 1 as TimeInSeconds,
-  ...callbacksRest
-}: LiveseqProps = {}): Liveseq => {
+export type PartialLiveseqProps = Partial<
+  Omit<LiveseqProps, 'project'> & { project: Partial<SerializableProject> }
+>;
+
+export const createLiveseq = (props: PartialLiveseqProps = {}): Liveseq => {
+  const { project, audioContext, lookAheadTime, scheduleInterval, ...callbacks } = getDefaultProps(
+    props,
+  );
+  // TODO: consider moving inside createProject
   validateProject(project, errors);
 
-  const callbacks = {
-    ...defaultCallbacks,
-    ...callbacksRest,
-  };
   const store = createStore(project.initialState, callbacks);
   const entities = createEntities(project, audioContext);
 

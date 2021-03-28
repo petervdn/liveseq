@@ -1,6 +1,6 @@
 import { createLiveseq } from '../lib/liveseq';
 import { errorMessages } from '../lib/errors';
-import { createProject, SerializableProject } from '../lib/project/project';
+import { createProject } from '../lib/project/project';
 import { libraryVersion } from '../lib/meta';
 import type { TimeInSeconds } from '../lib/time/time';
 
@@ -26,28 +26,4 @@ it('throws when project version is incompatible', () => {
 
   // ok
   expect(() => createLiveseq({ project: createProject({ libraryVersion }) })).not.toThrow();
-});
-
-it('throws when project shape is invalid', () => {
-  // error
-  const validProject = createProject();
-  const { libraryVersion, ...missingLibraryVersion } = validProject;
-  const { entities, ...missingEntities } = validProject;
-  const { initialState, ...missingInitialState } = validProject;
-  // TODO: add cases for missing some entities, missing some initialState keys, and with other incorrect inner shapes
-  const invalidProjects = [
-    {} as SerializableProject,
-    missingLibraryVersion as SerializableProject,
-    missingEntities as SerializableProject,
-    missingInitialState as SerializableProject,
-  ];
-
-  invalidProjects.forEach(() => {
-    expect(() => createLiveseq({ project: {} as SerializableProject })).toThrowError(
-      errorMessages.invalidProjectShape(),
-    );
-  });
-
-  // ok
-  expect(() => createLiveseq({ project: validProject })).not.toThrow();
 });

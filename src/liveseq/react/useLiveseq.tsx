@@ -1,6 +1,6 @@
 import { createContext, useContext, useMemo } from 'react';
 
-import type { LiveseqProps } from '../lib/liveseq';
+import type { PartialLiveseqProps } from '../lib/liveseq';
 import type { SubscribableLiveseq } from '../lib/subscribableLiveseq';
 import { createSubscribableLiveseq } from '../lib/subscribableLiveseq';
 
@@ -9,7 +9,7 @@ const liveseqContext = createContext<SubscribableLiveseq>({} as SubscribableLive
 type LiveseqProvider = ({ children }: { children: React.ReactNode }) => JSX.Element;
 
 // The idea is to use context to get liveseq deep in the tree and subscribe to it
-export const useLiveseq = (props: LiveseqProps) => {
+export const useLiveseq = (props: PartialLiveseqProps) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const initialProps = useMemo(() => props, []);
 

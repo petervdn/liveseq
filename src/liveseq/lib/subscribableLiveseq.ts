@@ -1,12 +1,12 @@
 // TODO: maybe move this to a new file
 import { createPubSub, PubSub } from './utils/pubSub';
-import { createLiveseq, LiveseqProps } from './liveseq';
+import { createLiveseq, PartialLiveseqProps } from './liveseq';
 
 export type SubscriptionEvents = 'playbackChange' | 'tempoChange';
 export type LiveseqPubSub = PubSub<SubscriptionEvents>;
 export type SubscribableLiveseq = ReturnType<typeof createSubscribableLiveseq>;
 
-export const createSubscribableLiveseq = (props: LiveseqProps) => {
+export const createSubscribableLiveseq = (props: PartialLiveseqProps) => {
   const pubSub = createPubSub() as LiveseqPubSub;
 
   const liveseq = createLiveseq({

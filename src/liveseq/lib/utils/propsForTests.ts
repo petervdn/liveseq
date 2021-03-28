@@ -1,10 +1,12 @@
 import { abSwitch } from '../../../projects/abSwitch';
-import type { LiveseqProps } from '../liveseq';
+import type { PartialLiveseqProps } from '../liveseq';
+import { getDefaultProps } from './getDefaultProps';
 
 // some tests should pass with all these props
-export const propsForTests: Array<LiveseqProps | undefined> = [
+export const propsForTests: Array<PartialLiveseqProps | undefined> = [
   undefined,
   {},
   { project: abSwitch },
   { audioContext: {} as AudioContext },
+  getDefaultProps(),
 ];
