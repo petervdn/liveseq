@@ -1,18 +1,13 @@
 import { createStore } from './store/store';
-
 import type { SerializableProject } from './project/project';
 import type { Bpm, TimeInSeconds } from './time/time';
-
 import { createEntities } from './entities/entities';
 import { getScheduleItemsWithinRange } from './player/slotPlaybackState';
 import { timeRangeToBeatsRange } from './time/beatsRange';
 import type { TimeRange } from './time/timeRange';
-
 import { createPlayer, ScheduleNote } from './player/player';
-
 import { errors } from './errors';
 import { validateProject } from './project/validateProject';
-
 import { getDefaultProps } from './utils/getDefaultProps';
 
 export type CommonProps = {
