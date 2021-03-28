@@ -63,6 +63,7 @@ export const createLiveseq = (props: PartialLiveseqProps = {}): Liveseq => {
   const store = createStore(project.initialState, callbacks);
   const entityManager = createEntityManager(createEntities(project, audioContext));
 
+  // UTILS
   // TODO: better naming
   // separate function so we can use for getScheduleItemsInfo below as it's part of the API
   const getScheduleItems = (
@@ -82,16 +83,6 @@ export const createLiveseq = (props: PartialLiveseqProps = {}): Liveseq => {
     );
   };
 
-  // TODO: better naming
-  const getScheduleItemsInfo = (timeRange: TimeRange) => {
-    return getScheduleItems(timeRange).scheduleItems.map((scheduleItem) => {
-      return {
-        notes: scheduleItem.notes,
-        // TODO: add SerializableInstrument here as well
-      };
-    });
-  };
-
   const player = createPlayer({
     getScheduleItems,
     onSchedule: ({ nextSlotPlaybackState }) => {
@@ -105,6 +96,7 @@ export const createLiveseq = (props: PartialLiveseqProps = {}): Liveseq => {
     scheduleInterval,
   });
 
+  // SELECTORS
   const getProject = () => {
     // TODO: generate from entities and current state
     return project;
@@ -114,6 +106,17 @@ export const createLiveseq = (props: PartialLiveseqProps = {}): Liveseq => {
     return audioContext;
   };
 
+  // TODO: better naming
+  const getScheduleItemsInfo = (timeRange: TimeRange) => {
+    return getScheduleItems(timeRange).scheduleItems.map((scheduleItem) => {
+      return {
+        notes: scheduleItem.notes,
+        // TODO: add SerializableInstrument here as well
+      };
+    });
+  };
+
+  // CORE
   const dispose = () => {
     player.dispose();
     store.dispose();
