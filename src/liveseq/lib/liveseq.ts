@@ -2,14 +2,14 @@ import { createStore } from './store/store';
 import { getAudioContext } from './utils/getAudioContext';
 
 import type { SerializableProject } from './project/project';
-import type { TimeInSeconds } from './time/time';
+import type { Bpm, TimeInSeconds } from './time/time';
 
 import { createEntities } from './entities/entities';
 import { getScheduleItemsWithinRange } from './player/slotPlaybackState';
 import { timeRangeToBeatsRange } from './time/beatsRange';
 import type { TimeRange } from './time/timeRange';
 
-import { createPlayer } from './player/player';
+import { createPlayer, ScheduleNote } from './player/player';
 import { noop } from './utils/noop';
 import { errors } from './errors';
 import { validateProject } from './project/validateProject';
@@ -40,7 +40,17 @@ export type LiveseqProps = Partial<LiveseqCallbacks> & {
   scheduleInterval?: TimeInSeconds;
 };
 
-export type Liveseq = ReturnType<typeof createLiveseq>;
+export type Liveseq = {
+  play: () => void;
+  audioContext: AudioContext | undefined;
+  stop: () => void;
+  setTempo: (bpm: Bpm) => void;
+  getTempo: () => Bpm;
+  dispose: () => void;
+  getScheduleItemsInfo: (timeRange: TimeRange) => Array<{ notes: Array<ScheduleNote> }>;
+  getIsPlaying: () => boolean;
+  getProject: () => SerializableProject | undefined;
+};
 
 export const createLiveseq = ({
   project = createProject(),
@@ -48,7 +58,7 @@ export const createLiveseq = ({
   lookAheadTime = 1.2 as TimeInSeconds,
   scheduleInterval = 1 as TimeInSeconds,
   ...callbacksRest
-}: LiveseqProps = {}) => {
+}: LiveseqProps = {}): Liveseq => {
   validateProject(project, errors);
 
   const callbacks = {
