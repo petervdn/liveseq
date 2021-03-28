@@ -14,6 +14,16 @@ it('adds all types of entities correctly', () => {
   expect(liveseq.getProject().entities).toEqual(getAddTwice());
 });
 
+// TODO: this is not working
+// it('adding all and immediately removing all is the same result', () => {
+//   const liveseq = createLiveseq();
+//
+//   addAllTypesOfEntities(liveseq);
+//   removeAllByIteration(liveseq, 0);
+//
+//   expect(liveseq.getProject().entities).toEqual(createLiveseq().getProject().entities);
+// });
+
 function getAddOnce() {
   return {
     channels: [
@@ -91,6 +101,16 @@ function getAddTwice() {
     ],
   };
 }
+
+// function removeAllByIteration(liveseq: Liveseq, iter: number) {
+//   liveseq.removeClip(`channel_${iter}`);
+//   liveseq.removeClip(`clip_${iter}`);
+//   liveseq.removeClip(`instrument_${iter}`);
+//   liveseq.removeClip(`sample_${iter}`);
+//   liveseq.removeClip(`scene_${iter}`);
+//   liveseq.removeClip(`slot_${iter}`);
+//   liveseq.removeClip(`timeline_${iter}`);
+// }
 
 function addAllTypesOfEntities(liveseq: Liveseq) {
   const clipId = liveseq.addClip({
