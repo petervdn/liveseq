@@ -1,4 +1,4 @@
-import { createStore } from './store/store';
+import { createStore, StoreActions } from './store/store';
 import type { SerializableProject } from './project/project';
 import { createEntities } from './entities/entities';
 import { getScheduleItemsWithinRange } from './player/slotPlaybackState';
@@ -30,8 +30,9 @@ export type LiveseqProps = LiveseqCallbacks & {
 };
 
 export type LiveseqActions = PlayerActions &
+  Pick<StoreActions, 'setIsMuted' | 'setTempo'> &
   EntityManagerActions & {
-    setTempo: (bpm: Bpm) => void;
+    setProject: (partialProject: Partial<SerializableProject>) => void;
   };
 
 // TODO: do similar to LiveseqActions
@@ -43,6 +44,7 @@ export type LiveseqSelectors = {
   getIsStopped: () => boolean;
   getProject: () => SerializableProject;
   getAudioContext: () => AudioContext;
+  getIsMuted: () => void;
 };
 
 // for now it's flat, maybe could use the same pattern as used internally of having actions and selectors in their own keys
@@ -88,9 +90,9 @@ export const createLiveseq = (props: PartialLiveseqProps = {}): Liveseq => {
     onSchedule: ({ nextSlotPlaybackState }) => {
       store.actions.setSlotPlaybackState(nextSlotPlaybackState);
     },
-    onPlay: store.actions.play,
-    onStop: store.actions.stop,
-    onPause: store.actions.pause,
+    onPlay: () => store.actions.setPlaybackState('playing'),
+    onPause: () => store.actions.setPlaybackState('paused'),
+    onStop: () => store.actions.setPlaybackState('stopped'),
     audioContext,
     lookAheadTime,
     scheduleInterval,
@@ -116,6 +118,12 @@ export const createLiveseq = (props: PartialLiveseqProps = {}): Liveseq => {
     });
   };
 
+  // ACTIONS
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const setProject = (partialProject: Partial<SerializableProject>) => {
+    // TODO: implement
+  };
+
   // CORE
   const dispose = () => {
     player.dispose();
@@ -127,12 +135,15 @@ export const createLiveseq = (props: PartialLiveseqProps = {}): Liveseq => {
     ...entityManager.actions,
     ...player.actions,
     setTempo: store.actions.setTempo,
+    setIsMuted: store.actions.setIsMuted,
+    setProject,
     // selectors
     getScheduleItemsInfo,
     getTempo: store.selectors.getTempo,
     getIsPlaying: store.selectors.getIsPlaying,
     getIsPaused: store.selectors.getIsPaused,
     getIsStopped: store.selectors.getIsStopped,
+    getIsMuted: store.selectors.getIsMuted,
     getProject,
     getAudioContext,
     // core

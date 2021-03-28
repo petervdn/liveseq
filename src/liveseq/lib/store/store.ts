@@ -2,22 +2,47 @@ import { createSlotPlaybackState, SlotPlaybackState } from '../player/slotPlayba
 import type { LiveseqCallbacks } from '../liveseq';
 import type { Bpm } from '../types';
 
+// TODO: better naming (rename some keys in objs as well)
 type PlaybackStates = 'playing' | 'paused' | 'stopped';
 
 export type LiveseqState = {
   playbackState: PlaybackStates;
   tempo: Bpm;
   slotPlaybackState: SlotPlaybackState;
+  isMuted: boolean;
+};
+
+export type StoreSelectors = {
+  getIsStopped: () => boolean;
+  getIsMuted: () => boolean;
+  getTempo: () => Bpm;
+  getIsPlaying: () => boolean;
+  getIsPaused: () => boolean;
+  getSlotPlaybackState: () => SlotPlaybackState;
+};
+
+export type StoreActions = {
+  setPlaybackState: (playbackState: PlaybackStates) => void;
+  setIsMuted: (isMuted: boolean) => void;
+  setTempo: (bpm: Bpm) => void;
+  setSlotPlaybackState: (slotPlaybackState: SlotPlaybackState) => void;
+};
+
+export type Store = {
+  selectors: StoreSelectors;
+  actions: StoreActions;
+  dispose: () => void;
 };
 
 export const createStore = (
   initialState: Partial<LiveseqState> = {},
   callbacks: LiveseqCallbacks,
-) => {
+): Store => {
   const defaultState: LiveseqState = {
     playbackState: 'stopped',
     tempo: 120 as Bpm,
     slotPlaybackState: createSlotPlaybackState(),
+    isMuted: false,
   };
 
   let state = {
@@ -52,39 +77,37 @@ export const createStore = (
     return state.playbackState === 'stopped';
   };
 
+  const getIsMuted = () => {
+    return state.isMuted;
+  };
+
   const getSlotPlaybackState = () => {
     return state.slotPlaybackState;
   };
 
   // ACTIONS
-  const play = () => {
-    if (state.playbackState === 'playing') return;
+  const setPlaybackState = (playbackState: PlaybackStates) => {
+    if (state.playbackState === playbackState) return;
 
     setState({
-      playbackState: 'playing',
+      playbackState,
     });
 
-    callbacks.onPlay();
+    if (getIsPlaying()) {
+      callbacks.onPlay();
+    } else if (getIsPaused()) {
+      callbacks.onPause();
+    } else if (getIsStopped()) {
+      callbacks.onStop();
+    }
   };
 
-  const pause = () => {
-    if (state.playbackState === 'paused') return;
+  const setIsMuted = (isMuted: boolean) => {
+    if (getIsMuted() === isMuted) return;
 
     setState({
-      playbackState: 'paused',
+      isMuted,
     });
-
-    callbacks.onPause();
-  };
-
-  const stop = () => {
-    if (state.playbackState === 'stopped') return;
-
-    setState({
-      playbackState: 'stopped',
-    });
-
-    callbacks.onStop();
   };
 
   const setTempo = (bpm: Bpm) => {
@@ -114,12 +137,12 @@ export const createStore = (
       getIsPlaying,
       getIsPaused,
       getIsStopped,
+      getIsMuted,
       getSlotPlaybackState,
     },
     actions: {
-      play,
-      pause,
-      stop,
+      setPlaybackState,
+      setIsMuted,
       setTempo,
       setSlotPlaybackState,
     },
