@@ -2,29 +2,27 @@ import { getAbSwitch } from './abSwitch';
 
 it('abSwitch is correct', () => {
   const abSwitch = getAbSwitch();
-  expect(abSwitch.initialState).toEqual({
-    slotPlaybackState: {
-      activeSceneIds: [],
-      playingSlots: [],
-      queuedScenes: [
-        { end: 4, sceneId: 'scene_0', start: 0 },
-        { end: 8, sceneId: 'scene_1', start: 4 },
-      ],
-    },
+  expect(abSwitch.initialState.slotPlaybackState).toEqual({
+    activeSceneIds: [],
+    playingSlots: [],
+    queuedScenes: [
+      { end: 4, sceneId: 'scene_0', start: 0 },
+      { end: 8, sceneId: 'scene_1', start: 4 },
+    ],
   });
 
   expect(abSwitch.entities).toEqual({
     channels: [
       {
         id: 'channel_0',
-        instrumentId: 'sampler_1',
+        instrumentId: 'instrument_0',
         name: 'Channel Name',
         slotIds: ['slot_0'],
         type: 'instrumentChannel',
       },
       {
         id: 'channel_1',
-        instrumentId: 'sampler_1',
+        instrumentId: 'instrument_1',
         name: 'Channel Name',
         slotIds: ['slot_1'],
         type: 'instrumentChannel',
@@ -56,7 +54,10 @@ it('abSwitch is correct', () => {
         type: 'noteClip',
       },
     ],
-    instruments: [],
+    instruments: [
+      { id: 'instrument_0', type: 'samplerInstrument' },
+      { id: 'instrument_1', type: 'samplerInstrument' },
+    ],
     samples: [],
     scenes: [
       {
