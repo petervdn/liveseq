@@ -4,7 +4,7 @@ import type { Beats, CommonProps, OmitId } from '../../types';
 
 export type SerializableTimeline = CommonProps & {
   duration?: Beats; // TODO: what to do if duration is undefined, maybe use Infinity instead or we can derive from its clips
-  clips: Array<
+  clipRanges: Array<
     BeatsRange & {
       clipId: string;
     }

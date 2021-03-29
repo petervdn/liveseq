@@ -14,7 +14,7 @@ import type { Beats } from '../../types';
 export const getTimelineDuration = (timeline: SerializableTimeline): Beats => {
   return timeline.duration !== undefined
     ? timeline.duration
-    : timeline.clips.reduce((accumulator, current) => {
+    : timeline.clipRanges.reduce((accumulator, current) => {
         return accumulator !== null && current.end > accumulator! ? current.end : accumulator;
       }, 0 as Beats);
 };

@@ -75,7 +75,7 @@ export const getClipsByTimelineId = (
   timelineId: string,
 ) => {
   const timeline = entities.timelines[timelineId];
-  return timeline.clips.map((clip) => ({
+  return timeline.clipRanges.map((clip) => ({
     ...clip,
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     ...entities.clips[clip.clipId],

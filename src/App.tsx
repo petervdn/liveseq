@@ -1,4 +1,4 @@
-import { abSwitch } from './projects/abSwitch';
+import { abSwitch } from './liveseq/projects/abSwitch';
 import { Liveseq } from './components/Liveseq';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

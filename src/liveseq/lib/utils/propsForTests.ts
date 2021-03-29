@@ -1,4 +1,4 @@
-import { abSwitch } from '../../../projects/abSwitch';
+import { abSwitch } from '../../projects/abSwitch';
 import type { LiveseqProps } from '../liveseq';
 import { getEngineProps } from './getEngineProps';
 

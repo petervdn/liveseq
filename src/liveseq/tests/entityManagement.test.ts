@@ -43,7 +43,7 @@ function getAddOnce() {
     slots: [{ id: 'slot_0', loops: 0, timelineId: 'timeline_0', type: 'timelineSlot' }],
     timelines: [
       {
-        clips: [{ clipId: 'clip_0', end: 4, start: 0 }],
+        clipRanges: [{ clipId: 'clip_0', end: 4, start: 0 }],
         duration: 4,
         id: 'timeline_0',
         name: 'Timeline Name',
@@ -87,13 +87,13 @@ function getAddTwice() {
     ],
     timelines: [
       {
-        clips: [{ clipId: 'clip_0', end: 4, start: 0 }],
+        clipRanges: [{ clipId: 'clip_0', end: 4, start: 0 }],
         duration: 4,
         id: 'timeline_0',
         name: 'Timeline Name',
       },
       {
-        clips: [{ clipId: 'clip_1', end: 4, start: 0 }],
+        clipRanges: [{ clipId: 'clip_1', end: 4, start: 0 }],
         duration: 4,
         id: 'timeline_1',
         name: 'Timeline Name',
@@ -122,7 +122,7 @@ function addAllTypesOfEntities(liveseq: Liveseq) {
   const timelineId = liveseq.addTimeline({
     name: 'Timeline Name',
     duration: musicTimeToBeats([1, 0, 0]),
-    clips: [
+    clipRanges: [
       {
         clipId,
         start: musicTimeToBeats([0, 0, 0]),
