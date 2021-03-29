@@ -24,7 +24,7 @@ export type EngineProps = EngineCallbacks & {
 };
 
 export type EngineActions = PlayerActions &
-  Pick<StoreActions, 'setIsMuted' | 'setTempo'> &
+  Pick<StoreActions, 'setIsMuted' | 'setTempo' | 'addSceneToQueue' | 'removeSceneFromQueue'> &
   EntityManagerActions & {
     setProject: (partialProject: Partial<SerializableProject>) => void;
   };
@@ -134,6 +134,8 @@ export const createEngine = ({
     ...player.actions,
     setTempo: store.actions.setTempo,
     setIsMuted: store.actions.setIsMuted,
+    addSceneToQueue: store.actions.addSceneToQueue,
+    removeSceneFromQueue: store.actions.removeSceneFromQueue,
     setProject,
     // selectors
     getScheduleItemsInfo,

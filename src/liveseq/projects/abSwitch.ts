@@ -7,7 +7,7 @@ import type { Beats } from '../lib/types';
 import { createLiveseq } from '../lib/liveseq';
 import { times } from '../lib/utils/times';
 
-const getAbSwitch = () => {
+export const getAbSwitch = (): SerializableProject => {
   const liveseq = createLiveseq();
 
   addMetronome(liveseq, false);
@@ -15,8 +15,6 @@ const getAbSwitch = () => {
 
   return liveseq.getProject();
 };
-
-export const abSwitch: SerializableProject = getAbSwitch();
 
 // adds a new channel + slot + timeline + metronome clip
 function addMetronome(liveseq: Liveseq, isAlternative: boolean) {
@@ -48,22 +46,28 @@ function addMetronome(liveseq: Liveseq, isAlternative: boolean) {
     slotIds: [slotId],
   });
 
-  return liveseq.addScene({
+  const sceneId = liveseq.addScene({
     name: isAlternative ? 'B' : 'A',
     eventActions: {
       enter: [
         {
           type: 'playSlots',
-          slotIds: ['slotId'],
+          slotIds: [slotId],
         },
       ],
       leave: [
         {
           type: 'stopSlots',
-          slotIds: ['slotId'],
+          slotIds: [slotId],
         },
       ],
     },
+  });
+
+  liveseq.addSceneToQueue({
+    sceneId,
+    start: (isAlternative ? 4 : 0) as Beats,
+    end: (isAlternative ? 8 : 4) as Beats,
   });
 }
 

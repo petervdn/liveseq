@@ -1,4 +1,10 @@
-import { createSlotPlaybackState, SlotPlaybackState } from '../player/slotPlaybackState';
+import {
+  addScenesToQueue,
+  createSlotPlaybackState,
+  QueuedScene,
+  removeScenesFromQueue,
+  SlotPlaybackState,
+} from '../player/slotPlaybackState';
 import type { EngineCallbacks } from '../engine';
 import type { Bpm } from '../types';
 
@@ -26,6 +32,8 @@ export type StoreActions = {
   setIsMuted: (isMuted: boolean) => void;
   setTempo: (bpm: Bpm) => void;
   setSlotPlaybackState: (slotPlaybackState: SlotPlaybackState) => void;
+  addSceneToQueue: (scene: QueuedScene) => void;
+  removeSceneFromQueue: (scene: QueuedScene) => void;
 };
 
 export type Store = {
@@ -102,6 +110,20 @@ export const createStore = (
     }
   };
 
+  const addSceneToQueue = (scene: QueuedScene) => {
+    // TODO: consider duplicates
+    setState({
+      slotPlaybackState: addScenesToQueue([scene], state.slotPlaybackState),
+    });
+  };
+
+  const removeSceneFromQueue = (scene: QueuedScene) => {
+    // TODO: consider duplicates
+    setState({
+      slotPlaybackState: removeScenesFromQueue([scene], state.slotPlaybackState),
+    });
+  };
+
   const setIsMuted = (isMuted: boolean) => {
     if (getIsMuted() === isMuted) return;
 
@@ -145,6 +167,8 @@ export const createStore = (
       setIsMuted,
       setTempo,
       setSlotPlaybackState,
+      addSceneToQueue,
+      removeSceneFromQueue,
     },
     dispose,
   };

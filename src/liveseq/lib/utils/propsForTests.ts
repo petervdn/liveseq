@@ -1,4 +1,4 @@
-import { abSwitch } from '../../projects/abSwitch';
+import { getAbSwitch } from '../../projects/abSwitch';
 import type { LiveseqProps } from '../liveseq';
 import { getEngineProps } from './getEngineProps';
 
@@ -6,7 +6,7 @@ import { getEngineProps } from './getEngineProps';
 export const propsForTests: Array<LiveseqProps | undefined> = [
   undefined,
   {},
-  { project: abSwitch },
+  { project: getAbSwitch() },
   { audioContext: {} as AudioContext },
   getEngineProps(),
 ];

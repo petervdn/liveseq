@@ -4,4 +4,4 @@ export type { SerializableProject } from './lib/project/project';
 export { useLiveseq, useLiveseqContext } from './react/useLiveseq';
 export { libraryVersion } from './lib/meta';
 export type { TimeInSeconds, Bpm, Beats } from './lib/types';
-export { abSwitch } from './projects/abSwitch';
+export { getAbSwitch } from './projects/abSwitch';

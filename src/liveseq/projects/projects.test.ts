@@ -1,6 +1,18 @@
-import { abSwitch } from './abSwitch';
+import { getAbSwitch } from './abSwitch';
 
 it('abSwitch is correct', () => {
+  const abSwitch = getAbSwitch();
+  expect(abSwitch.initialState).toEqual({
+    slotPlaybackState: {
+      activeSceneIds: [],
+      playingSlots: [],
+      queuedScenes: [
+        { end: 4, sceneId: 'scene_0', start: 0 },
+        { end: 8, sceneId: 'scene_1', start: 4 },
+      ],
+    },
+  });
+
   expect(abSwitch.entities).toEqual({
     channels: [
       {
@@ -49,16 +61,16 @@ it('abSwitch is correct', () => {
     scenes: [
       {
         eventActions: {
-          enter: [{ slotIds: ['slotId'], type: 'playSlots' }],
-          leave: [{ slotIds: ['slotId'], type: 'stopSlots' }],
+          enter: [{ slotIds: ['slot_0'], type: 'playSlots' }],
+          leave: [{ slotIds: ['slot_0'], type: 'stopSlots' }],
         },
         id: 'scene_0',
         name: 'A',
       },
       {
         eventActions: {
-          enter: [{ slotIds: ['slotId'], type: 'playSlots' }],
-          leave: [{ slotIds: ['slotId'], type: 'stopSlots' }],
+          enter: [{ slotIds: ['slot_1'], type: 'playSlots' }],
+          leave: [{ slotIds: ['slot_1'], type: 'stopSlots' }],
         },
         id: 'scene_1',
         name: 'B',
