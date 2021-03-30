@@ -10,6 +10,8 @@ import type { OmitId } from '../types';
 import type { SerializableSample } from './sample/sample';
 import type { SerializableProject } from '../..';
 import { createEntities } from './entities';
+import type { Note } from '../note/note';
+import { createNote } from '../note/note';
 
 type AddEntity<Props> = (props: OmitId<Props & { id: string }>) => string;
 type RemoveEntity = (id: string) => void;
@@ -21,6 +23,7 @@ export type EntityManagerActions = {
 
   addClip: AddEntity<SerializableClip>;
   removeClip: RemoveEntity;
+  addNotesToClip: (clip: string, notes: Array<Partial<OmitId<Note>>>) => void;
 
   addInstrument: AddEntity<SerializableInstrument>;
   removeInstrument: RemoveEntity;
@@ -69,6 +72,7 @@ export const createEntityManager = (project: SerializableProject): EntityManager
       removeChannel: (id) => {
         currentEntities = removeChannel(currentEntities, id);
       },
+      // CLIP
       addClip: (channel) => {
         const id = idGenerators.getClipId();
         currentEntities = addClip(currentEntities, channel, id);
@@ -77,6 +81,14 @@ export const createEntityManager = (project: SerializableProject): EntityManager
       removeClip: (id) => {
         currentEntities = removeClip(currentEntities, id);
       },
+      addNotesToClip: (clipId, notes) => {
+        const clip = currentEntities.clips[clipId];
+        // mutation!
+        clip.notes = clip.notes.concat(
+          notes.map((note) => createNote({ ...note, id: idGenerators.getNoteId() })),
+        );
+      },
+      // INSTRUMENT
       addInstrument: (instrument) => {
         const id = idGenerators.getInstrumentId();
         currentEntities = addInstrument(currentEntities, instrument, id);
