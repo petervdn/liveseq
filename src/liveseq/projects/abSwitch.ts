@@ -16,7 +16,7 @@ export const getAbSwitch = (): SerializableProject => {
 
 // adds a new channel + slot + timeline + metronome clip
 function addMetronome(liveseq: Liveseq, isAlternative: boolean) {
-  const clipId = getMetronome(liveseq, isAlternative);
+  const clipId = addMetronomeClip(liveseq, isAlternative);
 
   const timelineId = liveseq.addTimeline({
     name: 'Timeline Name',
@@ -50,20 +50,18 @@ function addMetronome(liveseq: Liveseq, isAlternative: boolean) {
 
   const sceneId = liveseq.addScene({
     name: isAlternative ? 'B' : 'A',
-    eventActions: {
-      enter: [
-        {
-          type: 'playSlots',
-          slotIds: [slotId],
-        },
-      ],
-      leave: [
-        {
-          type: 'stopSlots',
-          slotIds: [slotId],
-        },
-      ],
-    },
+    enter: [
+      {
+        type: 'playSlots',
+        slotIds: [slotId],
+      },
+    ],
+    leave: [
+      {
+        type: 'stopSlots',
+        slotIds: [slotId],
+      },
+    ],
   });
 
   liveseq.addSceneToQueue({
@@ -73,7 +71,7 @@ function addMetronome(liveseq: Liveseq, isAlternative: boolean) {
   });
 }
 
-function getMetronome(liveseq: Liveseq, isAlternative: boolean) {
+function addMetronomeClip(liveseq: Liveseq, isAlternative: boolean) {
   const notes = isAlternative
     ? { emphasis: 'C5' as NoteName, regular: 'C4' as NoteName }
     : { emphasis: 'G5' as NoteName, regular: 'G6' as NoteName };

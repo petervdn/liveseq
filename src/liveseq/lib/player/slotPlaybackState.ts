@@ -60,7 +60,7 @@ export const removeScenesFromQueue = (
 };
 
 export const applyScenesToSlotPlaybackState = (
-  scenes: Array<Pick<SceneEntity, 'id' | 'isEnabled' | 'eventActions'>>,
+  scenes: Array<Pick<SceneEntity, 'id' | 'isEnabled' | 'enter' | 'leave'>>,
   entities: Pick<Entities, 'slots'>,
   slotPlaybackState: SlotPlaybackState,
   start: Beats,
@@ -68,7 +68,7 @@ export const applyScenesToSlotPlaybackState = (
   // TODO: consider isEnabled
   // TODO: incomplete implementation, only plays
   const appliedScenes = scenes.flatMap((scene) => {
-    return (scene.eventActions.enter || []).flatMap((action) => {
+    return (scene.enter || []).flatMap((action) => {
       if (action.type === 'playSlots') {
         // if not specified we get all
         const slotIds = action.slotIds || Object.keys(entities.slots);

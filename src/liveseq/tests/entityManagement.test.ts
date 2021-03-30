@@ -37,9 +37,7 @@ function getAddOnce() {
     clips: [{ duration: 10, id: 'clip_0', notes: [], type: 'noteClip' }],
     instruments: [{ id: 'instrument_0', type: 'samplerInstrument' }],
     samples: [],
-    scenes: [
-      { eventActions: { enter: [{ slotIds: ['slot_0'], type: 'playSlots' }] }, id: 'scene_0' },
-    ],
+    scenes: [{ enter: [{ slotIds: ['slot_0'], type: 'playSlots' }], id: 'scene_0' }],
     slots: [{ id: 'slot_0', loops: 0, timelineId: 'timeline_0', type: 'timelineSlot' }],
     timelines: [
       {
@@ -78,8 +76,8 @@ function getAddTwice() {
     ],
     samples: [],
     scenes: [
-      { eventActions: { enter: [{ slotIds: ['slot_0'], type: 'playSlots' }] }, id: 'scene_0' },
-      { eventActions: { enter: [{ slotIds: ['slot_1'], type: 'playSlots' }] }, id: 'scene_1' },
+      { enter: [{ slotIds: ['slot_0'], type: 'playSlots' }], id: 'scene_0' },
+      { enter: [{ slotIds: ['slot_1'], type: 'playSlots' }], id: 'scene_1' },
     ],
     slots: [
       { id: 'slot_0', loops: 0, timelineId: 'timeline_0', type: 'timelineSlot' },
@@ -138,14 +136,12 @@ function addAllTypesOfEntities(liveseq: Liveseq) {
   });
 
   liveseq.addScene({
-    eventActions: {
-      enter: [
-        {
-          type: 'playSlots',
-          slotIds: [slotId],
-        },
-      ],
-    },
+    enter: [
+      {
+        type: 'playSlots',
+        slotIds: [slotId],
+      },
+    ],
   });
 
   liveseq.addChannel({

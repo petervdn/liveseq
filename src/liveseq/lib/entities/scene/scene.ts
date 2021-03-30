@@ -14,10 +14,8 @@ export type SceneAction =
     };
 
 export type SerializableScene = CommonProps & {
-  eventActions: {
-    enter?: ReadonlyArray<SceneAction>; // when it becomes active
-    leave?: ReadonlyArray<SceneAction>; // when it becomes inactive
-  };
+  enter?: ReadonlyArray<SceneAction>; // when it becomes active
+  leave?: ReadonlyArray<SceneAction>; // when it becomes inactive
 };
 
 export type SceneEntity = ReturnType<typeof createSceneEntity>;

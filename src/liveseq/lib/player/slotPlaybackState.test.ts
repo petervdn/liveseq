@@ -13,9 +13,7 @@ const entities = {
   scenes: {
     scene1: {
       id: 'scene1',
-      eventActions: {
-        enter: [{ type: 'playSlots', slotIds: ['slot1'] }],
-      },
+      enter: [{ type: 'playSlots', slotIds: ['slot1'] }],
     },
   },
   slots: {
@@ -48,9 +46,7 @@ it('applyScenesToSlotPlaybackState', () => {
       [
         {
           id: 'scene1',
-          eventActions: {
-            enter: [{ type: 'playSlots', slotIds: ['slot1'] }],
-          },
+          enter: [{ type: 'playSlots', slotIds: ['slot1'] }],
         },
       ],
       entities,
@@ -74,9 +70,7 @@ it('applyScenesToSlotPlaybackState', () => {
       [
         {
           id: 'scene1',
-          eventActions: {
-            enter: [{ type: 'playSlots' }],
-          },
+          enter: [{ type: 'playSlots' }],
         },
       ],
       entities,

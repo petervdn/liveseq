@@ -61,18 +61,14 @@ it('abSwitch is correct', () => {
     samples: [],
     scenes: [
       {
-        eventActions: {
-          enter: [{ slotIds: ['slot_0'], type: 'playSlots' }],
-          leave: [{ slotIds: ['slot_0'], type: 'stopSlots' }],
-        },
+        enter: [{ slotIds: ['slot_0'], type: 'playSlots' }],
+        leave: [{ slotIds: ['slot_0'], type: 'stopSlots' }],
         id: 'scene_0',
         name: 'A',
       },
       {
-        eventActions: {
-          enter: [{ slotIds: ['slot_1'], type: 'playSlots' }],
-          leave: [{ slotIds: ['slot_1'], type: 'stopSlots' }],
-        },
+        enter: [{ slotIds: ['slot_1'], type: 'playSlots' }],
+        leave: [{ slotIds: ['slot_1'], type: 'stopSlots' }],
         id: 'scene_1',
         name: 'B',
       },
