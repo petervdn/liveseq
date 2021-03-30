@@ -4,9 +4,9 @@ import { createLiveseq, LiveseqProps } from './liveseq';
 
 export type SubscriptionEvents = 'playbackChange' | 'tempoChange';
 export type LiveseqPubSub = PubSub<SubscriptionEvents>;
-export type SubscribableEngine = ReturnType<typeof createSubscribableEngine>;
+export type SubscribableLiveseq = ReturnType<typeof createSubscribableLiveseq>;
 
-export const createSubscribableEngine = (props: LiveseqProps) => {
+export const createSubscribableLiveseq = (props: LiveseqProps) => {
   const pubSub = createPubSub() as LiveseqPubSub;
 
   const liveseq = createLiveseq({
