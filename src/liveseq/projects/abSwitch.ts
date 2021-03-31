@@ -51,12 +51,14 @@ function addMetronome(liveseq: Liveseq, isAlternative: boolean) {
   const sceneId = liveseq.addScene({
     name: isAlternative ? 'B' : 'A',
     enter: [
+      // TODO: playSlots([slotId])
       {
         type: 'playSlots',
         slotIds: [slotId],
       },
     ],
     leave: [
+      // TODO: stopSlots([slotId])
       {
         type: 'stopSlots',
         slotIds: [slotId],
@@ -83,16 +85,13 @@ function addMetronomeClip(liveseq: Liveseq, isAlternative: boolean) {
     notes: [], // TODO: make optional
   });
 
-  liveseq.addNotesToClip(
-    clipId,
-    times(4, (index) => {
-      return {
-        start: musicTimeToBeats([0, 1 * index, 0]),
-        end: musicTimeToBeats([0, 1 * index + 1, 0]),
-        pitch: index === 0 ? notes.emphasis : notes.regular,
-      };
-    }),
-  );
+  times(4, (index) => {
+    return liveseq.addNoteToClip(clipId, {
+      start: musicTimeToBeats([0, 1 * index, 0]),
+      end: musicTimeToBeats([0, 1 * index + 1, 0]),
+      pitch: index === 0 ? notes.emphasis : notes.regular,
+    });
+  });
 
   return clipId;
 }

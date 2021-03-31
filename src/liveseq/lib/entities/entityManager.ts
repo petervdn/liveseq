@@ -23,7 +23,7 @@ export type EntityManagerActions = {
 
   addClip: AddEntity<SerializableClip>;
   removeClip: RemoveEntity;
-  addNotesToClip: (clip: string, notes: Array<Partial<OmitId<Note>>>) => void;
+  addNoteToClip: (clip: string, note: Partial<OmitId<Note>>) => string;
 
   addInstrument: AddEntity<SerializableInstrument>;
   removeInstrument: RemoveEntity;
@@ -81,12 +81,12 @@ export const createEntityManager = (project: SerializableProject): EntityManager
       removeClip: (id) => {
         currentEntities = removeClip(currentEntities, id);
       },
-      addNotesToClip: (clipId, notes) => {
+      addNoteToClip: (clipId, note) => {
+        const id = idGenerators.getNoteId();
         const clip = currentEntities.clips[clipId];
         // mutation!
-        clip.notes = clip.notes.concat(
-          notes.map((note) => createNote({ ...note, id: idGenerators.getNoteId() })),
-        );
+        clip.notes.push(createNote({ ...note, id }));
+        return id;
       },
       // INSTRUMENT
       addInstrument: (instrument) => {
