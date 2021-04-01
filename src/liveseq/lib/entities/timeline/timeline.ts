@@ -3,7 +3,7 @@ import type { Beats, CommonProps, OmitId } from '../../types';
 import type { AddEntity, EntityManagementProps, RemoveEntity } from '../entityManager';
 
 export type SerializableTimeline = CommonProps & {
-  duration?: Beats; // TODO: what to do if duration is undefined, maybe use Infinity instead or we can derive from its clips
+  duration?: Beats;
   clipRanges: Array<
     BeatsRange & {
       clipId: string;
