@@ -5,7 +5,7 @@ import type { SceneManager } from './scene/scene';
 import { getSlotManager, SlotManager } from './slot/slot';
 import { getTimelineManager, TimelineManager } from './timeline/timeline';
 import type { OmitId } from '../types';
-import type { SerializableSample } from './sample/sample';
+import type { SampleManager } from './sample/sample';
 import type { SerializableProject } from '../..';
 import { createEntities } from './entities';
 import { getChannelManager } from './channel/channel';
@@ -13,21 +13,18 @@ import type { ChannelManager } from './channel/channel';
 import { getIdGenerator } from '../utils/getIdGenerator';
 import { getSceneManager } from './scene/scene';
 import { getHighestId } from '../utils/getHighestId';
+import { getSampleManager } from './sample/sample';
 
 export type AddEntity<Props> = (props: OmitId<Props & { id: string }>) => string;
 export type RemoveEntity = (id: string) => void;
 
-// use literal string types for the keys
 export type EntityManagerActions = ChannelManager &
   ClipManager &
   SceneManager &
   SlotManager &
   InstrumentManager &
-  TimelineManager & {
-    // TODO
-    addSample: AddEntity<SerializableSample>;
-    removeSample: RemoveEntity;
-  };
+  TimelineManager &
+  SampleManager;
 
 type EntityManager = {
   selectors: {
@@ -97,20 +94,11 @@ export const createEntityManager = (project: SerializableProject): EntityManager
     };
   };
 
-  // TODO: see if we can DRY this
   return {
     actions: {
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      addSample: () => {
-        // TODO:
-        return '';
-      },
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      removeSample: () => {
-        // TODO:
-      },
       ...getChannelManager(getProps('channels')),
       ...getClipManager(getProps('clips')),
+      ...getSampleManager(getProps('samples')),
       ...getSceneManager(getProps('scenes')),
       ...getSlotManager(getProps('slots')),
       ...getInstrumentManager(getProps('instruments')),
