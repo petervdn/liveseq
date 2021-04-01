@@ -22,11 +22,10 @@ export const getClipManager = ({
   addEntity,
   removeEntity,
 }: EntityManagementProps): ClipManager => {
-  // Note is kind of a special thing so we have to do this for the ids
+  // Note is kind of a special thing so we have to do this for the ids so they are unique
   const initialIndex = Object.values(getEntities().clips).reduce((accumulator, current) => {
     return Math.max(accumulator, getHighestId(current.notes.map((note) => note.id)));
   }, 0);
-  // TODO: improve this or maybe use uuid generator...
   const getNoteId = getIdGenerator('notes', initialIndex);
 
   return {
