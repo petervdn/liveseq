@@ -14,6 +14,7 @@ import { getIdGenerator } from '../utils/getIdGenerator';
 import { getSceneManager } from './scene/scene';
 import { getHighestId } from '../utils/getHighestId';
 import { getSampleManager } from './sample/sample';
+import { errorMessages } from '../errors';
 
 export type AddEntity<Props> = (props: OmitId<Props & { id: string }>) => string;
 export type RemoveEntity = (id: string) => void;
@@ -42,6 +43,14 @@ export type EntityManagementProps = {
 
 export const createEntityManager = (project: SerializableProject): EntityManager => {
   let currentEntities = createEntities(project);
+
+  const getEntityById = (key: keyof Entities, id: string) => {
+    const entity = currentEntities[key][id];
+    if (!entity) {
+      throw new Error(errorMessages.invalidEntityId(key, id));
+    }
+    return entity;
+  };
 
   const getEntities = () => {
     return currentEntities;
@@ -72,6 +81,8 @@ export const createEntityManager = (project: SerializableProject): EntityManager
   const getRemoveEntity = (key: keyof Entities) => (id: string) => {
     const entities = getEntities();
     const copy = { ...entities[key] };
+    // just to trigger an error in case the id doesn't exist
+    getEntityById(key, id);
     delete copy[id];
 
     const result = {

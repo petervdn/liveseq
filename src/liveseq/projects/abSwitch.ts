@@ -4,9 +4,10 @@ import type { NoteName } from '../lib/note/note';
 import type { Beats } from '../lib/types';
 import { createLiveseq } from '../lib/liveseq';
 import { times } from '../lib/utils/times';
+import { playSlotsAction, stopSlotsAction } from '../lib/entities/scene/scene';
 
 export const getAbSwitch = (): SerializableProject => {
-  const liveseq = createLiveseq();
+  const liveseq = createLiveseq({ project: { name: 'abSwitch' } });
 
   addMetronome(liveseq, false);
   addMetronome(liveseq, true);
@@ -50,20 +51,8 @@ function addMetronome(liveseq: Liveseq, isAlternative: boolean) {
 
   const sceneId = liveseq.addScene({
     name: isAlternative ? 'B' : 'A',
-    enter: [
-      // TODO: playSlots([slotId])
-      {
-        type: 'playSlots',
-        slotIds: [slotId],
-      },
-    ],
-    leave: [
-      // TODO: stopSlots([slotId])
-      {
-        type: 'stopSlots',
-        slotIds: [slotId],
-      },
-    ],
+    enter: [playSlotsAction([slotId])],
+    leave: [stopSlotsAction([slotId])],
   });
 
   liveseq.addSceneToQueue({

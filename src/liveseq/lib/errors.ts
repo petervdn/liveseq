@@ -9,4 +9,7 @@ export const errorMessages = {
   },
   invalidIds: always('Invalid ids in project.'),
   contextSuspended: always('Cannot play, AudioContext is suspended.'),
+  invalidEntityId: (entityKey: string, id: string) => {
+    return `Can't find id ${id} in ${entityKey}.`;
+  },
 };

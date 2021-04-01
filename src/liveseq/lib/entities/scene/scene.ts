@@ -1,17 +1,33 @@
 import type { CommonProps, OmitId } from '../../types';
 import type { EntityManagementProps, AddEntity, RemoveEntity } from '../entityManager';
 
-export type SceneAction =
-  | {
-      type: 'playSlots';
-      // optional, if not present means all
-      slotIds?: ReadonlyArray<string>;
-    }
-  | {
-      type: 'stopSlots';
-      // optional, if not present means all
-      slotIds?: ReadonlyArray<string>;
-    };
+type PlaySlotsAction = {
+  type: 'playSlots';
+  // optional, if not present means all
+  slotIds?: ReadonlyArray<string>;
+};
+
+export const playSlotsAction = (slotIds?: ReadonlyArray<string>): PlaySlotsAction => {
+  return {
+    type: 'playSlots',
+    slotIds,
+  };
+};
+
+type StopSlotsAction = {
+  type: 'stopSlots';
+  // optional, if not present means all
+  slotIds?: ReadonlyArray<string>;
+};
+
+export const stopSlotsAction = (slotIds?: ReadonlyArray<string>): StopSlotsAction => {
+  return {
+    type: 'stopSlots',
+    slotIds,
+  };
+};
+
+export type SceneAction = PlaySlotsAction | StopSlotsAction;
 
 export type SerializableScene = CommonProps & {
   enter?: ReadonlyArray<SceneAction>; // when it becomes active

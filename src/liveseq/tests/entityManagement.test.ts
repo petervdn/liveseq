@@ -1,7 +1,6 @@
 import { Beats, createLiveseq, Liveseq } from '..';
 import { musicTimeToBeats } from '../lib/time/musicTime';
 
-// TODO: add samples isn't tested
 it('adds all types of entities correctly', () => {
   const liveseq = createLiveseq();
 
@@ -112,6 +111,11 @@ function getAddTwice() {
 }
 
 function addAllTypesOfEntities(liveseq: Liveseq) {
+  // TODO: use sample in a sampler
+  liveseq.addSample({
+    source: '',
+  });
+
   const clipId = liveseq.addClip({
     type: 'noteClip',
     duration: 10 as Beats,
