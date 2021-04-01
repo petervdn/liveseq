@@ -1,6 +1,6 @@
 import type { BeatsRange } from '../../time/beatsRange';
-import type { Entities } from '../entities';
 import type { Beats, CommonProps, OmitId } from '../../types';
+import type { AddEntity, EntityManagementProps, RemoveEntity } from '../entityManager';
 
 export type SerializableTimeline = CommonProps & {
   duration?: Beats; // TODO: what to do if duration is undefined, maybe use Infinity instead or we can derive from its clips
@@ -17,31 +17,24 @@ export const createTimelineEntity = (props: SerializableTimeline): SerializableT
   return props;
 };
 
-export const addTimeline = (
-  entities: Entities,
-  props: OmitId<SerializableTimeline>,
-  id: string,
-): Entities => {
-  return {
-    ...entities,
-    timelines: {
-      ...entities.timelines,
-      [id]: createTimelineEntity({ ...props, id }),
-    },
-  };
+// MANAGER
+export type TimelineManager = {
+  addTimeline: AddEntity<OmitId<SerializableTimeline>>;
+  removeTimeline: RemoveEntity;
 };
 
-export const removeTimeline = (entities: Entities, timelineId: string): Entities => {
-  const result = {
-    ...entities,
-    timelines: {
-      ...entities.timelines,
+export const getTimelineManager = ({
+  addEntity,
+  removeEntity,
+}: EntityManagementProps): TimelineManager => {
+  return {
+    addTimeline: (timeline) => {
+      return addEntity((id) => createTimelineEntity({ ...timeline, id }));
+    },
+    removeTimeline: (timelineId) => {
+      removeEntity(timelineId);
+
+      // TODO: search and remove any references by id
     },
   };
-
-  delete result.timelines[timelineId];
-
-  // TODO: search and remove any references by id
-
-  return result;
 };

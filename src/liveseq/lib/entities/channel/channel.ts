@@ -1,5 +1,5 @@
-import type { Entities } from '../entities';
 import type { CommonProps, OmitId } from '../../types';
+import type { AddEntity, EntityManagementProps, RemoveEntity } from '../entityManager';
 
 export type InstrumentChannel = CommonProps & {
   type: 'instrumentChannel';
@@ -17,31 +17,39 @@ export const createInstrumentChannelEntity = (props: SerializableChannel): Instr
   return props;
 };
 
-export const addChannel = (
-  entities: Entities,
-  props: OmitId<SerializableChannel>,
-  id: string,
-): Entities => {
-  return {
-    ...entities,
-    channels: {
-      ...entities.channels,
-      [id]: createInstrumentChannelEntity({ ...props, id }),
-    },
-  };
+// MANAGER
+export type ChannelManager = {
+  addChannel: AddEntity<OmitId<SerializableChannel>>;
+  removeChannel: RemoveEntity;
+  addSlotReference: (channelId: string, slotId: string) => void;
+  removeSlotReference: (channelId: string, slotId: string) => void;
 };
 
-export const removeChannel = (entities: Entities, channelId: string): Entities => {
-  const result = {
-    ...entities,
-    channels: {
-      ...entities.channels,
+export const getChannelManager = ({
+  getEntities,
+  addEntity,
+  removeEntity,
+}: EntityManagementProps): ChannelManager => {
+  return {
+    addChannel: (channel) => {
+      return addEntity((id) => createInstrumentChannelEntity({ ...channel, id }));
+    },
+    removeChannel: (channelId) => {
+      removeEntity(channelId);
+
+      // TODO: search and remove any references by id
+    },
+    addSlotReference: (channelId, slotId) => {
+      // TODO: validate both channelId and slotId
+      const channel = getEntities().channels[channelId];
+      // mutation!
+      channel.slotIds.push(slotId);
+    },
+    removeSlotReference: (channelId, slotId) => {
+      // TODO: validate both channelId and slotId
+      const channel = getEntities().channels[channelId];
+      // mutation!
+      channel.slotIds.push(slotId);
     },
   };
-
-  delete result.channels[channelId];
-
-  // TODO: search and remove any references by id
-
-  return result;
 };

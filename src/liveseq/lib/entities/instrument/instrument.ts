@@ -1,8 +1,9 @@
 import type { ScheduleNote } from '../../player/player';
 import type { SamplerInstrument } from './sampler';
-import type { Entities } from '../entities';
+
 import type { OmitId } from '../../types';
 import { createSamplerEntity } from './sampler';
+import type { AddEntity, EntityManagementProps, RemoveEntity } from '../entityManager';
 
 export type SerializableInstrument = SamplerInstrument; //  | SimpleSynthInstrument;
 
@@ -10,31 +11,24 @@ export type InstrumentInstance = {
   schedule: (notes: Array<ScheduleNote>, audioContext: AudioContext) => void;
 };
 
-export const addInstrument = (
-  entities: Entities,
-  props: OmitId<SerializableInstrument>,
-  id: string,
-): Entities => {
-  return {
-    ...entities,
-    instruments: {
-      ...entities.instruments,
-      [id]: createSamplerEntity({ ...props, id }),
-    },
-  };
+// MANAGER
+export type InstrumentManager = {
+  addInstrument: AddEntity<OmitId<SerializableInstrument>>;
+  removeInstrument: RemoveEntity;
 };
 
-export const removeInstrument = (entities: Entities, instrumentId: string): Entities => {
-  const result = {
-    ...entities,
-    instruments: {
-      ...entities.instruments,
+export const getInstrumentManager = ({
+  addEntity,
+  removeEntity,
+}: EntityManagementProps): InstrumentManager => {
+  return {
+    addInstrument: (instrument) => {
+      return addEntity((id) => createSamplerEntity({ ...instrument, id }));
+    },
+    removeInstrument: (instrumentId) => {
+      removeEntity(instrumentId);
+
+      // TODO: search and remove any references by id
     },
   };
-
-  delete result.instruments[instrumentId];
-
-  // TODO: search and remove any references by id
-
-  return result;
 };

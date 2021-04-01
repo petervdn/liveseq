@@ -1,47 +1,33 @@
 import type { Entities } from './entities';
-import { addChannel, removeChannel, SerializableChannel } from './channel/channel';
-import { addClip, removeClip, SerializableClip } from './clip/clip';
-import { addInstrument, removeInstrument, SerializableInstrument } from './instrument/instrument';
-import { addScene, removeScene, SerializableScene } from './scene/scene';
-import { addSlot, removeSlot, SerializableSlot } from './slot/slot';
-import { addTimeline, removeTimeline, SerializableTimeline } from './timeline/timeline';
-import { getIdGenerators } from './getIdGenerators';
+import { ClipManager, getClipManager } from './clip/clip';
+import { getInstrumentManager, InstrumentManager } from './instrument/instrument';
+import type { SceneManager } from './scene/scene';
+import { getSlotManager, SlotManager } from './slot/slot';
+import { getTimelineManager, TimelineManager } from './timeline/timeline';
+import { getHighestId, getIdGenerators } from './getIdGenerators';
 import type { OmitId } from '../types';
 import type { SerializableSample } from './sample/sample';
 import type { SerializableProject } from '../..';
 import { createEntities } from './entities';
-import type { Note } from '../note/note';
-import { createNote } from '../note/note';
+import { getChannelManager } from './channel/channel';
+import type { ChannelManager } from './channel/channel';
+import { getIdGenerator } from '../utils/getIdGenerator';
+import { getSceneManager } from './scene/scene';
 
-type AddEntity<Props> = (props: OmitId<Props & { id: string }>) => string;
-type RemoveEntity = (id: string) => void;
+export type AddEntity<Props> = (props: OmitId<Props & { id: string }>) => string;
+export type RemoveEntity = (id: string) => void;
 
 // use literal string types for the keys
-export type EntityManagerActions = {
-  addChannel: AddEntity<SerializableChannel>;
-  removeChannel: RemoveEntity;
-  addSlotReference: (channelId: string, slotId: string) => void;
-  removeSlotReference: (channelId: string, slotId: string) => void;
-
-  addClip: AddEntity<SerializableClip>;
-  removeClip: RemoveEntity;
-  addNoteToClip: (clipId: string, note: Partial<OmitId<Note>>) => string;
-
-  addInstrument: AddEntity<SerializableInstrument>;
-  removeInstrument: RemoveEntity;
-
-  addSample: AddEntity<SerializableSample>;
-  removeSample: RemoveEntity;
-
-  addScene: AddEntity<SerializableScene>;
-  removeScene: RemoveEntity;
-
-  addSlot: AddEntity<SerializableSlot>;
-  removeSlot: RemoveEntity;
-
-  addTimeline: AddEntity<SerializableTimeline>;
-  removeTimeline: RemoveEntity;
-};
+export type EntityManagerActions = ChannelManager &
+  ClipManager &
+  SceneManager &
+  SlotManager &
+  InstrumentManager &
+  TimelineManager & {
+    // TODO
+    addSample: AddEntity<SerializableSample>;
+    removeSample: RemoveEntity;
+  };
 
 type EntityManager = {
   selectors: {
@@ -50,9 +36,67 @@ type EntityManager = {
   actions: EntityManagerActions;
 };
 
+// passed to each entity manager
+export type EntityManagementProps = {
+  addEntity: (getEntity: (id: string) => unknown) => string;
+  getEntities: () => Entities;
+  removeEntity: (id: string) => void;
+};
+
 export const createEntityManager = (project: SerializableProject): EntityManager => {
   let currentEntities = createEntities(project);
   const idGenerators = getIdGenerators(currentEntities);
+
+  const getEntities = () => {
+    return currentEntities;
+  };
+
+  const setEntities = (entities: Entities) => {
+    currentEntities = entities;
+  };
+
+  const getAddEntity = (key: keyof Entities) => {
+    const generateId = getIdGenerator(key, getHighestId(getEntities()[key]));
+
+    return (getEntity: (id: string) => unknown) => {
+      const id = generateId();
+      const entity = getEntity(id);
+      const entities = getEntities();
+      setEntities({
+        ...entities,
+        [key]: {
+          ...entities[key],
+          [id]: entity,
+        },
+      });
+      return id;
+    };
+  };
+
+  const getRemoveEntity = (key: keyof Entities) => (id: string) => {
+    const entities = getEntities();
+    const copy = { ...entities[key] };
+    delete copy[id];
+
+    const result = {
+      ...entities,
+      [key]: {
+        ...copy,
+      },
+    };
+
+    // TODO: search and remove any references by id
+
+    setEntities(result);
+  };
+
+  const getProps = (key: keyof Entities) => {
+    return {
+      addEntity: getAddEntity(key),
+      removeEntity: getRemoveEntity(key),
+      getEntities,
+    };
+  };
 
   // TODO: see if we can DRY this
   return {
@@ -66,79 +110,15 @@ export const createEntityManager = (project: SerializableProject): EntityManager
       removeSample: () => {
         // TODO:
       },
-      // CHANNEL // TODO: move to /channel
-      addChannel: (channel) => {
-        const id = idGenerators.getChannelId();
-        currentEntities = addChannel(currentEntities, channel, id);
-        return id;
-      },
-      removeChannel: (id) => {
-        currentEntities = removeChannel(currentEntities, id);
-      },
-      addSlotReference: (channelId, slotId) => {
-        // TODO: validate both channelId and slotId
-        const channel = currentEntities.channels[channelId];
-        channel.slotIds.push(slotId);
-      },
-      removeSlotReference: (channelId, slotId) => {
-        // TODO: validate both channelId and slotId
-        const channel = currentEntities.channels[channelId];
-        channel.slotIds.push(slotId);
-      },
-      // CLIP // TODO: move to /clip
-      addClip: (channel) => {
-        const id = idGenerators.getClipId();
-        currentEntities = addClip(currentEntities, channel, id);
-        return id;
-      },
-      removeClip: (id) => {
-        currentEntities = removeClip(currentEntities, id);
-      },
-      addNoteToClip: (clipId, note) => {
-        const id = idGenerators.getNoteId();
-        const clip = currentEntities.clips[clipId];
-        // mutation!
-        clip.notes.push(createNote({ ...note, id }));
-        return id;
-      },
-      // INSTRUMENT
-      addInstrument: (instrument) => {
-        const id = idGenerators.getInstrumentId();
-        currentEntities = addInstrument(currentEntities, instrument, id);
-        return id;
-      },
-      removeInstrument: (id) => {
-        currentEntities = removeInstrument(currentEntities, id);
-      },
-      addScene: (scene) => {
-        const id = idGenerators.getSceneId();
-        currentEntities = addScene(currentEntities, scene, id);
-        return id;
-      },
-      removeScene: (id) => {
-        currentEntities = removeScene(currentEntities, id);
-      },
-      addSlot: (slot) => {
-        const id = idGenerators.getSlotId();
-        currentEntities = addSlot(currentEntities, slot, id);
-        return id;
-      },
-      removeSlot: (id) => {
-        currentEntities = removeSlot(currentEntities, id);
-      },
-      addTimeline: (timeline) => {
-        const id = idGenerators.getTimelineId();
-        currentEntities = addTimeline(currentEntities, timeline, id);
-        return id;
-      },
-      removeTimeline: (id) => {
-        currentEntities = removeTimeline(currentEntities, id);
-      },
+      ...getChannelManager(getProps('channels')),
+      ...getClipManager(getProps('clips')),
+      ...getSceneManager(getProps('scenes')),
+      ...getSlotManager(getProps('slots')),
+      ...getInstrumentManager(getProps('instruments')),
+      ...getTimelineManager(getProps('timelines')),
     },
     selectors: {
-      getEntities: () => {
-        return currentEntities;
-      },
+      getEntities,
     },
   };
 };

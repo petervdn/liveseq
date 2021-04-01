@@ -1,5 +1,5 @@
-import type { Entities } from '../entities';
 import type { CommonProps, OmitId } from '../../types';
+import type { EntityManagementProps, AddEntity, RemoveEntity } from '../entityManager';
 
 export type SceneAction =
   | {
@@ -25,31 +25,24 @@ export const createSceneEntity = (props: SerializableScene): SerializableScene =
   return props;
 };
 
-export const addScene = (
-  entities: Entities,
-  props: OmitId<SerializableScene>,
-  id: string,
-): Entities => {
-  return {
-    ...entities,
-    scenes: {
-      ...entities.scenes,
-      [id]: createSceneEntity({ ...props, id }),
-    },
-  };
+// MANAGER
+export type SceneManager = {
+  addScene: AddEntity<OmitId<SerializableScene>>;
+  removeScene: RemoveEntity;
 };
 
-export const removeScene = (entities: Entities, sceneId: string): Entities => {
-  const result = {
-    ...entities,
-    scenes: {
-      ...entities.scenes,
+export const getSceneManager = ({
+  addEntity,
+  removeEntity,
+}: EntityManagementProps): SceneManager => {
+  return {
+    addScene: (channel) => {
+      return addEntity((id) => createSceneEntity({ ...channel, id }));
+    },
+    removeScene: (channelId) => {
+      removeEntity(channelId);
+
+      // TODO: search and remove any references by id
     },
   };
-
-  delete result.scenes[sceneId];
-
-  // TODO: search and remove any references by id
-
-  return result;
 };

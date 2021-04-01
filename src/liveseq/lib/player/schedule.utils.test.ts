@@ -6,62 +6,62 @@ import { libraryVersion } from '../meta';
 export const testProject = {
   libraryVersion,
   name: 'Project Name',
-  startScenes: ['scene_1'],
+  startScenes: ['scenes_1'],
   entities: {
     channels: [
       {
-        id: 'channel_1',
+        id: 'channels_1',
         name: 'Channel Name',
         type: 'instrumentChannel',
-        instrumentId: 'sampler_1',
-        slotIds: ['slot_1', 'slot_2'],
+        instrumentId: 'samplers_1',
+        slotIds: ['slots_1', 'slot_2'],
       },
     ],
     instruments: [
       {
-        id: 'sampler_1',
+        id: 'samplers_1',
         type: 'samplerInstrument',
       },
     ],
     slots: [
       {
-        id: 'slot_1',
+        id: 'slots_1',
         type: 'timelineSlot',
         name: 'Slot Name',
-        timelineId: 'timeline_1',
+        timelineId: 'timelines_1',
         loops: 10,
       },
     ],
     clips: [
       {
-        id: 'clip_1',
+        id: 'clips_1',
         type: 'noteClip',
         name: 'Clip Name',
         duration: musicTimeToBeats([1, 0, 0]),
         notes: [
           {
-            id: 'note_1',
+            id: 'notes_1',
             start: musicTimeToBeats([0, 0, 0]),
             end: musicTimeToBeats([0, 1, 0]),
             velocity: 0.75,
             pitch: 'C6' as NoteName,
           },
           {
-            id: 'note_2',
+            id: 'notes_2',
             start: musicTimeToBeats([0, 1, 0]),
             end: musicTimeToBeats([0, 2, 0]),
             velocity: 0.75,
             pitch: 'C5' as NoteName,
           },
           {
-            id: 'note_3',
+            id: 'notes_3',
             start: musicTimeToBeats([0, 2, 0]),
             end: musicTimeToBeats([0, 3, 0]),
             velocity: 0.75,
             pitch: 'C5' as NoteName,
           },
           {
-            id: 'note_4',
+            id: 'notes_4',
             start: musicTimeToBeats([0, 3, 0]),
             end: musicTimeToBeats([0, 4, 0]),
             velocity: 0.75,
@@ -73,12 +73,12 @@ export const testProject = {
     // global to allow same timeline being used in multiple channels or slots
     timelines: [
       {
-        id: 'timeline_1',
+        id: 'timelines_1',
         name: 'Timeline Name',
         duration: musicTimeToBeats([1, 0, 0]),
         clips: [
           {
-            clipId: 'clip_1',
+            clipId: 'clips_1',
             start: musicTimeToBeats([0, 0, 0]),
             end: musicTimeToBeats([1, 0, 0]),
           },

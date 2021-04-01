@@ -1,36 +1,43 @@
 import type { NoteClip } from './noteClip';
-import type { Entities } from '../entities';
 import { createNoteClipEntity } from './noteClip';
 import type { OmitId } from '../../types';
+import { createNote, Note } from '../../note/note';
+import type { AddEntity, RemoveEntity, EntityManagementProps } from '../entityManager';
+import { getIdGenerator } from '../../utils/getIdGenerator';
 
 // ready to add more later
 export type SerializableClip = NoteClip;
 
-export const addClip = (
-  entities: Entities,
-  props: OmitId<SerializableClip>,
-  id: string,
-): Entities => {
-  return {
-    ...entities,
-    clips: {
-      ...entities.clips,
-      [id]: createNoteClipEntity({ ...props, id }),
-    },
-  };
+// MANAGER
+// TODO: move to NoteClip
+export type ClipManager = {
+  addClip: AddEntity<OmitId<SerializableClip>>;
+  removeClip: RemoveEntity;
+  addNoteToClip: (clipId: string, note: Partial<OmitId<Note>>) => string;
 };
 
-export const removeClip = (entities: Entities, clipId: string): Entities => {
-  const result = {
-    ...entities,
-    clips: {
-      ...entities.clips,
+export const getClipManager = ({
+  getEntities,
+  addEntity,
+  removeEntity,
+}: EntityManagementProps): ClipManager => {
+  // TODO: improve this or maybe use uuid generator... or promote to entity
+  const getNoteId = getIdGenerator('notes', 0);
+
+  return {
+    addClip: (clip) => {
+      return addEntity((id) => createNoteClipEntity({ ...clip, id }));
+    },
+    removeClip: (clipId) => {
+      return removeEntity(clipId);
+    },
+    addNoteToClip: (clipId, note) => {
+      const entities = getEntities();
+      const id = getNoteId();
+      const clip = entities.clips[clipId];
+      // mutation!
+      clip.notes.push(createNote({ ...note, id }));
+      return id;
     },
   };
-
-  delete result.clips[clipId];
-
-  // TODO: search and remove any references by id
-
-  return result;
 };

@@ -12,7 +12,7 @@ export {};
 // const entities = createEntities(testProject);
 // const scheduleItems = getScheduleItems(
 //   entities,
-//   ['slot_1'],
+//   ['slots_1'],
 //   0 as TimeInSeconds,
 //   2 as TimeInSeconds,
 //   60 as Bpm,

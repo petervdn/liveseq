@@ -1,5 +1,5 @@
-import type { Entities } from '../entities';
 import type { CommonProps, OmitId } from '../../types';
+import type { AddEntity, EntityManagementProps, RemoveEntity } from '../entityManager';
 
 export type TimelineSlot = CommonProps & {
   type: 'timelineSlot';
@@ -17,31 +17,21 @@ export const createSlotEntity = (props: SerializableSlot): SerializableSlot => {
   return props;
 };
 
-export const addSlot = (
-  entities: Entities,
-  props: OmitId<SerializableSlot>,
-  id: string,
-): Entities => {
-  return {
-    ...entities,
-    slots: {
-      ...entities.slots,
-      [id]: createSlotEntity({ ...props, id }),
-    },
-  };
+// MANAGER
+export type SlotManager = {
+  addSlot: AddEntity<OmitId<SerializableSlot>>;
+  removeSlot: RemoveEntity;
 };
 
-export const removeSlot = (entities: Entities, slotId: string): Entities => {
-  const result = {
-    ...entities,
-    slots: {
-      ...entities.slots,
+export const getSlotManager = ({ addEntity, removeEntity }: EntityManagementProps): SlotManager => {
+  return {
+    addSlot: (slot) => {
+      return addEntity((id) => createSlotEntity({ ...slot, id }));
+    },
+    removeSlot: (slotId) => {
+      removeEntity(slotId);
+
+      // TODO: search and remove any references by id
     },
   };
-
-  delete result.slots[slotId];
-
-  // TODO: search and remove any references by id
-
-  return result;
 };
