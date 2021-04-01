@@ -14,15 +14,26 @@ it('adds all types of entities correctly', () => {
   expect(liveseq.getProject().entities).toEqual(getAddTwice());
 });
 
-// TODO: this is not working
-// it('adding all and immediately removing all is the same result', () => {
-//   const liveseq = createLiveseq();
-//
-//   addAllTypesOfEntities(liveseq);
-//   removeAllByIteration(liveseq, 0);
-//
-//   expect(liveseq.getProject().entities).toEqual(createLiveseq().getProject().entities);
-// });
+it('adding all twice and immediately removing all twice is the same result', () => {
+  const liveseq = createLiveseq();
+
+  addAllTypesOfEntities(liveseq);
+  addAllTypesOfEntities(liveseq);
+  removeAllByIteration(liveseq, 0);
+  removeAllByIteration(liveseq, 1);
+
+  expect(liveseq.getProject().entities).toEqual(createLiveseq().getProject().entities);
+});
+
+function removeAllByIteration(liveseq: Liveseq, iter: number) {
+  liveseq.removeChannel(`channels_${iter}`);
+  liveseq.removeClip(`clips_${iter}`);
+  liveseq.removeInstrument(`instruments_${iter}`);
+  liveseq.removeSample(`samples_${iter}`);
+  liveseq.removeScene(`scenes_${iter}`);
+  liveseq.removeSlot(`slots_${iter}`);
+  liveseq.removeTimeline(`timelines_${iter}`);
+}
 
 function getAddOnce() {
   return {
@@ -99,16 +110,6 @@ function getAddTwice() {
     ],
   };
 }
-
-// function removeAllByIteration(liveseq: Liveseq, iter: number) {
-//   liveseq.removeClip(`channel_${iter}`);
-//   liveseq.removeClip(`clip_${iter}`);
-//   liveseq.removeClip(`instrument_${iter}`);
-//   liveseq.removeClip(`sample_${iter}`);
-//   liveseq.removeClip(`scene_${iter}`);
-//   liveseq.removeClip(`slot_${iter}`);
-//   liveseq.removeClip(`timeline_${iter}`);
-// }
 
 function addAllTypesOfEntities(liveseq: Liveseq) {
   const clipId = liveseq.addClip({
