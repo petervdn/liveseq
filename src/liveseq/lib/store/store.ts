@@ -46,15 +46,11 @@ export const createStore = (
   initialState: Partial<LiveseqState> = {},
   callbacks: EngineCallbacks,
 ): Store => {
-  const defaultState: LiveseqState = {
+  let state: LiveseqState = {
     playbackState: 'stopped',
     tempo: 120 as Bpm,
-    slotPlaybackState: createSlotPlaybackState(),
+    slotPlaybackState: createSlotPlaybackState(), // TODO: this line always executes
     isMuted: false,
-  };
-
-  let state = {
-    ...defaultState,
     ...initialState,
   };
 

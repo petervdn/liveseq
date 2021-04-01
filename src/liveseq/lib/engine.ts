@@ -26,7 +26,7 @@ export type EngineProps = EngineCallbacks & {
 export type EngineActions = PlayerActions &
   Pick<StoreActions, 'setIsMuted' | 'setTempo' | 'addSceneToQueue' | 'removeSceneFromQueue'> &
   EntityManagerActions & {
-    setProject: (partialProject: Partial<SerializableProject>) => void;
+    // setProject: (partialProject: Partial<SerializableProject>) => void;
   };
 
 // TODO: do similar to EngineActions
@@ -117,10 +117,6 @@ export const createEngine = ({
   };
 
   // ACTIONS
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const setProject = (partialProject: Partial<SerializableProject>) => {
-    // TODO: implement
-  };
 
   // CORE
   const dispose = () => {
@@ -136,7 +132,6 @@ export const createEngine = ({
     setIsMuted: store.actions.setIsMuted,
     addSceneToQueue: store.actions.addSceneToQueue,
     removeSceneFromQueue: store.actions.removeSceneFromQueue,
-    setProject,
     // selectors
     getScheduleItemsInfo,
     getTempo: store.selectors.getTempo,

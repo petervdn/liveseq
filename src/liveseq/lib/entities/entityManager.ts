@@ -20,10 +20,12 @@ type RemoveEntity = (id: string) => void;
 export type EntityManagerActions = {
   addChannel: AddEntity<SerializableChannel>;
   removeChannel: RemoveEntity;
+  addSlotReference: (channelId: string, slotId: string) => void;
+  removeSlotReference: (channelId: string, slotId: string) => void;
 
   addClip: AddEntity<SerializableClip>;
   removeClip: RemoveEntity;
-  addNoteToClip: (clip: string, note: Partial<OmitId<Note>>) => string;
+  addNoteToClip: (clipId: string, note: Partial<OmitId<Note>>) => string;
 
   addInstrument: AddEntity<SerializableInstrument>;
   removeInstrument: RemoveEntity;
@@ -64,6 +66,7 @@ export const createEntityManager = (project: SerializableProject): EntityManager
       removeSample: () => {
         // TODO:
       },
+      // CHANNEL // TODO: move to /channel
       addChannel: (channel) => {
         const id = idGenerators.getChannelId();
         currentEntities = addChannel(currentEntities, channel, id);
@@ -72,7 +75,17 @@ export const createEntityManager = (project: SerializableProject): EntityManager
       removeChannel: (id) => {
         currentEntities = removeChannel(currentEntities, id);
       },
-      // CLIP
+      addSlotReference: (channelId, slotId) => {
+        // TODO: validate both channelId and slotId
+        const channel = currentEntities.channels[channelId];
+        channel.slotIds.push(slotId);
+      },
+      removeSlotReference: (channelId, slotId) => {
+        // TODO: validate both channelId and slotId
+        const channel = currentEntities.channels[channelId];
+        channel.slotIds.push(slotId);
+      },
+      // CLIP // TODO: move to /clip
       addClip: (channel) => {
         const id = idGenerators.getClipId();
         currentEntities = addClip(currentEntities, channel, id);
