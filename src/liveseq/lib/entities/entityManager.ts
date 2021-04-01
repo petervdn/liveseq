@@ -4,7 +4,6 @@ import { getInstrumentManager, InstrumentManager } from './instrument/instrument
 import type { SceneManager } from './scene/scene';
 import { getSlotManager, SlotManager } from './slot/slot';
 import { getTimelineManager, TimelineManager } from './timeline/timeline';
-import { getHighestId, getIdGenerators } from './getIdGenerators';
 import type { OmitId } from '../types';
 import type { SerializableSample } from './sample/sample';
 import type { SerializableProject } from '../..';
@@ -13,6 +12,7 @@ import { getChannelManager } from './channel/channel';
 import type { ChannelManager } from './channel/channel';
 import { getIdGenerator } from '../utils/getIdGenerator';
 import { getSceneManager } from './scene/scene';
+import { getHighestId } from '../utils/getHighestId';
 
 export type AddEntity<Props> = (props: OmitId<Props & { id: string }>) => string;
 export type RemoveEntity = (id: string) => void;
@@ -45,7 +45,6 @@ export type EntityManagementProps = {
 
 export const createEntityManager = (project: SerializableProject): EntityManager => {
   let currentEntities = createEntities(project);
-  const idGenerators = getIdGenerators(currentEntities);
 
   const getEntities = () => {
     return currentEntities;
@@ -56,7 +55,7 @@ export const createEntityManager = (project: SerializableProject): EntityManager
   };
 
   const getAddEntity = (key: keyof Entities) => {
-    const generateId = getIdGenerator(key, getHighestId(getEntities()[key]));
+    const generateId = getIdGenerator(key, getHighestId(Object.keys(getEntities()[key])));
 
     return (getEntity: (id: string) => unknown) => {
       const id = generateId();
@@ -104,7 +103,7 @@ export const createEntityManager = (project: SerializableProject): EntityManager
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       addSample: () => {
         // TODO:
-        return idGenerators.getSampleId();
+        return '';
       },
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       removeSample: () => {

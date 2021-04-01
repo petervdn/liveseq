@@ -4,6 +4,7 @@ import type { OmitId } from '../../types';
 import { createNote, Note } from '../../note/note';
 import type { AddEntity, RemoveEntity, EntityManagementProps } from '../entityManager';
 import { getIdGenerator } from '../../utils/getIdGenerator';
+import { getHighestId } from '../../utils/getHighestId';
 
 // ready to add more later
 export type SerializableClip = NoteClip;
@@ -21,8 +22,12 @@ export const getClipManager = ({
   addEntity,
   removeEntity,
 }: EntityManagementProps): ClipManager => {
-  // TODO: improve this or maybe use uuid generator... or promote to entity
-  const getNoteId = getIdGenerator('notes', 0);
+  // Note is kind of a special thing so we have to do this for the ids
+  const initialIndex = Object.values(getEntities().clips).reduce((accumulator, current) => {
+    return Math.max(accumulator, getHighestId(current.notes.map((note) => note.id)));
+  }, 0);
+  // TODO: improve this or maybe use uuid generator...
+  const getNoteId = getIdGenerator('notes', initialIndex);
 
   return {
     addClip: (clip) => {
