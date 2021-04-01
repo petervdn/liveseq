@@ -1,5 +1,6 @@
 import { Beats, createLiveseq, Liveseq } from '..';
 import { musicTimeToBeats } from '../lib/time/musicTime';
+import { playSlotsAction } from '../lib/entities/scene/scene';
 
 it('adds all types of entities correctly', () => {
   const liveseq = createLiveseq();
@@ -119,7 +120,6 @@ function addAllTypesOfEntities(liveseq: Liveseq) {
   const clipId = liveseq.addClip({
     type: 'noteClip',
     duration: 10 as Beats,
-    notes: [],
   });
 
   const timelineId = liveseq.addTimeline({
@@ -141,12 +141,7 @@ function addAllTypesOfEntities(liveseq: Liveseq) {
   });
 
   liveseq.addScene({
-    enter: [
-      {
-        type: 'playSlots',
-        slotIds: [slotId],
-      },
-    ],
+    enter: [playSlotsAction([slotId])],
   });
 
   liveseq.addChannel({

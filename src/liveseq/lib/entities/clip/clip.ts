@@ -12,9 +12,9 @@ export type SerializableClip = NoteClip;
 // MANAGER
 // TODO: move to NoteClip
 export type ClipManager = {
-  addClip: AddEntity<OmitId<SerializableClip>>;
+  addClip: AddEntity<Omit<OmitId<SerializableClip>, 'notes'>>;
   removeClip: RemoveEntity;
-  addNoteToClip: (clipId: string, note: Partial<OmitId<Note>>) => string;
+  addNote: (clipId: string, note: Partial<OmitId<Note>>) => string;
 };
 
 export const getClipManager = ({
@@ -30,12 +30,12 @@ export const getClipManager = ({
 
   return {
     addClip: (clip) => {
-      return addEntity((id) => createNoteClipEntity({ ...clip, id }));
+      return addEntity((id) => createNoteClipEntity({ ...clip, notes: [], id }));
     },
     removeClip: (clipId) => {
       return removeEntity(clipId);
     },
-    addNoteToClip: (clipId, note) => {
+    addNote: (clipId, note) => {
       const entities = getEntities();
       const id = getNoteId();
       const clip = entities.clips[clipId];

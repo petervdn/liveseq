@@ -1,5 +1,6 @@
 import type { CommonProps, OmitId } from '../../types';
 import type { AddEntity, EntityManagementProps, RemoveEntity } from '../entityManager';
+import { without } from '../../utils/without';
 
 export type InstrumentChannel = CommonProps & {
   type: 'instrumentChannel';
@@ -23,12 +24,16 @@ export type ChannelManager = {
   removeChannel: RemoveEntity;
   addSlotReference: (channelId: string, slotId: string) => void;
   removeSlotReference: (channelId: string, slotId: string) => void;
+  enableChannel: (channelId: string) => void;
+  disableChannel: (channelId: string) => void;
 };
 
 export const getChannelManager = ({
-  getEntities,
   addEntity,
   removeEntity,
+  updateEntity,
+  enable,
+  disable,
 }: EntityManagementProps): ChannelManager => {
   return {
     addChannel: (channel) => {
@@ -40,16 +45,24 @@ export const getChannelManager = ({
       // TODO: search and remove any references by id
     },
     addSlotReference: (channelId, slotId) => {
-      // TODO: validate both channelId and slotId
-      const channel = getEntities().channels[channelId];
-      // mutation!
-      channel.slotIds.push(slotId);
+      // TODO: validate slotId (channel id is validated by the update)
+      return updateEntity<ChannelEntity>(channelId, (channel) => {
+        return {
+          ...channel,
+          slotIds: [...channel.slotIds, slotId],
+        };
+      });
     },
     removeSlotReference: (channelId, slotId) => {
-      // TODO: validate both channelId and slotId
-      const channel = getEntities().channels[channelId];
-      // mutation!
-      channel.slotIds.push(slotId);
+      // TODO: validate slotId (channel id is validated by the update)
+      return updateEntity<ChannelEntity>(channelId, (channel) => {
+        return {
+          ...channel,
+          slotIds: without(channel.slotIds, slotId),
+        };
+      });
     },
+    enableChannel: enable,
+    disableChannel: disable,
   };
 };

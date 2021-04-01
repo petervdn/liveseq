@@ -68,14 +68,13 @@ function addMetronomeClip(liveseq: Liveseq, isAlternative: boolean) {
     : { emphasis: 'G5' as NoteName, regular: 'G6' as NoteName };
 
   const clipId = liveseq.addClip({
-    type: 'noteClip' as const,
+    type: 'noteClip' as const, // TODO: remove this by renaming Clip to NoteClip, so addNoteClip
     name: 'Clip Name',
     duration: musicTimeToBeats([1, 0, 0]),
-    notes: [], // TODO: make optional
   });
 
   times(4, (index) => {
-    return liveseq.addNoteToClip(clipId, {
+    return liveseq.addNote(clipId, {
       start: musicTimeToBeats([0, 1 * index, 0]),
       end: musicTimeToBeats([0, 1 * index + 1, 0]),
       pitch: index === 0 ? notes.emphasis : notes.regular,

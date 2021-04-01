@@ -4,7 +4,7 @@ import { getInstrumentManager, InstrumentManager } from './instrument/instrument
 import type { SceneManager } from './scene/scene';
 import { getSlotManager, SlotManager } from './slot/slot';
 import { getTimelineManager, TimelineManager } from './timeline/timeline';
-import type { OmitId } from '../types';
+import type { CommonProps, OmitId } from '../types';
 import type { SampleManager } from './sample/sample';
 import type { SerializableProject } from '../..';
 import { createEntities } from './entities';
@@ -15,6 +15,8 @@ import { getSceneManager } from './scene/scene';
 import { getHighestId } from '../utils/getHighestId';
 import { getSampleManager } from './sample/sample';
 import { errorMessages } from '../errors';
+import { enable } from '../utils/enable';
+import { disable } from '../utils/disable';
 
 export type AddEntity<Props> = (props: OmitId<Props & { id: string }>) => string;
 export type RemoveEntity = (id: string) => void;
@@ -36,9 +38,12 @@ type EntityManager = {
 
 // passed to each entity manager
 export type EntityManagementProps = {
-  addEntity: (getEntity: (id: string) => unknown) => string;
+  addEntity: <T extends CommonProps>(getEntity: (id: string) => T) => string;
   getEntities: () => Entities;
   removeEntity: (id: string) => void;
+  updateEntity: <T>(id: string, update: (entity: T) => T) => void;
+  enable: (id: string) => void;
+  disable: (id: string) => void;
 };
 
 export const createEntityManager = (project: SerializableProject): EntityManager => {
@@ -60,10 +65,30 @@ export const createEntityManager = (project: SerializableProject): EntityManager
     currentEntities = entities;
   };
 
+  const getUpdateEntityById = (key: keyof Entities) => <T>(
+    id: string,
+    mapEntity: (entity: T) => T,
+  ) => {
+    const entity = getEntityById(key, id);
+    const entities = getEntities();
+
+    setEntities(
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      mapEntity({
+        ...entities,
+        [key]: {
+          ...entities[key],
+          [id]: entity,
+        },
+      }),
+    );
+  };
+
   const getAddEntity = (key: keyof Entities) => {
     const generateId = getIdGenerator(key, getHighestId(Object.keys(getEntities()[key])));
 
-    return (getEntity: (id: string) => unknown) => {
+    return <T extends CommonProps>(getEntity: (id: string) => T) => {
       const id = generateId();
       const entity = getEntity(id);
       const entities = getEntities();
@@ -97,11 +122,18 @@ export const createEntityManager = (project: SerializableProject): EntityManager
     setEntities(result);
   };
 
-  const getProps = (key: keyof Entities) => {
+  const getProps = (key: keyof Entities): EntityManagementProps => {
+    const addEntity = getAddEntity(key);
+    const removeEntity = getRemoveEntity(key);
+    const updateEntity = getUpdateEntityById(key);
+
     return {
-      addEntity: getAddEntity(key),
-      removeEntity: getRemoveEntity(key),
+      addEntity,
+      removeEntity,
       getEntities,
+      updateEntity,
+      enable: (id) => updateEntity<CommonProps>(id, enable),
+      disable: (id) => updateEntity<CommonProps>(id, disable),
     };
   };
 
