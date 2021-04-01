@@ -7,6 +7,7 @@ import { createPlayer, PlayerActions, ScheduleNote } from './player/player';
 import { serializeEntities } from './entities/entities';
 import { createProject, SerializableProject } from './project/project';
 import type { Bpm, TimeInSeconds } from './types';
+import { libraryVersion } from './meta';
 
 export type EngineCallbacks = {
   onPlay: () => void;
@@ -97,6 +98,8 @@ export const createEngine = ({
     const slotPlaybackState = store.selectors.getSlotPlaybackState();
 
     return createProject({
+      ...project,
+      libraryVersion,
       initialState: { slotPlaybackState },
       entities: serializableEntities,
     });
