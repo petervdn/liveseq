@@ -1,24 +1,22 @@
 import { getIdGenerator } from '../utils/getIdGenerator';
 import type { Entities } from './entities';
 
+export const getHighestId = (record: Record<string, unknown>): number => {
+  return Object.keys(record).reduce((accumulator, current) => {
+    return Math.max(accumulator, parseInt(current.split('_')[1], 10));
+  }, 0);
+};
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const getIdGenerators = (entities: Entities) => {
   return {
-    // TODO: fix initial index using project info
-    getChannelId: getIdGenerator('channel', 0),
-    // TODO: fix initial index using project info
-    getClipId: getIdGenerator('clip', 0),
-    // TODO: fix initial index using project info
-    getInstrumentId: getIdGenerator('instrument', 0),
-    // TODO: fix initial index using project info
-    getSampleId: getIdGenerator('sample', 0),
-    // TODO: fix initial index using project info
-    getSceneId: getIdGenerator('scene', 0),
-    // TODO: fix initial index using project info
-    getSlotId: getIdGenerator('slot', 0),
-    // TODO: fix initial index using project info
-    getTimelineId: getIdGenerator('timeline', 0),
-    // TODO: fix initial index using project info
+    getChannelId: getIdGenerator('channel', getHighestId(entities.channels)),
+    getClipId: getIdGenerator('clip', getHighestId(entities.clips)),
+    getInstrumentId: getIdGenerator('instrument', getHighestId(entities.instruments)),
+    getSampleId: getIdGenerator('sample', getHighestId(entities.samples)),
+    getSceneId: getIdGenerator('scene', getHighestId(entities.scenes)),
+    getSlotId: getIdGenerator('slot', getHighestId(entities.slots)),
+    getTimelineId: getIdGenerator('timeline', getHighestId(entities.timelines)),
     getNoteId: getIdGenerator('note', 0),
   };
 };

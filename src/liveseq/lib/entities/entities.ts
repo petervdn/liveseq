@@ -21,6 +21,7 @@ export type Entities = {
   instruments: Record<string, SamplerEntity>;
   slots: Record<string, SlotEntity>;
   scenes: Record<string, SceneEntity>;
+  samples: Record<string, unknown>;
 };
 
 export function createEntities(project: SerializableProject): Entities {
@@ -31,6 +32,7 @@ export function createEntities(project: SerializableProject): Entities {
     slots: createRecordById(project.entities.slots.map(createSlotEntity)),
     scenes: createRecordById(project.entities.scenes.map(createSceneEntity)),
     instruments: createRecordById(project.entities.instruments.map(createSamplerEntity)),
+    samples: {},
   };
 }
 
