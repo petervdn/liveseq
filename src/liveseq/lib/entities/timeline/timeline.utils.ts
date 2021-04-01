@@ -10,6 +10,7 @@ import {
   subtractFromRange,
 } from '../../time/beatsRange';
 import type { Beats } from '../../types';
+import type { NoteClip } from '../clip/noteClip';
 
 export const getTimelineDuration = (timeline: SerializableTimeline): Beats => {
   return timeline.duration !== undefined
@@ -22,7 +23,7 @@ export const getTimelineDuration = (timeline: SerializableTimeline): Beats => {
 export const getTimelineNotesInRange = (
   range: BeatsRange,
   timeline: SerializableTimeline,
-  clips: Array<BeatsRange & { id: string; duration: Beats; notes: Array<Note> }>, // todo: this isnt a clip?
+  clips: Array<BeatsRange & NoteClip>,
   channelId: string,
   slotId: string,
   timelineLoops: number,
