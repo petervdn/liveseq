@@ -2,13 +2,13 @@ import { createStore, StoreActions } from './store/store';
 import type { TimeRange } from './time/timeRange';
 import { BeatsRange, timeRangeToBeatsRange } from './time/beatsRange';
 import { createPlayer, PlayerActions, ScheduleNote } from './player/player';
-
 import { createProject, SerializableProject } from './project/project';
 import type { Bpm, TimeInSeconds } from './types';
 import { libraryVersion } from './meta';
 import { createEntities, Entities } from './entities/entities';
 import { getScheduleItemsWithinRange } from './player/utils/getScheduleItemsWithinRange';
 import { getSlotPlaybackStatesWithinRange } from './player/utils/getSlotPlaybackStatesWithinRange';
+import { createMixer } from './mixer/mixer';
 
 export type EngineCallbacks = {
   onPlay: () => void;
@@ -58,7 +58,11 @@ export const createEngine = ({
   ...callbacks
 }: EngineProps): Engine => {
   const store = createStore(project.initialState, callbacks);
-  const entities = createEntities(project);
+  const mixer = createMixer(audioContext);
+  const entities = createEntities({
+    project,
+    mixer,
+  });
 
   // UTILS
   // TODO: better naming

@@ -7,10 +7,16 @@ import { createSceneEntries, SerializableScene } from './scene';
 import { createSlotEntries, SerializableSlot } from './slot';
 import { createTimelineEntries, SerializableTimeline } from './timeline';
 import { objectEntries, objectValues } from '../utils/objUtils';
+import type { Mixer } from '../mixer/mixer';
 
-const decodeProjectEntities = (project: SerializableProject) => {
+export type CreateEntitiesProps = {
+  project: SerializableProject;
+  mixer: Mixer;
+};
+
+const decodeProjectEntities = (props: CreateEntitiesProps) => {
   const entries = {
-    ...createInstrumentChannelEntries(),
+    ...createInstrumentChannelEntries(props.mixer),
     ...createNoteClipEntries(),
     ...createSampleEntries(),
     ...createSamplerEntries(),
@@ -19,7 +25,7 @@ const decodeProjectEntities = (project: SerializableProject) => {
     ...createTimelineEntries(),
   };
 
-  objectEntries(project.entities).forEach(([key, values]) => {
+  objectEntries(props.project.entities).forEach(([key, values]) => {
     values.forEach((value) => {
       entries[key as keyof typeof entries].create(value as never);
     });
@@ -49,8 +55,8 @@ const encodeEntities = (entities: Entities): SerializableEntities => {
   }, {} as SerializableEntities);
 };
 
-export const createEntities = (project: SerializableProject) => {
-  const entries = decodeProjectEntities(project);
+export const createEntities = (props: CreateEntitiesProps) => {
+  const entries = decodeProjectEntities(props);
 
   return {
     getEntries: () => {

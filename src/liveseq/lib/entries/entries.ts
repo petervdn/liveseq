@@ -6,14 +6,18 @@ import { enable } from '../utils/enable';
 import { disable } from '../utils/disable';
 
 // TODO: rename Instance to Entity
-type EntriesInstance<Instance extends CommonProps, Serializable extends CommonProps> = {
-  add: (instance: OmitId<Instance>) => string;
+export type EntriesInstance<
+  Instance extends CommonProps,
+  Serializable extends CommonProps,
+  Extra extends Record<string, unknown>
+> = {
+  add: (instance: OmitId<Instance & Extra>) => string;
   create: (serializable: OmitId<Serializable>) => string;
   encode: (id: string) => Serializable;
-  getRecord: () => Record<string, Instance>;
-  get: (id: string) => Instance;
+  getRecord: () => Record<string, Instance & Extra>;
+  get: (id: string) => Instance & Extra;
   remove: (id: string) => void;
-  update: (id: string, update: (entity: Instance) => Instance) => void;
+  update: (id: string, update: (entity: Instance & Extra) => Instance & Extra) => void;
   enable: (id: string) => void;
   disable: (id: string) => void;
   dispose: () => void;
@@ -31,9 +35,9 @@ export const createEntries = <
   key: Key,
   decode: (serializable: Serializable) => Instance,
   encode: (instance: Instance) => Serializable,
-  getExtra: (entries: EntriesInstance<Instance, Serializable>) => Extra,
+  getExtra: (entries: EntriesInstance<Instance, Serializable, Extra>) => Extra,
 ) => {
-  const currentEntries: Entries<Instance> = {
+  const currentEntries: Entries<Instance & Extra> = {
     [key]: {},
   };
 
@@ -50,13 +54,13 @@ export const createEntries = <
     return currentEntries[key];
   };
 
-  const setEntries = (entities: Record<string, Instance>) => {
+  const setEntries = (entities: Record<string, Instance & Extra>) => {
     currentEntries[key] = entities;
   };
 
   const generateId = getIdGenerator(key, getHighestId(Object.keys(getRecord())));
 
-  const add = (instance: OmitId<Instance>) => {
+  const add = (instance: OmitId<Instance & Extra>) => {
     const id = generateId();
 
     const entries = getRecord();
@@ -65,7 +69,7 @@ export const createEntries = <
       [id]: {
         ...instance,
         id,
-      } as Instance,
+      } as Instance & Extra,
     });
     return id;
   };
@@ -83,7 +87,7 @@ export const createEntries = <
     setEntries(copy);
   };
 
-  const update = (id: string, mapEntity: (entity: Instance) => Instance) => {
+  const update = (id: string, mapEntity: (entity: Instance & Extra) => Instance & Extra) => {
     const entity = get(id);
 
     setEntries({
@@ -96,7 +100,7 @@ export const createEntries = <
     setEntries({});
   };
 
-  const entriesInstance: EntriesInstance<Instance, Serializable> = {
+  const entriesInstance: EntriesInstance<Instance, Serializable, Extra> = {
     get,
     getRecord,
     add,
@@ -105,7 +109,7 @@ export const createEntries = <
     enable: (id) => update(id, enable),
     disable: (id) => update(id, disable),
     // TODO: fix casts
-    create: (serializable) => add(decode(serializable as Serializable) as Instance),
+    create: (serializable) => add(decode(serializable as Serializable) as Instance & Extra),
     encode: (id) => encode(get(id)),
     dispose,
   };

@@ -20,12 +20,12 @@ export const getNotesForInstrumentInTimeRange = (
     const timelineClips = getClipsByTimelineId(entities, timeline.id);
     const channels = getInstrumentChannelsBySlotId(entities, slot.id);
 
-    return channels.reduce((accumulator, channel) => {
+    return channels.reduce((accumulator, instrumentChannel) => {
       const notes = getTimelineNotesInRange(
         beatsRange,
         timeline,
         timelineClips,
-        channel.id,
+        instrumentChannel.id,
         slot.id,
         slot.loops,
         previouslyScheduledNoteIds,
@@ -34,9 +34,10 @@ export const getNotesForInstrumentInTimeRange = (
       if (notes.length === 0) return accumulator;
 
       // TODO: need to check what kind of instrument before assuming sampler
-      const instrument = entities.samplers.get(channel.instrumentId);
+      const instrument = entities.samplers.get(instrumentChannel.instrumentId);
 
       accumulator.push({
+        channelMixer: instrumentChannel.getChannelMixer(),
         instrument,
         notes: notes.map((note) => {
           return {

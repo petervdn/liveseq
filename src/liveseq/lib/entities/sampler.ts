@@ -1,33 +1,22 @@
-import type { ScheduleNote } from '../player/player';
 import { playTick } from '../utils/playTick';
 import { getFrequency } from '../note/note';
 import type { CommonProps } from '../types';
 import { createEntries } from '../entries/entries';
 import { always } from '../utils/always';
+import type { Instrument } from './instrumentChannel';
 
 export type SerializableSampler = CommonProps;
-
-// TODO: when we have more samplers this needs to be moved to a general place
-export type InstrumentInstance = {
-  schedule: (notes: Array<ScheduleNote>, audioContext: AudioContext) => void;
-};
-
-export type SamplerInstance = InstrumentInstance & SerializableSampler;
+export type SamplerInstance = Instrument & SerializableSampler;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const decode = (props: SerializableSampler): SamplerInstance => {
+export const decode = (serializable: SerializableSampler): SamplerInstance => {
   return {
-    ...props,
-    schedule: (notes: Array<ScheduleNote>, audioContext: AudioContext) => {
+    ...serializable,
+    schedule: (notes, mixer) => {
       notes.forEach((note) => {
         // eslint-disable-next-line no-console
         console.log('scheduling', note.schedulingId);
-        playTick(
-          audioContext,
-          getFrequency(note.pitch),
-          note.startTime,
-          note.endTime - note.startTime,
-        );
+        playTick(mixer, getFrequency(note.pitch), note.startTime, note.endTime - note.startTime);
       });
     },
   };

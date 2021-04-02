@@ -4,6 +4,8 @@ import { isContextSuspended } from '../utils/isContextSuspended';
 import type { TimeInSeconds } from '../types';
 import { errorMessages } from '../errors';
 import type { getScheduleItemsWithinRange } from './utils/getScheduleItemsWithinRange';
+import type { Instrument } from '../entities/instrumentChannel';
+import type { ChannelMixer } from '../mixer/mixer';
 
 export type ScheduleNote = Note & {
   startTime: TimeInSeconds;
@@ -13,11 +15,8 @@ export type ScheduleNote = Note & {
 
 export type ScheduleItem = {
   notes: Array<ScheduleNote>;
-  instrument: {
-    // when the player calls instrument.schedule, it will already pass notes with time in seconds
-    // TODO: maybe the instrument returns a "cancel" fn
-    schedule: (notes: Array<ScheduleNote>, audioContext: AudioContext) => void;
-  };
+  channelMixer: ChannelMixer;
+  instrument: Instrument;
 };
 
 export type PlayerProps = {
@@ -91,7 +90,7 @@ export const createPlayer = ({
     );
 
     scheduleItems.forEach((item) => {
-      item.instrument.schedule(item.notes, audioContext);
+      item.instrument.schedule(item.notes, item.channelMixer);
     });
 
     timeoutId = window.setTimeout(() => schedule(), scheduleInterval * 1000);
