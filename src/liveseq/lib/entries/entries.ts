@@ -87,6 +87,7 @@ export const createEntries = <
     const entity = get(id);
 
     setEntries({
+      ...getRecord(),
       [id]: mapEntity(entity),
     });
   };
