@@ -6,8 +6,8 @@ it('can create empty project with createProject', () => {
     libraryVersion: 0,
     initialState: { slotPlaybackState: { activeSceneIds: [], playingSlots: [], queuedScenes: [] } },
     entities: {
-      channels: [],
-      clips: [],
+      instrumentChannels: [],
+      noteClips: [],
       instruments: [],
       samples: [],
       scenes: [],

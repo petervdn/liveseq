@@ -8,7 +8,7 @@ export const testProject = {
   name: 'Project Name',
   startScenes: ['scenes_1'],
   entities: {
-    channels: [
+    instrumentChannels: [
       {
         id: 'instrumentChannels_1',
         name: 'Channel Name',
@@ -31,9 +31,9 @@ export const testProject = {
         loops: 10,
       },
     ],
-    clips: [
+    noteClips: [
       {
-        id: 'clips_1',
+        id: 'noteClips_1',
         type: 'noteClip',
         name: 'Clip Name',
         duration: musicTimeToBeats([1, 0, 0]),
@@ -75,9 +75,9 @@ export const testProject = {
         id: 'timelines_1',
         name: 'Timeline Name',
         duration: musicTimeToBeats([1, 0, 0]),
-        clips: [
+        noteClips: [
           {
-            clipId: 'clips_1',
+            noteClipId: 'noteClips_1',
             start: musicTimeToBeats([0, 0, 0]),
             end: musicTimeToBeats([1, 0, 0]),
           },

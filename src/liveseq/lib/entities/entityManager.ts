@@ -1,5 +1,5 @@
 import type { Entities } from './entities';
-import { ClipManager, getClipManager } from './clip/clip';
+import { NoteClipManager, getNoteClipManager } from './clip/clip';
 import { getInstrumentManager, InstrumentManager } from './instrument/instrument';
 import type { SceneManager } from './scene/scene';
 import { getSlotManager, SlotManager } from './slot/slot';
@@ -22,7 +22,7 @@ export type AddEntity<Props> = (props: OmitId<Props & { id: string }>) => string
 export type RemoveEntity = (id: string) => void;
 
 export type EntityManagerActions = InstrumentChannelManager &
-  ClipManager &
+  NoteClipManager &
   SceneManager &
   SlotManager &
   InstrumentManager &
@@ -140,7 +140,7 @@ export const createEntityManager = (project: SerializableProject): EntityManager
   return {
     actions: {
       ...getInstrumentChannelManager(getProps('instrumentChannels')),
-      ...getClipManager(getProps('clips')),
+      ...getNoteClipManager(getProps('noteClips')),
       ...getSampleManager(getProps('samples')),
       ...getSceneManager(getProps('scenes')),
       ...getSlotManager(getProps('slots')),

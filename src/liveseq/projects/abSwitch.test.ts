@@ -16,7 +16,7 @@ it('abSwitch is correct', () => {
       },
     },
     entities: {
-      channels: [
+      instrumentChannels: [
         {
           id: 'instrumentChannels_0',
           instrumentId: 'instruments_0',
@@ -30,10 +30,10 @@ it('abSwitch is correct', () => {
           slotIds: ['slots_1'],
         },
       ],
-      clips: [
+      noteClips: [
         {
           duration: 4,
-          id: 'clips_0',
+          id: 'noteClips_0',
           name: 'Clip Name',
           notes: [
             { end: 1, id: 'notes_0', pitch: 'G5', start: 0, velocity: 0.75 },
@@ -45,7 +45,7 @@ it('abSwitch is correct', () => {
         },
         {
           duration: 4,
-          id: 'clips_1',
+          id: 'noteClips_1',
           name: 'Clip Name',
           notes: [
             { end: 1, id: 'notes_4', pitch: 'C5', start: 0, velocity: 0.75 },
@@ -93,13 +93,13 @@ it('abSwitch is correct', () => {
       ],
       timelines: [
         {
-          clipRanges: [{ clipId: 'clips_0', end: 4, start: 0 }],
+          clipRanges: [{ noteClipId: 'noteClips_0', end: 4, start: 0 }],
           duration: 4,
           id: 'timelines_0',
           name: 'Timeline Name',
         },
         {
-          clipRanges: [{ clipId: 'clips_1', end: 4, start: 0 }],
+          clipRanges: [{ noteClipId: 'noteClips_1', end: 4, start: 0 }],
           duration: 4,
           id: 'timelines_1',
           name: 'Timeline Name',

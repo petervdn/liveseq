@@ -23,7 +23,7 @@ export const getTimelineDuration = (timeline: SerializableTimeline): Beats => {
 export const getTimelineNotesInRange = (
   range: BeatsRange,
   timeline: SerializableTimeline,
-  clips: Array<BeatsRange & NoteClip>,
+  noteClips: Array<BeatsRange & NoteClip>,
   channelId: string,
   slotId: string,
   timelineLoops: number,
@@ -33,37 +33,39 @@ export const getTimelineNotesInRange = (
   const loopedRanges = getWrappedRanges(range, timelineRange, timelineLoops);
 
   return loopedRanges.flatMap((loopedRange) => {
-    const clipsInRange = getItemsInRange(loopedRange, clips);
-    return clipsInRange.flatMap((clip) => {
-      const localRange = subtractFromRange(loopedRange, clip.start);
+    const clipsInRange = getItemsInRange(loopedRange, noteClips);
+    return clipsInRange.flatMap((noteClip) => {
+      const localRange = subtractFromRange(loopedRange, noteClip.start);
 
-      return getItemsInRange(localRange, clip.notes).reduce<Array<Note & { schedulingId: string }>>(
-        (accumulator, note) => {
-          // adjust note timing
-          const noteWithTimelineTime = addToRange(note, (clip.start + loopedRange.offset) as Beats);
+      return getItemsInRange(localRange, noteClip.notes).reduce<
+        Array<Note & { schedulingId: string }>
+      >((accumulator, note) => {
+        // adjust note timing
+        const noteWithTimelineTime = addToRange(
+          note,
+          (noteClip.start + loopedRange.offset) as Beats,
+        );
 
-          const schedulingId = getUniqueSchedulingId({
-            noteId: note.id,
-            start: noteWithTimelineTime.start,
-            channelId,
-            slotId,
-            clipId: clip.id,
+        const schedulingId = getUniqueSchedulingId({
+          noteId: note.id,
+          start: noteWithTimelineTime.start,
+          channelId,
+          slotId,
+          noteClipId: noteClip.id,
+        });
+
+        const hasBeenScheduled = previouslyScheduledNoteIds.includes(schedulingId);
+
+        if (!hasBeenScheduled) {
+          accumulator.push({
+            ...noteWithTimelineTime,
+            // to easily know if note has been scheduled
+            schedulingId,
           });
+        }
 
-          const hasBeenScheduled = previouslyScheduledNoteIds.includes(schedulingId);
-
-          if (!hasBeenScheduled) {
-            accumulator.push({
-              ...noteWithTimelineTime,
-              // to easily know if note has been scheduled
-              schedulingId,
-            });
-          }
-
-          return accumulator;
-        },
-        [],
-      );
+        return accumulator;
+      }, []);
     });
   });
 };

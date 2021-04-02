@@ -7,7 +7,7 @@ type PlaySlotsAction = {
   slotIds?: ReadonlyArray<string>;
 };
 
-export const playSlotsAction = (slotIds?: ReadonlyArray<string>): PlaySlotsAction => {
+export const playSlots = (slotIds?: ReadonlyArray<string>): PlaySlotsAction => {
   return {
     type: 'playSlots',
     slotIds,
@@ -20,7 +20,7 @@ type StopSlotsAction = {
   slotIds?: ReadonlyArray<string>;
 };
 
-export const stopSlotsAction = (slotIds?: ReadonlyArray<string>): StopSlotsAction => {
+export const stopSlots = (slotIds?: ReadonlyArray<string>): StopSlotsAction => {
   return {
     type: 'stopSlots',
     slotIds,
@@ -55,10 +55,6 @@ export const getSceneManager = ({
     addScene: (channel) => {
       return addEntity((id) => createSceneEntity({ ...channel, id }));
     },
-    removeScene: (channelId) => {
-      removeEntity(channelId);
-
-      // TODO: search and remove any references by id
-    },
+    removeScene: removeEntity,
   };
 };

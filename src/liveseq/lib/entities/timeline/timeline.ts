@@ -6,7 +6,7 @@ export type SerializableTimeline = CommonProps & {
   duration?: Beats;
   clipRanges: Array<
     BeatsRange & {
-      clipId: string;
+      noteClipId: string;
     }
   >;
 };

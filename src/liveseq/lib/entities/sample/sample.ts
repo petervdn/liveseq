@@ -26,8 +26,8 @@ export const getSampleManager = ({
     addSample: (clip) => {
       return addEntity((id) => createSampleEntity({ ...clip, id }));
     },
-    removeSample: (clipId) => {
-      return removeEntity(clipId);
+    removeSample: (noteClipId) => {
+      return removeEntity(noteClipId);
     },
   };
 };

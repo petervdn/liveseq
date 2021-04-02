@@ -24,10 +24,10 @@ export const createProject = (project: Partial<SerializableProject> = {}): Seria
       ...(project.initialState || {}),
     },
     entities: {
-      channels: [],
+      instrumentChannels: [],
       instruments: [],
       timelines: [],
-      clips: [],
+      noteClips: [],
       scenes: [],
       samples: [],
       slots: [],

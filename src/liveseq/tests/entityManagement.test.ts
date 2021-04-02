@@ -1,6 +1,6 @@
 import { Beats, createLiveseq, Liveseq } from '..';
 import { musicTimeToBeats } from '../lib/time/musicTime';
-import { playSlotsAction } from '../lib/entities/scene/scene';
+import { playSlots } from '../lib/entities/scene/scene';
 
 it('adds all types of entities correctly', () => {
   const liveseq = createLiveseq();
@@ -27,7 +27,7 @@ it('adding all twice and immediately removing all twice is the same result', () 
 
 function removeAllByIteration(liveseq: Liveseq, iter: number) {
   liveseq.removeInstrumentChannel(`instrumentChannels_${iter}`);
-  liveseq.removeClip(`clips_${iter}`);
+  liveseq.removeNoteClip(`noteClips_${iter}`);
   liveseq.removeInstrument(`instruments_${iter}`);
   liveseq.removeSample(`samples_${iter}`);
   liveseq.removeScene(`scenes_${iter}`);
@@ -37,21 +37,21 @@ function removeAllByIteration(liveseq: Liveseq, iter: number) {
 
 function getAddOnce() {
   return {
-    channels: [
+    instrumentChannels: [
       {
         id: 'instrumentChannels_0',
         instrumentId: 'instruments_0',
         slotIds: ['slots_0'],
       },
     ],
-    clips: [{ duration: 10, id: 'clips_0', notes: [], type: 'noteClip' }],
+    noteClips: [{ duration: 10, id: 'noteClips_0', notes: [], type: 'noteClip' }],
     instruments: [{ id: 'instruments_0', type: 'samplerInstrument' }],
     samples: [],
     scenes: [{ enter: [{ slotIds: ['slots_0'], type: 'playSlots' }], id: 'scenes_0' }],
     slots: [{ id: 'slots_0', loops: 0, timelineId: 'timelines_0', type: 'timelineSlot' }],
     timelines: [
       {
-        clipRanges: [{ clipId: 'clips_0', end: 4, start: 0 }],
+        clipRanges: [{ noteClipId: 'noteClips_0', end: 4, start: 0 }],
         duration: 4,
         id: 'timelines_0',
         name: 'Timeline Name',
@@ -62,7 +62,7 @@ function getAddOnce() {
 
 function getAddTwice() {
   return {
-    channels: [
+    instrumentChannels: [
       {
         id: 'instrumentChannels_0',
         instrumentId: 'instruments_0',
@@ -74,9 +74,9 @@ function getAddTwice() {
         slotIds: ['slots_1'],
       },
     ],
-    clips: [
-      { duration: 10, id: 'clips_0', notes: [], type: 'noteClip' },
-      { duration: 10, id: 'clips_1', notes: [], type: 'noteClip' },
+    noteClips: [
+      { duration: 10, id: 'noteClips_0', notes: [], type: 'noteClip' },
+      { duration: 10, id: 'noteClips_1', notes: [], type: 'noteClip' },
     ],
     instruments: [
       { id: 'instruments_0', type: 'samplerInstrument' },
@@ -93,13 +93,13 @@ function getAddTwice() {
     ],
     timelines: [
       {
-        clipRanges: [{ clipId: 'clips_0', end: 4, start: 0 }],
+        clipRanges: [{ noteClipId: 'noteClips_0', end: 4, start: 0 }],
         duration: 4,
         id: 'timelines_0',
         name: 'Timeline Name',
       },
       {
-        clipRanges: [{ clipId: 'clips_1', end: 4, start: 0 }],
+        clipRanges: [{ noteClipId: 'noteClips_1', end: 4, start: 0 }],
         duration: 4,
         id: 'timelines_1',
         name: 'Timeline Name',
@@ -114,7 +114,7 @@ function addAllTypesOfEntities(liveseq: Liveseq) {
     source: '',
   });
 
-  const clipId = liveseq.addClip({
+  const noteClipId = liveseq.addNoteClip({
     type: 'noteClip',
     duration: 10 as Beats,
   });
@@ -124,7 +124,7 @@ function addAllTypesOfEntities(liveseq: Liveseq) {
     duration: musicTimeToBeats([1, 0, 0]),
     clipRanges: [
       {
-        clipId,
+        noteClipId,
         start: musicTimeToBeats([0, 0, 0]),
         end: musicTimeToBeats([1, 0, 0]),
       },
@@ -138,7 +138,7 @@ function addAllTypesOfEntities(liveseq: Liveseq) {
   });
 
   liveseq.addScene({
-    enter: [playSlotsAction([slotId])],
+    enter: [playSlots([slotId])],
   });
 
   liveseq.addInstrumentChannel({

@@ -21,7 +21,7 @@ import { createSampleEntity } from './sample/sample';
 export type Entities = {
   instrumentChannels: Record<string, InstrumentChannelEntity>;
   timelines: Record<string, TimelineEntity>;
-  clips: Record<string, NoteClipEntity>;
+  noteClips: Record<string, NoteClipEntity>;
   instruments: Record<string, SamplerEntity>;
   slots: Record<string, SlotEntity>;
   scenes: Record<string, SceneEntity>;
@@ -33,9 +33,9 @@ export function createEntities(project: SerializableProject): Entities {
 
   return {
     instrumentChannels: createRecordById(
-      project.entities.channels.map(createInstrumentChannelEntity),
+      project.entities.instrumentChannels.map(createInstrumentChannelEntity),
     ),
-    clips: createRecordById(project.entities.clips.map(createNoteClipEntity)),
+    noteClips: createRecordById(project.entities.noteClips.map(createNoteClipEntity)),
     instruments: createRecordById(project.entities.instruments.map(createSamplerEntity)),
     samples: createRecordById(project.entities.samples.map(createSampleEntity)),
     scenes: createRecordById(project.entities.scenes.map(createSceneEntity)),
@@ -46,10 +46,10 @@ export function createEntities(project: SerializableProject): Entities {
 
 // Serialization
 export type SerializableEntities = {
-  channels: Array<SerializableInstrumentChannel>;
+  instrumentChannels: Array<SerializableInstrumentChannel>;
   instruments: Array<SerializableInstrument>;
   timelines: Array<SerializableTimeline>;
-  clips: Array<SerializableClip>;
+  noteClips: Array<SerializableClip>;
   scenes: Array<SerializableScene>;
   slots: Array<SerializableSlot>;
   samples: Array<SerializableSample>;
@@ -57,8 +57,8 @@ export type SerializableEntities = {
 
 export const serializeEntities = (entities: Entities): SerializableEntities => {
   return {
-    channels: Object.values(entities.instrumentChannels),
-    clips: Object.values(entities.clips),
+    instrumentChannels: Object.values(entities.instrumentChannels),
+    noteClips: Object.values(entities.noteClips),
     instruments: Object.values(entities.instruments).map((instrument) => {
       const { schedule, ...withoutSchedule } = instrument;
       return withoutSchedule;
@@ -81,13 +81,13 @@ export const getInstrumentChannelsBySlotId = (
 };
 
 export const getClipsByTimelineId = (
-  entities: Pick<Entities, 'timelines' | 'clips'>,
+  entities: Pick<Entities, 'timelines' | 'noteClips'>,
   timelineId: string,
 ) => {
   const timeline = entities.timelines[timelineId];
   return timeline.clipRanges.map((clip) => ({
     ...clip,
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    ...entities.clips[clip.clipId],
+    ...entities.noteClips[clip.noteClipId],
   }));
 };
