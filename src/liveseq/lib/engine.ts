@@ -1,10 +1,10 @@
 import { createStore, StoreActions } from './store/store';
-import { createEntityManager, EntityManagerActions } from './entities/entityManager';
+import type { EntityManagerActions } from './entities/entityManager';
 import type { TimeRange } from './time/timeRange';
 import { timeRangeToBeatsRange } from './time/beatsRange';
 import { getScheduleItemsWithinRange } from './player/slotPlaybackState';
 import { createPlayer, PlayerActions, ScheduleNote } from './player/player';
-import { serializeEntities } from './entities/entities';
+import { createEntities, serializeEntities } from './entities/entities';
 import { createProject, SerializableProject } from './project/project';
 import type { Bpm, TimeInSeconds } from './types';
 import { libraryVersion } from './meta';
@@ -56,7 +56,7 @@ export const createEngine = ({
   ...callbacks
 }: EngineProps): Engine => {
   const store = createStore(project.initialState, callbacks);
-  const entityManager = createEntityManager(project);
+  const entities = createEntities(project);
 
   // UTILS
   // TODO: better naming
@@ -71,7 +71,7 @@ export const createEngine = ({
 
     return getScheduleItemsWithinRange(
       beatsRange,
-      entityManager.selectors.getEntities(),
+      entities.selectors.getEntities(),
       currentBpm,
       currentSlotPlaybackState,
       previouslyScheduledNoteIds,
@@ -94,7 +94,7 @@ export const createEngine = ({
 
   // SELECTORS
   const getProject = () => {
-    const serializableEntities = serializeEntities(entityManager.selectors.getEntities());
+    const serializableEntities = serializeEntities(entities.selectors.getEntities());
     const slotPlaybackState = store.selectors.getSlotPlaybackState();
 
     return createProject({
@@ -129,7 +129,7 @@ export const createEngine = ({
 
   return {
     // actions
-    ...entityManager.actions,
+    ...entities.actions,
     ...player.actions,
     setTempo: store.actions.setTempo,
     setIsMuted: store.actions.setIsMuted,
