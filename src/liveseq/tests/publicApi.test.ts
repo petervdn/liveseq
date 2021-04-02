@@ -39,8 +39,8 @@ it('returns an object with the expected keys from createLiveseq', () => {
   expect(liveseq.removeInstrumentChannel).toBeDefined();
   expect(liveseq.addNoteClip).toBeDefined();
   expect(liveseq.removeNoteClip).toBeDefined();
-  expect(liveseq.addInstrument).toBeDefined();
-  expect(liveseq.removeInstrument).toBeDefined();
+  expect(liveseq.addSampler).toBeDefined();
+  expect(liveseq.removeSampler).toBeDefined();
   expect(liveseq.addSample).toBeDefined();
   expect(liveseq.removeSample).toBeDefined();
   expect(liveseq.addScene).toBeDefined();

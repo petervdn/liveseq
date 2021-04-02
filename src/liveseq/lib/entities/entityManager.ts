@@ -16,7 +16,7 @@ import { disable } from '../utils/disable';
 import type { InstrumentChannelManager } from './instrumentChannel/instrumentChannel';
 import { getInstrumentChannelManager } from './instrumentChannel/instrumentChannel';
 import { getNoteClipManager, NoteClipManager } from './noteClip/noteClip';
-import { getInstrumentManager, InstrumentManager } from './sampler/sampler';
+import { getInstrumentManager, SamplerManager } from './sampler/sampler';
 
 export type AddEntity<Props> = (props: OmitId<Props & { id: string }>) => string;
 export type RemoveEntity = (id: string) => void;
@@ -25,7 +25,7 @@ export type EntityManagerActions = InstrumentChannelManager &
   NoteClipManager &
   SceneManager &
   SlotManager &
-  InstrumentManager &
+  SamplerManager &
   TimelineManager &
   SampleManager;
 
@@ -144,7 +144,7 @@ export const createEntityManager = (project: SerializableProject): EntityManager
       ...getSampleManager(getProps('samples')),
       ...getSceneManager(getProps('scenes')),
       ...getSlotManager(getProps('slots')),
-      ...getInstrumentManager(getProps('instruments')),
+      ...getInstrumentManager(getProps('samplers')),
       ...getTimelineManager(getProps('timelines')),
     },
     selectors: {

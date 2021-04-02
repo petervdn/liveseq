@@ -38,13 +38,11 @@ function addMetronome(liveseq: Liveseq, isAlternative: boolean) {
     loops: 0,
   });
 
-  const instrumentId = liveseq.addInstrument({
-    type: 'samplerInstrument',
-  });
+  const samplerId = liveseq.addSampler({});
 
   liveseq.addInstrumentChannel({
     name: 'Channel Name',
-    instrumentId,
+    samplerId,
     slotIds: [slotId],
   });
 

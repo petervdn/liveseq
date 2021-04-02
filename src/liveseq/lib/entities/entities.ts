@@ -20,7 +20,7 @@ export type Entities = {
   instrumentChannels: Record<string, InstrumentChannelEntity>;
   timelines: Record<string, TimelineEntity>;
   noteClips: Record<string, NoteClipEntity>;
-  instruments: Record<string, SamplerEntity>;
+  samplers: Record<string, SamplerEntity>;
   slots: Record<string, SlotEntity>;
   scenes: Record<string, SceneEntity>;
   samples: Record<string, unknown>;
@@ -34,7 +34,7 @@ export function createEntities(project: SerializableProject): Entities {
       project.entities.instrumentChannels.map(createInstrumentChannelEntity),
     ),
     noteClips: createRecordById(project.entities.noteClips.map(createNoteClipEntity)),
-    instruments: createRecordById(project.entities.instruments.map(createSamplerEntity)),
+    samplers: createRecordById(project.entities.samplers.map(createSamplerEntity)),
     samples: createRecordById(project.entities.samples.map(createSampleEntity)),
     scenes: createRecordById(project.entities.scenes.map(createSceneEntity)),
     slots: createRecordById(project.entities.slots.map(createSlotEntity)),
@@ -45,7 +45,7 @@ export function createEntities(project: SerializableProject): Entities {
 // Serialization
 export type SerializableEntities = {
   instrumentChannels: Array<SerializableInstrumentChannel>;
-  instruments: Array<SerializableSampler>;
+  samplers: Array<SerializableSampler>;
   timelines: Array<SerializableTimeline>;
   noteClips: Array<SerializableClip>;
   scenes: Array<SerializableScene>;
@@ -57,7 +57,7 @@ export const serializeEntities = (entities: Entities): SerializableEntities => {
   return {
     instrumentChannels: Object.values(entities.instrumentChannels),
     noteClips: Object.values(entities.noteClips),
-    instruments: Object.values(entities.instruments).map((instrument) => {
+    samplers: Object.values(entities.samplers).map((instrument) => {
       const { schedule, ...withoutSchedule } = instrument;
       return withoutSchedule;
     }),

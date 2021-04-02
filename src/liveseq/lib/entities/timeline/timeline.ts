@@ -31,10 +31,6 @@ export const getTimelineManager = ({
     addTimeline: (timeline) => {
       return addEntity((id) => createTimelineEntity({ ...timeline, id }));
     },
-    removeTimeline: (timelineId) => {
-      removeEntity(timelineId);
-
-      // TODO: search and remove any references by id
-    },
+    removeTimeline: removeEntity,
   };
 };

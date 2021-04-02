@@ -28,7 +28,7 @@ it('adding all twice and immediately removing all twice is the same result', () 
 function removeAllByIteration(liveseq: Liveseq, iter: number) {
   liveseq.removeInstrumentChannel(`instrumentChannels_${iter}`);
   liveseq.removeNoteClip(`noteClips_${iter}`);
-  liveseq.removeInstrument(`instruments_${iter}`);
+  liveseq.removeSampler(`samplers_${iter}`);
   liveseq.removeSample(`samples_${iter}`);
   liveseq.removeScene(`scenes_${iter}`);
   liveseq.removeSlot(`slots_${iter}`);
@@ -40,12 +40,12 @@ function getAddOnce() {
     instrumentChannels: [
       {
         id: 'instrumentChannels_0',
-        instrumentId: 'instruments_0',
+        samplerId: 'samplers_0',
         slotIds: ['slots_0'],
       },
     ],
     noteClips: [{ duration: 10, id: 'noteClips_0', notes: [], type: 'noteClip' }],
-    instruments: [{ id: 'instruments_0', type: 'samplerInstrument' }],
+    samplers: [{ id: 'samplers_0' }],
     samples: [],
     scenes: [{ enter: [{ slotIds: ['slots_0'], type: 'playSlots' }], id: 'scenes_0' }],
     slots: [{ id: 'slots_0', loops: 0, timelineId: 'timelines_0', type: 'timelineSlot' }],
@@ -65,12 +65,12 @@ function getAddTwice() {
     instrumentChannels: [
       {
         id: 'instrumentChannels_0',
-        instrumentId: 'instruments_0',
+        samplerId: 'samplers_0',
         slotIds: ['slots_0'],
       },
       {
         id: 'instrumentChannels_1',
-        instrumentId: 'instruments_1',
+        samplerId: 'samplers_1',
         slotIds: ['slots_1'],
       },
     ],
@@ -78,10 +78,7 @@ function getAddTwice() {
       { duration: 10, id: 'noteClips_0', notes: [], type: 'noteClip' },
       { duration: 10, id: 'noteClips_1', notes: [], type: 'noteClip' },
     ],
-    instruments: [
-      { id: 'instruments_0', type: 'samplerInstrument' },
-      { id: 'instruments_1', type: 'samplerInstrument' },
-    ],
+    samplers: [{ id: 'samplers_0' }, { id: 'samplers_1' }],
     samples: [],
     scenes: [
       { enter: [{ slotIds: ['slots_0'], type: 'playSlots' }], id: 'scenes_0' },
@@ -142,9 +139,7 @@ function addAllTypesOfEntities(liveseq: Liveseq) {
   });
 
   liveseq.addInstrumentChannel({
-    instrumentId: liveseq.addInstrument({
-      type: 'samplerInstrument',
-    }),
+    samplerId: liveseq.addSampler({}),
     slotIds: [slotId],
   });
 }

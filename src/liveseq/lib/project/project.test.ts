@@ -8,7 +8,7 @@ it('can create empty project with createProject', () => {
     entities: {
       instrumentChannels: [],
       noteClips: [],
-      instruments: [],
+      samplers: [],
       samples: [],
       scenes: [],
       slots: [],

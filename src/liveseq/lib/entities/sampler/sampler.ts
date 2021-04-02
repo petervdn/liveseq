@@ -4,11 +4,9 @@ import { getFrequency } from '../../note/note';
 import type { CommonProps, OmitId } from '../../types';
 import type { AddEntity, EntityManagementProps, RemoveEntity } from '../entityManager';
 
-export type SerializableSampler = CommonProps & {
-  type: 'samplerInstrument';
-};
+export type SerializableSampler = CommonProps;
 
-// TODO: when we have more instruments this needs to be moved to a general place
+// TODO: when we have more samplers this needs to be moved to a general place
 export type InstrumentInstance = {
   schedule: (notes: Array<ScheduleNote>, audioContext: AudioContext) => void;
 };
@@ -35,18 +33,18 @@ export const createSamplerEntity = (props: SerializableSampler): SamplerEntity =
 };
 
 // MANAGER
-export type InstrumentManager = {
-  addInstrument: AddEntity<OmitId<SerializableSampler>>;
-  removeInstrument: RemoveEntity;
+export type SamplerManager = {
+  addSampler: AddEntity<OmitId<SerializableSampler>>;
+  removeSampler: RemoveEntity;
 };
 export const getInstrumentManager = ({
   addEntity,
   removeEntity,
-}: EntityManagementProps): InstrumentManager => {
+}: EntityManagementProps): SamplerManager => {
   return {
-    addInstrument: (instrument) => {
+    addSampler: (instrument) => {
       return addEntity((id) => createSamplerEntity({ ...instrument, id }));
     },
-    removeInstrument: removeEntity,
+    removeSampler: removeEntity,
   };
 };

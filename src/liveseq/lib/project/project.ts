@@ -25,7 +25,7 @@ export const createProject = (project: Partial<SerializableProject> = {}): Seria
     },
     entities: {
       instrumentChannels: [],
-      instruments: [],
+      samplers: [],
       timelines: [],
       noteClips: [],
       scenes: [],

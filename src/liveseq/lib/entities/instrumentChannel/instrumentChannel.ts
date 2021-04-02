@@ -3,7 +3,7 @@ import type { AddEntity, EntityManagementProps, RemoveEntity } from '../entityMa
 import { without } from '../../utils/without';
 
 export type InstrumentChannel = CommonProps & {
-  instrumentId: string;
+  samplerId: string;
   slotIds: Array<string>;
 };
 

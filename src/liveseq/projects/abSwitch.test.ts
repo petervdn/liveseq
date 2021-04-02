@@ -19,13 +19,13 @@ it('abSwitch is correct', () => {
       instrumentChannels: [
         {
           id: 'instrumentChannels_0',
-          instrumentId: 'instruments_0',
+          samplerId: 'samplers_0',
           name: 'Channel Name',
           slotIds: ['slots_0'],
         },
         {
           id: 'instrumentChannels_1',
-          instrumentId: 'instruments_1',
+          samplerId: 'samplers_1',
           name: 'Channel Name',
           slotIds: ['slots_1'],
         },
@@ -56,10 +56,7 @@ it('abSwitch is correct', () => {
           type: 'noteClip',
         },
       ],
-      instruments: [
-        { id: 'instruments_0', type: 'samplerInstrument' },
-        { id: 'instruments_1', type: 'samplerInstrument' },
-      ],
+      samplers: [{ id: 'samplers_0' }, { id: 'samplers_1' }],
       samples: [],
       scenes: [
         {

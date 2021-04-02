@@ -47,7 +47,7 @@ export {};
 //
 //       if (notes.length === 0) return accumulator;
 //
-//       const instrument = entities.instruments[channel.instrumentId];
+//       const instrument = entities.samplers[channel.samplerId];
 //
 //       accumulator.push({
 //         instrument,
