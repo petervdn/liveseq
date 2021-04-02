@@ -1,8 +1,8 @@
-import { BeatsRange, createRange } from '../time/beatsRange';
+import { BeatsRange, createRange } from '../../time/beatsRange';
 import type { QueuedScenesByStart } from './groupQueuedScenesByStart';
-import type { Entities } from '../entities/entities';
-import type { Beats } from '../types';
-import { removeScenesFromQueue, SlotPlaybackState } from './slotPlaybackState';
+import type { Entities } from '../../entities/entities';
+import type { Beats } from '../../types';
+import { removeScenesFromQueue, SlotPlaybackState } from '../slotPlaybackState';
 import { applyScenesToSlotPlaybackState } from './applyScenesToSlotPlaybackState';
 
 // TODO: better naming

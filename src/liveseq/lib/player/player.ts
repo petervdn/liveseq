@@ -3,7 +3,7 @@ import type { TimeRange } from '../time/timeRange';
 import { isContextSuspended } from '../utils/isContextSuspended';
 import type { TimeInSeconds } from '../types';
 import { errorMessages } from '../errors';
-import type { getScheduleItemsWithinRange } from './getScheduleItemsWithinRange';
+import type { getScheduleItemsWithinRange } from './utils/getScheduleItemsWithinRange';
 
 export type ScheduleNote = Note & {
   startTime: TimeInSeconds;

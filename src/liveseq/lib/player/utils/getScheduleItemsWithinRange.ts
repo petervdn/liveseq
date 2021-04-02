@@ -1,8 +1,8 @@
-import type { BeatsRange } from '../time/beatsRange';
-import type { Entities } from '../entities/entities';
-import type { Bpm } from '../types';
-import { getNotesForInstrumentInTimeRange } from '../entities/utils/getNotesForInstrumentInTimeRange';
-import type { SlotPlaybackState } from './slotPlaybackState';
+import type { BeatsRange } from '../../time/beatsRange';
+import type { Entities } from '../../entities/entities';
+import type { Bpm } from '../../types';
+import { getNotesForInstrumentInTimeRange } from '../../entities/utils/getNotesForInstrumentInTimeRange';
+import type { SlotPlaybackState } from '../slotPlaybackState';
 import { getSlotPlaybackStatesWithinRange } from './getSlotPlaybackStatesWithinRange';
 
 export const getScheduleItemsWithinRange = (

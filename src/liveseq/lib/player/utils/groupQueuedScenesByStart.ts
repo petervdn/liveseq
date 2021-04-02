@@ -1,5 +1,5 @@
-import type { QueuedScene } from './slotPlaybackState';
-import type { Beats } from '../types';
+import type { QueuedScene } from '../slotPlaybackState';
+import type { Beats } from '../../types';
 
 export type QueuedScenesByStart = Record<number, Array<QueuedScene>>;
 export const groupQueuedScenesByStart = (

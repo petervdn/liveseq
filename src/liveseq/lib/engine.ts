@@ -7,8 +7,8 @@ import { createProject, SerializableProject } from './project/project';
 import type { Bpm, TimeInSeconds } from './types';
 import { libraryVersion } from './meta';
 import { createEntities, Entities } from './entities/entities';
-import { getScheduleItemsWithinRange } from './player/getScheduleItemsWithinRange';
-import { getSlotPlaybackStatesWithinRange } from './player/getSlotPlaybackStatesWithinRange';
+import { getScheduleItemsWithinRange } from './player/utils/getScheduleItemsWithinRange';
+import { getSlotPlaybackStatesWithinRange } from './player/utils/getSlotPlaybackStatesWithinRange';
 
 export type EngineCallbacks = {
   onPlay: () => void;

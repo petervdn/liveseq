@@ -1,7 +1,7 @@
-import type { SceneInstance } from '../entities/scene';
-import type { Entities } from '../entities/entities';
-import type { Beats } from '../types';
-import type { SlotPlaybackState } from './slotPlaybackState';
+import type { SceneInstance } from '../../entities/scene';
+import type { Entities } from '../../entities/entities';
+import type { Beats } from '../../types';
+import type { SlotPlaybackState } from '../slotPlaybackState';
 
 export const applyScenesToSlotPlaybackState = (
   scenes: Array<Pick<SceneInstance, 'id' | 'isEnabled' | 'enter' | 'leave'>>,
