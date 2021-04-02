@@ -35,8 +35,8 @@ it('returns an object with the expected keys from createLiveseq', () => {
   expect(liveseq.setIsMuted).toBeDefined();
 
   // entity manager
-  expect(liveseq.addChannel).toBeDefined();
-  expect(liveseq.removeChannel).toBeDefined();
+  expect(liveseq.addInstrumentChannel).toBeDefined();
+  expect(liveseq.removeInstrumentChannel).toBeDefined();
   expect(liveseq.addClip).toBeDefined();
   expect(liveseq.removeClip).toBeDefined();
   expect(liveseq.addInstrument).toBeDefined();

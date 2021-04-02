@@ -18,13 +18,13 @@ it('abSwitch is correct', () => {
     entities: {
       channels: [
         {
-          id: 'channels_0',
+          id: 'instrumentChannels_0',
           instrumentId: 'instruments_0',
           name: 'Channel Name',
           slotIds: ['slots_0'],
         },
         {
-          id: 'channels_1',
+          id: 'instrumentChannels_1',
           instrumentId: 'instruments_1',
           name: 'Channel Name',
           slotIds: ['slots_1'],

@@ -16,9 +16,10 @@ import {
   InstrumentChannelEntity,
   SerializableInstrumentChannel,
 } from './instrumentChannel/instrumentChannel';
+import { createSampleEntity } from './sample/sample';
 
 export type Entities = {
-  channels: Record<string, InstrumentChannelEntity>;
+  instrumentChannels: Record<string, InstrumentChannelEntity>;
   timelines: Record<string, TimelineEntity>;
   clips: Record<string, NoteClipEntity>;
   instruments: Record<string, SamplerEntity>;
@@ -28,14 +29,18 @@ export type Entities = {
 };
 
 export function createEntities(project: SerializableProject): Entities {
+  // TODO: create one way links between entities when initializing
+
   return {
-    channels: createRecordById(project.entities.channels.map(createInstrumentChannelEntity)),
-    timelines: createRecordById(project.entities.timelines.map(createTimelineEntity)),
+    instrumentChannels: createRecordById(
+      project.entities.channels.map(createInstrumentChannelEntity),
+    ),
     clips: createRecordById(project.entities.clips.map(createNoteClipEntity)),
-    slots: createRecordById(project.entities.slots.map(createSlotEntity)),
-    scenes: createRecordById(project.entities.scenes.map(createSceneEntity)),
     instruments: createRecordById(project.entities.instruments.map(createSamplerEntity)),
-    samples: {},
+    samples: createRecordById(project.entities.samples.map(createSampleEntity)),
+    scenes: createRecordById(project.entities.scenes.map(createSceneEntity)),
+    slots: createRecordById(project.entities.slots.map(createSlotEntity)),
+    timelines: createRecordById(project.entities.timelines.map(createTimelineEntity)),
   };
 }
 
@@ -52,7 +57,7 @@ export type SerializableEntities = {
 
 export const serializeEntities = (entities: Entities): SerializableEntities => {
   return {
-    channels: Object.values(entities.channels),
+    channels: Object.values(entities.instrumentChannels),
     clips: Object.values(entities.clips),
     instruments: Object.values(entities.instruments).map((instrument) => {
       const { schedule, ...withoutSchedule } = instrument;
@@ -66,11 +71,11 @@ export const serializeEntities = (entities: Entities): SerializableEntities => {
 };
 
 // entity selectors
-export const getChannelsBySlotId = (
-  entities: Pick<Entities, 'channels'>,
+export const getInstrumentChannelsBySlotId = (
+  entities: Pick<Entities, 'instrumentChannels'>,
   slotId: string,
 ): Array<InstrumentChannelEntity> => {
-  return Object.values(entities.channels).filter((channel) => {
+  return Object.values(entities.instrumentChannels).filter((channel) => {
     return channel.slotIds.includes(slotId);
   });
 };

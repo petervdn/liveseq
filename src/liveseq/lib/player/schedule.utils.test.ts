@@ -10,7 +10,7 @@ export const testProject = {
   entities: {
     channels: [
       {
-        id: 'channels_1',
+        id: 'instrumentChannels_1',
         name: 'Channel Name',
         instrumentId: 'samplers_1',
         slotIds: ['slots_1', 'slot_2'],

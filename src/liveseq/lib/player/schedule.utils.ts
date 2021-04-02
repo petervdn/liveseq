@@ -2,7 +2,7 @@ import type { ScheduleItem } from './player';
 import { getTimelineNotesInRange } from '../entities/timeline/timeline.utils';
 import { beatsToTime } from '../time/musicTime';
 import type { Entities } from '../entities/entities';
-import { getChannelsBySlotId, getClipsByTimelineId } from '../entities/entities';
+import { getInstrumentChannelsBySlotId, getClipsByTimelineId } from '../entities/entities';
 import type { BeatsRange } from '../time/beatsRange';
 import type { Bpm } from '../types';
 
@@ -17,7 +17,7 @@ export const getNotesForInstrumentInTimeRange = (
     const slot = entities.slots[slotId];
     const timeline = entities.timelines[slot.timelineId];
     const timelineClips = getClipsByTimelineId(entities, timeline.id);
-    const channels = getChannelsBySlotId(entities, slot.id);
+    const channels = getInstrumentChannelsBySlotId(entities, slot.id);
 
     return channels.reduce((accumulator, channel) => {
       const notes = getTimelineNotesInRange(

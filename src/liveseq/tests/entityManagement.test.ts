@@ -26,7 +26,7 @@ it('adding all twice and immediately removing all twice is the same result', () 
 });
 
 function removeAllByIteration(liveseq: Liveseq, iter: number) {
-  liveseq.removeChannel(`channels_${iter}`);
+  liveseq.removeInstrumentChannel(`instrumentChannels_${iter}`);
   liveseq.removeClip(`clips_${iter}`);
   liveseq.removeInstrument(`instruments_${iter}`);
   liveseq.removeSample(`samples_${iter}`);
@@ -39,7 +39,7 @@ function getAddOnce() {
   return {
     channels: [
       {
-        id: 'channels_0',
+        id: 'instrumentChannels_0',
         instrumentId: 'instruments_0',
         slotIds: ['slots_0'],
       },
@@ -64,12 +64,12 @@ function getAddTwice() {
   return {
     channels: [
       {
-        id: 'channels_0',
+        id: 'instrumentChannels_0',
         instrumentId: 'instruments_0',
         slotIds: ['slots_0'],
       },
       {
-        id: 'channels_1',
+        id: 'instrumentChannels_1',
         instrumentId: 'instruments_1',
         slotIds: ['slots_1'],
       },
@@ -141,7 +141,7 @@ function addAllTypesOfEntities(liveseq: Liveseq) {
     enter: [playSlotsAction([slotId])],
   });
 
-  liveseq.addChannel({
+  liveseq.addInstrumentChannel({
     instrumentId: liveseq.addInstrument({
       type: 'samplerInstrument',
     }),

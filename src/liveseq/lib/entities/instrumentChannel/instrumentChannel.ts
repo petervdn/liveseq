@@ -20,27 +20,27 @@ export const createInstrumentChannelEntity = (
 };
 
 // MANAGER
-export type ChannelManager = {
-  addChannel: AddEntity<OmitId<SerializableInstrumentChannel>>;
-  removeChannel: RemoveEntity;
+export type InstrumentChannelManager = {
+  addInstrumentChannel: AddEntity<OmitId<SerializableInstrumentChannel>>;
+  removeInstrumentChannel: RemoveEntity;
   addSlotReference: (channelId: string, slotId: string) => void;
   removeSlotReference: (channelId: string, slotId: string) => void;
-  enableChannel: (channelId: string) => void;
-  disableChannel: (channelId: string) => void;
+  enableInstrumentChannel: (channelId: string) => void;
+  disableInstrumentChannel: (channelId: string) => void;
 };
 
-export const getChannelManager = ({
+export const getInstrumentChannelManager = ({
   addEntity,
   removeEntity,
   updateEntity,
   enable,
   disable,
-}: EntityManagementProps): ChannelManager => {
+}: EntityManagementProps): InstrumentChannelManager => {
   return {
-    addChannel: (channel) => {
+    addInstrumentChannel: (channel) => {
       return addEntity((id) => createInstrumentChannelEntity({ ...channel, id }));
     },
-    removeChannel: (channelId) => {
+    removeInstrumentChannel: (channelId) => {
       removeEntity(channelId);
 
       // TODO: search and remove any references by id
@@ -63,7 +63,7 @@ export const getChannelManager = ({
         };
       });
     },
-    enableChannel: enable,
-    disableChannel: disable,
+    enableInstrumentChannel: enable,
+    disableInstrumentChannel: disable,
   };
 };

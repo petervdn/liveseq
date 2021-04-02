@@ -15,13 +15,13 @@ import { getSampleManager } from './sample/sample';
 import { errorMessages } from '../errors';
 import { enable } from '../utils/enable';
 import { disable } from '../utils/disable';
-import type { ChannelManager } from './instrumentChannel/instrumentChannel';
-import { getChannelManager } from './instrumentChannel/instrumentChannel';
+import type { InstrumentChannelManager } from './instrumentChannel/instrumentChannel';
+import { getInstrumentChannelManager } from './instrumentChannel/instrumentChannel';
 
 export type AddEntity<Props> = (props: OmitId<Props & { id: string }>) => string;
 export type RemoveEntity = (id: string) => void;
 
-export type EntityManagerActions = ChannelManager &
+export type EntityManagerActions = InstrumentChannelManager &
   ClipManager &
   SceneManager &
   SlotManager &
@@ -139,7 +139,7 @@ export const createEntityManager = (project: SerializableProject): EntityManager
 
   return {
     actions: {
-      ...getChannelManager(getProps('channels')),
+      ...getInstrumentChannelManager(getProps('instrumentChannels')),
       ...getClipManager(getProps('clips')),
       ...getSampleManager(getProps('samples')),
       ...getSceneManager(getProps('scenes')),
