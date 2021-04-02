@@ -3,12 +3,11 @@ import type { NoteClipEntity, SerializableClip } from './noteClip/noteClip';
 import { createNoteClipEntity } from './noteClip/noteClip';
 import type { TimelineEntity } from './timeline/timeline';
 import { createTimelineEntity, SerializableTimeline } from './timeline/timeline';
-import { createSamplerEntity, SamplerEntity } from './instrument/sampler';
+import { createSamplerEntity, SamplerEntity, SerializableSampler } from './sampler/sampler';
 import { createSlotEntity, SerializableSlot, SlotEntity } from './slot/slot';
 import type { SceneEntity } from './scene/scene';
 import { createSceneEntity, SerializableScene } from './scene/scene';
 import { createRecordById } from '../utils/createRecordById';
-import type { SerializableInstrument } from './instrument/instrument';
 import type { SerializableSample } from './sample/sample';
 import {
   createInstrumentChannelEntity,
@@ -46,7 +45,7 @@ export function createEntities(project: SerializableProject): Entities {
 // Serialization
 export type SerializableEntities = {
   instrumentChannels: Array<SerializableInstrumentChannel>;
-  instruments: Array<SerializableInstrument>;
+  instruments: Array<SerializableSampler>;
   timelines: Array<SerializableTimeline>;
   noteClips: Array<SerializableClip>;
   scenes: Array<SerializableScene>;
