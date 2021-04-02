@@ -8,22 +8,22 @@ import { createSlotEntity, SerializableSlot, SlotEntity } from './slot/slot';
 import type { SceneEntity } from './scene/scene';
 import { createSceneEntity, SerializableScene } from './scene/scene';
 import { createRecordById } from '../utils/createRecordById';
-import type { SerializableSample } from './sample/sample';
+import type { SampleEntity, SerializableSample } from './sample/sample';
+import { createSampleEntity } from './sample/sample';
 import {
   createInstrumentChannelEntity,
   InstrumentChannelEntity,
   SerializableInstrumentChannel,
 } from './instrumentChannel/instrumentChannel';
-import { createSampleEntity } from './sample/sample';
 
 export type Entities = {
   instrumentChannels: Record<string, InstrumentChannelEntity>;
-  timelines: Record<string, TimelineEntity>;
   noteClips: Record<string, NoteClipEntity>;
   samplers: Record<string, SamplerEntity>;
-  slots: Record<string, SlotEntity>;
+  samples: Record<string, SampleEntity>;
   scenes: Record<string, SceneEntity>;
-  samples: Record<string, unknown>;
+  slots: Record<string, SlotEntity>;
+  timelines: Record<string, TimelineEntity>;
 };
 
 export function createEntities(project: SerializableProject): Entities {
@@ -45,12 +45,12 @@ export function createEntities(project: SerializableProject): Entities {
 // Serialization
 export type SerializableEntities = {
   instrumentChannels: Array<SerializableInstrumentChannel>;
-  samplers: Array<SerializableSampler>;
-  timelines: Array<SerializableTimeline>;
   noteClips: Array<SerializableClip>;
+  samplers: Array<SerializableSampler>;
+  samples: Array<SerializableSample>;
   scenes: Array<SerializableScene>;
   slots: Array<SerializableSlot>;
-  samples: Array<SerializableSample>;
+  timelines: Array<SerializableTimeline>;
 };
 
 export const serializeEntities = (entities: Entities): SerializableEntities => {
@@ -66,26 +66,4 @@ export const serializeEntities = (entities: Entities): SerializableEntities => {
     slots: Object.values(entities.slots),
     timelines: Object.values(entities.timelines),
   };
-};
-
-// entity selectors
-export const getInstrumentChannelsBySlotId = (
-  entities: Pick<Entities, 'instrumentChannels'>,
-  slotId: string,
-): Array<InstrumentChannelEntity> => {
-  return Object.values(entities.instrumentChannels).filter((channel) => {
-    return channel.slotIds.includes(slotId);
-  });
-};
-
-export const getClipsByTimelineId = (
-  entities: Pick<Entities, 'timelines' | 'noteClips'>,
-  timelineId: string,
-) => {
-  const timeline = entities.timelines[timelineId];
-  return timeline.clipRanges.map((clip) => ({
-    ...clip,
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    ...entities.noteClips[clip.noteClipId],
-  }));
 };

@@ -2,9 +2,10 @@ import type { ScheduleItem } from './player';
 import { getTimelineNotesInRange } from '../entities/timeline/getTimelineNotesInRange';
 import { beatsToTime } from '../time/musicTime';
 import type { Entities } from '../entities/entities';
-import { getInstrumentChannelsBySlotId, getClipsByTimelineId } from '../entities/entities';
 import type { BeatsRange } from '../time/beatsRange';
 import type { Bpm } from '../types';
+import { getInstrumentChannelsBySlotId } from '../entities/getInstrumentChannelsBySlotId';
+import { getClipsByTimelineId } from '../entities/getClipsByTimelineId';
 
 export const getNotesForInstrumentInTimeRange = (
   entities: Entities,

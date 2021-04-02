@@ -8,7 +8,7 @@ export type SerializableSample = CommonProps & {
 export type SampleEntity = SerializableSample;
 
 // might be the same as config for now but for the sake of consistency and to get the interface used internally
-export const createSampleEntity = (props: SampleEntity): SampleEntity => {
+export const createSampleEntity = (props: SerializableSample): SampleEntity => {
   return props;
 };
 
