@@ -1,11 +1,11 @@
-import type { ScheduleItem } from './player';
-import { getTimelineNotesInRange } from '../entities/timeline/getTimelineNotesInRange';
-import { beatsToTime } from '../time/musicTime';
-import type { Entities } from '../entities/entities';
-import type { BeatsRange } from '../time/beatsRange';
-import type { Bpm } from '../types';
-import { getInstrumentChannelsBySlotId } from '../entities/getInstrumentChannelsBySlotId';
-import { getClipsByTimelineId } from '../entities/getClipsByTimelineId';
+import type { ScheduleItem } from '../../player/player';
+import { getTimelineNotesInRange } from './getTimelineNotesInRange';
+import { beatsToTime } from '../../time/musicTime';
+import type { Entities } from '../entities';
+import type { BeatsRange } from '../../time/beatsRange';
+import type { Bpm } from '../../types';
+import { getInstrumentChannelsBySlotId } from './getInstrumentChannelsBySlotId';
+import { getClipsByTimelineId } from './getClipsByTimelineId';
 
 export const getNotesForInstrumentInTimeRange = (
   entities: Entities,
@@ -15,8 +15,8 @@ export const getNotesForInstrumentInTimeRange = (
   previouslyScheduledNoteIds: Array<string>,
 ): Array<ScheduleItem> => {
   return activeSlotIds.flatMap((slotId) => {
-    const slot = entities.slots[slotId];
-    const timeline = entities.timelines[slot.timelineId];
+    const slot = entities.slots.get(slotId);
+    const timeline = entities.timelines.get(slot.timelineId);
     const timelineClips = getClipsByTimelineId(entities, timeline.id);
     const channels = getInstrumentChannelsBySlotId(entities, slot.id);
 
@@ -33,7 +33,8 @@ export const getNotesForInstrumentInTimeRange = (
 
       if (notes.length === 0) return accumulator;
 
-      const instrument = entities.samplers[channel.samplerId];
+      // TODO: need to check what kind of instrument before assuming sampler
+      const instrument = entities.samplers.get(channel.instrumentId);
 
       accumulator.push({
         instrument,

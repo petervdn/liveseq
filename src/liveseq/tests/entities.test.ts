@@ -1,6 +1,6 @@
 import { Beats, createLiveseq, Liveseq } from '..';
 import { musicTimeToBeats } from '../lib/time/musicTime';
-import { playSlots } from '../lib/entities/scene/scene';
+import { playSlots } from '../lib/entities/scene';
 
 it('adds all types of entities correctly', () => {
   const liveseq = createLiveseq();
@@ -26,13 +26,13 @@ it('adding all twice and immediately removing all twice is the same result', () 
 });
 
 function removeAllByIteration(liveseq: Liveseq, iter: number) {
-  liveseq.removeInstrumentChannel(`instrumentChannels_${iter}`);
-  liveseq.removeNoteClip(`noteClips_${iter}`);
-  liveseq.removeSampler(`samplers_${iter}`);
-  liveseq.removeSample(`samples_${iter}`);
-  liveseq.removeScene(`scenes_${iter}`);
-  liveseq.removeSlot(`slots_${iter}`);
-  liveseq.removeTimeline(`timelines_${iter}`);
+  liveseq.instrumentChannels.remove(`instrumentChannels_${iter}`);
+  liveseq.noteClips.remove(`noteClips_${iter}`);
+  liveseq.samplers.remove(`samplers_${iter}`);
+  liveseq.samples.remove(`samples_${iter}`);
+  liveseq.scenes.remove(`scenes_${iter}`);
+  liveseq.slots.remove(`slots_${iter}`);
+  liveseq.timelines.remove(`timelines_${iter}`);
 }
 
 function getAddOnce() {
@@ -40,13 +40,18 @@ function getAddOnce() {
     instrumentChannels: [
       {
         id: 'instrumentChannels_0',
-        samplerId: 'samplers_0',
+        instrumentId: 'samplers_0',
         slotIds: ['slots_0'],
       },
     ],
-    noteClips: [{ duration: 10, id: 'noteClips_0', notes: [], type: 'noteClip' }],
+    noteClips: [{ duration: 10, id: 'noteClips_0', notes: [] }],
     samplers: [{ id: 'samplers_0' }],
-    samples: [],
+    samples: [
+      {
+        id: 'samples_0',
+        source: '',
+      },
+    ],
     scenes: [{ enter: [{ slotIds: ['slots_0'], type: 'playSlots' }], id: 'scenes_0' }],
     slots: [{ id: 'slots_0', loops: 0, timelineId: 'timelines_0', type: 'timelineSlot' }],
     timelines: [
@@ -65,21 +70,30 @@ function getAddTwice() {
     instrumentChannels: [
       {
         id: 'instrumentChannels_0',
-        samplerId: 'samplers_0',
+        instrumentId: 'samplers_0',
         slotIds: ['slots_0'],
       },
       {
         id: 'instrumentChannels_1',
-        samplerId: 'samplers_1',
+        instrumentId: 'samplers_1',
         slotIds: ['slots_1'],
       },
     ],
     noteClips: [
-      { duration: 10, id: 'noteClips_0', notes: [], type: 'noteClip' },
-      { duration: 10, id: 'noteClips_1', notes: [], type: 'noteClip' },
+      { duration: 10, id: 'noteClips_0', notes: [] },
+      { duration: 10, id: 'noteClips_1', notes: [] },
     ],
     samplers: [{ id: 'samplers_0' }, { id: 'samplers_1' }],
-    samples: [],
+    samples: [
+      {
+        id: 'samples_0',
+        source: '',
+      },
+      {
+        id: 'samples_1',
+        source: '',
+      },
+    ],
     scenes: [
       { enter: [{ slotIds: ['slots_0'], type: 'playSlots' }], id: 'scenes_0' },
       { enter: [{ slotIds: ['slots_1'], type: 'playSlots' }], id: 'scenes_1' },
@@ -107,16 +121,16 @@ function getAddTwice() {
 
 function addAllTypesOfEntities(liveseq: Liveseq) {
   // TODO: use sample in a sampler
-  liveseq.addSample({
+  liveseq.samples.create({
     source: '',
   });
 
-  const noteClipId = liveseq.addNoteClip({
-    type: 'noteClip',
+  const noteClipId = liveseq.noteClips.create({
     duration: 10 as Beats,
+    notes: [], // TODO: remove this
   });
 
-  const timelineId = liveseq.addTimeline({
+  const timelineId = liveseq.timelines.create({
     name: 'Timeline Name',
     duration: musicTimeToBeats([1, 0, 0]),
     clipRanges: [
@@ -128,18 +142,18 @@ function addAllTypesOfEntities(liveseq: Liveseq) {
     ],
   });
 
-  const slotId = liveseq.addSlot({
+  const slotId = liveseq.slots.create({
     type: 'timelineSlot',
     timelineId,
     loops: 0,
   });
 
-  liveseq.addScene({
+  liveseq.scenes.create({
     enter: [playSlots([slotId])],
   });
 
-  liveseq.addInstrumentChannel({
-    samplerId: liveseq.addSampler({}),
+  liveseq.instrumentChannels.create({
+    instrumentId: liveseq.samplers.create({}),
     slotIds: [slotId],
   });
 }

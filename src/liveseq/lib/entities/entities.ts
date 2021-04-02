@@ -1,48 +1,35 @@
 import type { SerializableProject } from '../project/project';
-import type { NoteClipEntity, SerializableClip } from './noteClip/noteClip';
-import { createNoteClipEntity, getNoteClipManager } from './noteClip/noteClip';
-import type { TimelineEntity } from './timeline/timeline';
-import {
-  createTimelineEntity,
-  getTimelineManager,
-  SerializableTimeline,
-} from './timeline/timeline';
-import {
-  createSamplerEntity,
-  getInstrumentManager,
-  SamplerEntity,
-  SerializableSampler,
-} from './sampler/sampler';
-import { createSlotEntity, getSlotManager, SerializableSlot, SlotEntity } from './slot/slot';
-import type { SceneEntity } from './scene/scene';
-import { createSceneEntity, getSceneManager, SerializableScene } from './scene/scene';
-import { createRecordById } from '../utils/createRecordById';
-import type { SampleEntity, SerializableSample } from './sample/sample';
-import { createSampleEntity, getSampleManager } from './sample/sample';
-import {
-  getInstrumentChannelManager,
-  InstrumentChannelInstance,
-  SerializableInstrumentChannel,
-} from './instrumentChannel/serializableInstrumentChannel';
-import { errorMessages } from '../errors';
-import { getIdGenerator } from '../utils/getIdGenerator';
-import { getHighestId } from '../utils/getHighestId';
-import type { CommonProps } from '../types';
-import { enable } from '../utils/enable';
-import { disable } from '../utils/disable';
-import type { EntityManagementProps } from './entityManager';
+import { createInstrumentChannelEntries, SerializableInstrumentChannel } from './instrumentChannel';
+import { createNoteClipEntries, SerializableClip } from './noteClip';
+import { createSampleEntries, SerializableSample } from './sample';
+import { createSamplerEntries, SerializableSampler } from './sampler';
+import { createSceneEntries, SerializableScene } from './scene';
+import { createSlotEntries, SerializableSlot } from './slot';
+import { createTimelineEntries, SerializableTimeline } from './timeline';
+import { objectEntries, objectValues } from '../utils/objUtils';
 
-export type Entities = {
-  instrumentChannels: Record<string, InstrumentChannelInstance>;
-  noteClips: Record<string, NoteClipEntity>;
-  samplers: Record<string, SamplerEntity>;
-  samples: Record<string, SampleEntity>;
-  scenes: Record<string, SceneEntity>;
-  slots: Record<string, SlotEntity>;
-  timelines: Record<string, TimelineEntity>;
+const decodeProjectEntities = (project: SerializableProject) => {
+  const entries = {
+    ...createInstrumentChannelEntries(),
+    ...createNoteClipEntries(),
+    ...createSampleEntries(),
+    ...createSamplerEntries(),
+    ...createSceneEntries(),
+    ...createSlotEntries(),
+    ...createTimelineEntries(),
+  };
+
+  objectEntries(project.entities).forEach(([key, values]) => {
+    values.forEach((value) => {
+      entries[key as keyof typeof entries].create(value as never);
+    });
+  });
+
+  return entries;
 };
 
-// Serialization
+export type Entities = ReturnType<typeof decodeProjectEntities>;
+
 export type SerializableEntities = {
   instrumentChannels: Array<SerializableInstrumentChannel>;
   noteClips: Array<SerializableClip>;
@@ -53,134 +40,24 @@ export type SerializableEntities = {
   timelines: Array<SerializableTimeline>;
 };
 
-export function createEntities(project: SerializableProject) {
-  // TODO: create one way links between entities when initializing
+const encodeEntities = (entities: Entities): SerializableEntities => {
+  return objectEntries(entities).reduce((accumulator, [key, entity]) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    accumulator[key] = objectValues(entity.getRecord()).map(({ id }) => entities[key].encode(id));
+    return accumulator;
+  }, {} as SerializableEntities);
+};
 
-  let currentEntities = {
-    instrumentChannels: createRecordById(project.entities.instrumentChannels.map((item) => item)),
-    noteClips: createRecordById(project.entities.noteClips.map(createNoteClipEntity)),
-    samplers: createRecordById(project.entities.samplers.map(createSamplerEntity)),
-    samples: createRecordById(project.entities.samples.map(createSampleEntity)),
-    scenes: createRecordById(project.entities.scenes.map(createSceneEntity)),
-    slots: createRecordById(project.entities.slots.map(createSlotEntity)),
-    timelines: createRecordById(project.entities.timelines.map(createTimelineEntity)),
-  };
-
-  const getEntityById = (key: keyof Entities, id: string) => {
-    const entity = currentEntities[key][id];
-    if (!entity) {
-      throw new Error(errorMessages.invalidEntityId(key, id));
-    }
-    return entity;
-  };
-
-  const getEntities = () => {
-    return currentEntities;
-  };
-
-  const setEntities = (entities: Entities) => {
-    currentEntities = entities;
-  };
-
-  const getUpdateEntityById = (key: keyof Entities) => <T>(
-    id: string,
-    mapEntity: (entity: T) => T,
-  ) => {
-    const entity = getEntityById(key, id);
-    const entities = getEntities();
-
-    setEntities(
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      mapEntity({
-        ...entities,
-        [key]: {
-          ...entities[key],
-          [id]: entity,
-        },
-      }),
-    );
-  };
-
-  const getAddEntity = (key: keyof Entities) => {
-    const generateId = getIdGenerator(key, getHighestId(Object.keys(getEntities()[key])));
-
-    return <T extends CommonProps>(getEntity: (id: string) => T) => {
-      const id = generateId();
-      const entity = getEntity(id);
-      const entities = getEntities();
-      setEntities({
-        ...entities,
-        [key]: {
-          ...entities[key],
-          [id]: entity,
-        },
-      });
-      return id;
-    };
-  };
-
-  const getRemoveEntity = (key: keyof Entities) => (id: string) => {
-    const entities = getEntities();
-    const copy = { ...entities[key] };
-    // just to trigger an error in case the id doesn't exist
-    getEntityById(key, id);
-    delete copy[id];
-
-    const result = {
-      ...entities,
-      [key]: {
-        ...copy,
-      },
-    };
-
-    // TODO: search and remove any references by id
-
-    setEntities(result);
-  };
-
-  const getProps = (key: keyof Entities): EntityManagementProps => {
-    const addEntity = getAddEntity(key);
-    const removeEntity = getRemoveEntity(key);
-    const updateEntity = getUpdateEntityById(key);
-
-    return {
-      addEntity,
-      removeEntity,
-      getEntities,
-      updateEntity,
-      enable: (id) => updateEntity<CommonProps>(id, enable),
-      disable: (id) => updateEntity<CommonProps>(id, disable),
-    };
-  };
+export const createEntities = (project: SerializableProject) => {
+  const entries = decodeProjectEntities(project);
 
   return {
-    actions: {
-      ...getInstrumentChannelManager(getProps('instrumentChannels')),
-      ...getNoteClipManager(getProps('noteClips')),
-      ...getSampleManager(getProps('samples')),
-      ...getSceneManager(getProps('scenes')),
-      ...getSlotManager(getProps('slots')),
-      ...getInstrumentManager(getProps('samplers')),
-      ...getTimelineManager(getProps('timelines')),
+    getEntries: () => {
+      return entries;
     },
-    selectors: {
-      getEntities,
-    },
-    serializeEntities: (): SerializableEntities => {
-      const entities = currentEntities;
-      return {
-        instrumentChannels: Object.values(entities.instrumentChannels),
-        noteClips: Object.values(entities.noteClips),
-        samplers: Object.values(entities.samplers).map((instrument) => {
-          const { schedule, ...withoutSchedule } = instrument;
-          return withoutSchedule;
-        }),
-        samples: [],
-        scenes: Object.values(entities.scenes),
-        slots: Object.values(entities.slots),
-        timelines: Object.values(entities.timelines),
-      };
+    encodeEntities: () => {
+      return encodeEntities(entries);
     },
   };
-}
+};

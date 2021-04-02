@@ -1,13 +1,16 @@
 import { createStore, StoreActions } from './store/store';
-import type { EntityManagerActions } from './entities/entityManager';
 import type { TimeRange } from './time/timeRange';
-import { timeRangeToBeatsRange } from './time/beatsRange';
-import { getScheduleItemsWithinRange } from './player/slotPlaybackState';
+import { BeatsRange, timeRangeToBeatsRange } from './time/beatsRange';
+import {
+  getScheduleItemsWithinRange,
+  getSlotPlaybackStatesWithinRange,
+} from './player/slotPlaybackState';
 import { createPlayer, PlayerActions, ScheduleNote } from './player/player';
-import { createEntities } from './entities/entities';
+
 import { createProject, SerializableProject } from './project/project';
 import type { Bpm, TimeInSeconds } from './types';
 import { libraryVersion } from './meta';
+import { createEntities, Entities } from './entities/entities';
 
 export type EngineCallbacks = {
   onPlay: () => void;
@@ -26,9 +29,7 @@ export type EngineProps = EngineCallbacks & {
 
 export type EngineActions = PlayerActions &
   Pick<StoreActions, 'setIsMuted' | 'setTempo' | 'addSceneToQueue' | 'removeSceneFromQueue'> &
-  EntityManagerActions & {
-    // setProject: (partialProject: Partial<SerializableProject>) => void;
-  };
+  Entities;
 
 // TODO: do similar to EngineActions
 export type EngineSelectors = {
@@ -40,6 +41,9 @@ export type EngineSelectors = {
   getProject: () => SerializableProject;
   getAudioContext: () => AudioContext;
   getIsMuted: () => void;
+  getSlotPlaybackStatesWithinRange: (
+    beatsRange: BeatsRange,
+  ) => ReturnType<typeof getSlotPlaybackStatesWithinRange>;
 };
 
 // for now it's flat, maybe could use the same pattern as used internally of having actions and selectors in their own keys
@@ -71,7 +75,7 @@ export const createEngine = ({
 
     return getScheduleItemsWithinRange(
       beatsRange,
-      entities.selectors.getEntities(),
+      entities.getEntries(),
       currentBpm,
       currentSlotPlaybackState,
       previouslyScheduledNoteIds,
@@ -94,7 +98,7 @@ export const createEngine = ({
 
   // SELECTORS
   const getProject = () => {
-    const serializableEntities = entities.serializeEntities();
+    const serializableEntities = entities.encodeEntities();
     const slotPlaybackState = store.selectors.getSlotPlaybackState();
 
     return createProject({
@@ -119,8 +123,6 @@ export const createEngine = ({
     });
   };
 
-  // ACTIONS
-
   // CORE
   const dispose = () => {
     player.dispose();
@@ -129,13 +131,20 @@ export const createEngine = ({
 
   return {
     // actions
-    ...entities.actions,
+    ...entities.getEntries(),
     ...player.actions,
     setTempo: store.actions.setTempo,
     setIsMuted: store.actions.setIsMuted,
     addSceneToQueue: store.actions.addSceneToQueue,
     removeSceneFromQueue: store.actions.removeSceneFromQueue,
     // selectors
+    getSlotPlaybackStatesWithinRange: (beatsRange: BeatsRange) => {
+      return getSlotPlaybackStatesWithinRange(
+        beatsRange,
+        entities.getEntries(),
+        store.selectors.getSlotPlaybackState(),
+      );
+    },
     getScheduleItemsInfo,
     getTempo: store.selectors.getTempo,
     getIsPlaying: store.selectors.getIsPlaying,

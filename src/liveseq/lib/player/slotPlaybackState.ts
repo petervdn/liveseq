@@ -1,8 +1,8 @@
 import type { BeatsRange } from '../time/beatsRange';
-import type { SceneEntity } from '../entities/scene/scene';
+import type { SceneInstance } from '../entities/scene';
 import { createRange, isTimeInRange } from '../time/beatsRange';
 import type { Entities } from '../entities/entities';
-import { getNotesForInstrumentInTimeRange } from './getNotesForInstrumentInTimeRange';
+import { getNotesForInstrumentInTimeRange } from '../entities/utils/getNotesForInstrumentInTimeRange';
 import type { Beats, Bpm } from '../types';
 
 type PlayingSlot = {
@@ -60,7 +60,7 @@ export const removeScenesFromQueue = (
 };
 
 export const applyScenesToSlotPlaybackState = (
-  scenes: Array<Pick<SceneEntity, 'id' | 'isEnabled' | 'enter' | 'leave'>>,
+  scenes: Array<Pick<SceneInstance, 'id' | 'isEnabled' | 'enter' | 'leave'>>,
   entities: Pick<Entities, 'slots'>,
   slotPlaybackState: SlotPlaybackState,
   start: Beats,
@@ -155,7 +155,7 @@ export const getAppliedStatesForQueuedScenes = (
       const currentSlotPlaybackState = index > 0 ? accumulator[index - 1] : slotPlaybackState;
 
       const sceneEntities = queuedScenes.map((scene) => {
-        return entities.scenes[scene.sceneId];
+        return entities.scenes.get(scene.sceneId);
       });
 
       const appliedSlotPlaybackState = {

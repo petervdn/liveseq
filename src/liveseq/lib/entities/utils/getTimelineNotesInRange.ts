@@ -1,4 +1,4 @@
-import type { SerializableTimeline } from './timeline';
+import type { SerializableTimeline } from '../timeline';
 import type { Note } from '../../note/note';
 import { getUniqueSchedulingId } from '../../player/getUniqueSchedulingId';
 import type { BeatsRange } from '../../time/beatsRange';
@@ -10,7 +10,7 @@ import {
   subtractFromRange,
 } from '../../time/beatsRange';
 import type { Beats } from '../../types';
-import type { NoteClip } from '../noteClip/noteClip';
+import type { NoteClip } from '../noteClip';
 
 const getTimelineDuration = (timeline: SerializableTimeline): Beats => {
   return timeline.duration !== undefined
