@@ -20,11 +20,10 @@ import { createRecordById } from '../utils/createRecordById';
 import type { SampleEntity, SerializableSample } from './sample/sample';
 import { createSampleEntity, getSampleManager } from './sample/sample';
 import {
-  createInstrumentChannelEntity,
   getInstrumentChannelManager,
-  InstrumentChannelEntity,
+  InstrumentChannelInstance,
   SerializableInstrumentChannel,
-} from './instrumentChannel/instrumentChannel';
+} from './instrumentChannel/serializableInstrumentChannel';
 import { errorMessages } from '../errors';
 import { getIdGenerator } from '../utils/getIdGenerator';
 import { getHighestId } from '../utils/getHighestId';
@@ -34,7 +33,7 @@ import { disable } from '../utils/disable';
 import type { EntityManagementProps } from './entityManager';
 
 export type Entities = {
-  instrumentChannels: Record<string, InstrumentChannelEntity>;
+  instrumentChannels: Record<string, InstrumentChannelInstance>;
   noteClips: Record<string, NoteClipEntity>;
   samplers: Record<string, SamplerEntity>;
   samples: Record<string, SampleEntity>;
@@ -47,9 +46,7 @@ export function createEntities(project: SerializableProject) {
   // TODO: create one way links between entities when initializing
 
   let currentEntities = {
-    instrumentChannels: createRecordById(
-      project.entities.instrumentChannels.map(createInstrumentChannelEntity),
-    ),
+    instrumentChannels: createRecordById(project.entities.instrumentChannels.map((item) => item)),
     noteClips: createRecordById(project.entities.noteClips.map(createNoteClipEntity)),
     samplers: createRecordById(project.entities.samplers.map(createSamplerEntity)),
     samples: createRecordById(project.entities.samples.map(createSampleEntity)),

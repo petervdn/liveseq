@@ -2,22 +2,16 @@ import type { CommonProps, OmitId } from '../../types';
 import type { AddEntity, EntityManagementProps, RemoveEntity } from '../entityManager';
 import { without } from '../../utils/without';
 
-export type InstrumentChannel = CommonProps & {
+export type SerializableInstrumentChannel = CommonProps & {
   samplerId: string;
   slotIds: Array<string>;
 };
 
-// ready for adding more types of channels
-export type SerializableInstrumentChannel = InstrumentChannel;
+export type InstrumentChannelInstance = SerializableInstrumentChannel;
 
-export type InstrumentChannelEntity = ReturnType<typeof createInstrumentChannelEntity>;
-
-// might be the same as config for now but for the sake of consistency and to get the interface used internally
-export const createInstrumentChannelEntity = (
-  props: SerializableInstrumentChannel,
-): InstrumentChannel => {
-  return props;
-};
+// const toInstance = (serialized: SerializableInstrumentChannel): InstrumentChannelInstance => {
+//   return serialized
+// }
 
 // MANAGER
 export type InstrumentChannelManager = {
@@ -38,7 +32,7 @@ export const getInstrumentChannelManager = ({
 }: EntityManagementProps): InstrumentChannelManager => {
   return {
     addInstrumentChannel: (channel) => {
-      return addEntity((id) => createInstrumentChannelEntity({ ...channel, id }));
+      return addEntity((id) => ({ ...channel, id }));
     },
     removeInstrumentChannel: (channelId) => {
       removeEntity(channelId);
@@ -47,7 +41,7 @@ export const getInstrumentChannelManager = ({
     },
     addSlotReference: (channelId, slotId) => {
       // TODO: validate slotId (channel id is validated by the update)
-      return updateEntity<InstrumentChannelEntity>(channelId, (channel) => {
+      return updateEntity<InstrumentChannelInstance>(channelId, (channel) => {
         return {
           ...channel,
           slotIds: [...channel.slotIds, slotId],
@@ -56,7 +50,7 @@ export const getInstrumentChannelManager = ({
     },
     removeSlotReference: (channelId, slotId) => {
       // TODO: validate slotId (channel id is validated by the update)
-      return updateEntity<InstrumentChannelEntity>(channelId, (channel) => {
+      return updateEntity<InstrumentChannelInstance>(channelId, (channel) => {
         return {
           ...channel,
           slotIds: without(channel.slotIds, slotId),

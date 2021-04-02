@@ -4,7 +4,7 @@ import type { SlotManager } from './slot/slot';
 import type { TimelineManager } from './timeline/timeline';
 import type { CommonProps, OmitId } from '../types';
 import type { SampleManager } from './sample/sample';
-import type { InstrumentChannelManager } from './instrumentChannel/instrumentChannel';
+import type { InstrumentChannelManager } from './instrumentChannel/serializableInstrumentChannel';
 import type { NoteClipManager } from './noteClip/noteClip';
 import type { SamplerManager } from './sampler/sampler';
 
