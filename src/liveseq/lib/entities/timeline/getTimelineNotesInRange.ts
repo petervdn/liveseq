@@ -10,9 +10,9 @@ import {
   subtractFromRange,
 } from '../../time/beatsRange';
 import type { Beats } from '../../types';
-import type { NoteClip } from '../clip/noteClip';
+import type { NoteClip } from '../noteClip/noteClip';
 
-export const getTimelineDuration = (timeline: SerializableTimeline): Beats => {
+const getTimelineDuration = (timeline: SerializableTimeline): Beats => {
   return timeline.duration !== undefined
     ? timeline.duration
     : timeline.clipRanges.reduce((accumulator, current) => {

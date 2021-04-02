@@ -1,6 +1,6 @@
 import type { SerializableProject } from '../project/project';
-import type { NoteClipEntity } from './clip/noteClip';
-import { createNoteClipEntity } from './clip/noteClip';
+import type { NoteClipEntity, SerializableClip } from './noteClip/noteClip';
+import { createNoteClipEntity } from './noteClip/noteClip';
 import type { TimelineEntity } from './timeline/timeline';
 import { createTimelineEntity, SerializableTimeline } from './timeline/timeline';
 import { createSamplerEntity, SamplerEntity } from './instrument/sampler';
@@ -9,7 +9,6 @@ import type { SceneEntity } from './scene/scene';
 import { createSceneEntity, SerializableScene } from './scene/scene';
 import { createRecordById } from '../utils/createRecordById';
 import type { SerializableInstrument } from './instrument/instrument';
-import type { SerializableClip } from './clip/clip';
 import type { SerializableSample } from './sample/sample';
 import {
   createInstrumentChannelEntity,

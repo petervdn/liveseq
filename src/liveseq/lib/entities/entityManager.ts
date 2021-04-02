@@ -1,5 +1,4 @@
 import type { Entities } from './entities';
-import { NoteClipManager, getNoteClipManager } from './clip/clip';
 import { getInstrumentManager, InstrumentManager } from './instrument/instrument';
 import type { SceneManager } from './scene/scene';
 import { getSlotManager, SlotManager } from './slot/slot';
@@ -17,6 +16,7 @@ import { enable } from '../utils/enable';
 import { disable } from '../utils/disable';
 import type { InstrumentChannelManager } from './instrumentChannel/instrumentChannel';
 import { getInstrumentChannelManager } from './instrumentChannel/instrumentChannel';
+import { getNoteClipManager, NoteClipManager } from './noteClip/noteClip';
 
 export type AddEntity<Props> = (props: OmitId<Props & { id: string }>) => string;
 export type RemoveEntity = (id: string) => void;

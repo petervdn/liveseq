@@ -1,5 +1,5 @@
 import type { ScheduleItem } from './player';
-import { getTimelineNotesInRange } from '../entities/timeline/timeline.utils';
+import { getTimelineNotesInRange } from '../entities/timeline/getTimelineNotesInRange';
 import { beatsToTime } from '../time/musicTime';
 import type { Entities } from '../entities/entities';
 import { getInstrumentChannelsBySlotId, getClipsByTimelineId } from '../entities/entities';
