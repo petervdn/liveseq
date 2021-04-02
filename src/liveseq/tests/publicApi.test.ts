@@ -35,18 +35,33 @@ it('returns an object with the expected keys from createLiveseq', () => {
   expect(liveseq.setIsMuted).toBeDefined();
 
   // entity manager
+  // instrument channel
   expect(liveseq.addInstrumentChannel).toBeDefined();
   expect(liveseq.removeInstrumentChannel).toBeDefined();
+  expect(liveseq.enableInstrumentChannel).toBeDefined();
+  expect(liveseq.disableInstrumentChannel).toBeDefined();
+
+  // note clip
   expect(liveseq.addNoteClip).toBeDefined();
   expect(liveseq.removeNoteClip).toBeDefined();
+
+  // sampler
   expect(liveseq.addSampler).toBeDefined();
   expect(liveseq.removeSampler).toBeDefined();
+
+  // sample
   expect(liveseq.addSample).toBeDefined();
   expect(liveseq.removeSample).toBeDefined();
+
+  // scene
   expect(liveseq.addScene).toBeDefined();
   expect(liveseq.removeScene).toBeDefined();
+
+  // slot
   expect(liveseq.addSlot).toBeDefined();
   expect(liveseq.removeSlot).toBeDefined();
+
+  // timeline
   expect(liveseq.addTimeline).toBeDefined();
   expect(liveseq.removeTimeline).toBeDefined();
 
