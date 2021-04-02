@@ -8,8 +8,6 @@ import type { CommonProps, OmitId } from '../types';
 import type { SampleManager } from './sample/sample';
 import type { SerializableProject } from '../..';
 import { createEntities } from './entities';
-import { getChannelManager } from './channel/channel';
-import type { ChannelManager } from './channel/channel';
 import { getIdGenerator } from '../utils/getIdGenerator';
 import { getSceneManager } from './scene/scene';
 import { getHighestId } from '../utils/getHighestId';
@@ -17,6 +15,8 @@ import { getSampleManager } from './sample/sample';
 import { errorMessages } from '../errors';
 import { enable } from '../utils/enable';
 import { disable } from '../utils/disable';
+import type { ChannelManager } from './instrumentChannel/instrumentChannel';
+import { getChannelManager } from './instrumentChannel/instrumentChannel';
 
 export type AddEntity<Props> = (props: OmitId<Props & { id: string }>) => string;
 export type RemoveEntity = (id: string) => void;

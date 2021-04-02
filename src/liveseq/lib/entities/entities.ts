@@ -2,9 +2,7 @@ import type { SerializableProject } from '../project/project';
 import type { NoteClipEntity } from './clip/noteClip';
 import { createNoteClipEntity } from './clip/noteClip';
 import type { TimelineEntity } from './timeline/timeline';
-import type { ChannelEntity } from './channel/channel';
 import { createTimelineEntity, SerializableTimeline } from './timeline/timeline';
-import { createInstrumentChannelEntity, SerializableChannel } from './channel/channel';
 import { createSamplerEntity, SamplerEntity } from './instrument/sampler';
 import { createSlotEntity, SerializableSlot, SlotEntity } from './slot/slot';
 import type { SceneEntity } from './scene/scene';
@@ -13,9 +11,14 @@ import { createRecordById } from '../utils/createRecordById';
 import type { SerializableInstrument } from './instrument/instrument';
 import type { SerializableClip } from './clip/clip';
 import type { SerializableSample } from './sample/sample';
+import {
+  createInstrumentChannelEntity,
+  InstrumentChannelEntity,
+  SerializableInstrumentChannel,
+} from './instrumentChannel/instrumentChannel';
 
 export type Entities = {
-  channels: Record<string, ChannelEntity>;
+  channels: Record<string, InstrumentChannelEntity>;
   timelines: Record<string, TimelineEntity>;
   clips: Record<string, NoteClipEntity>;
   instruments: Record<string, SamplerEntity>;
@@ -38,7 +41,7 @@ export function createEntities(project: SerializableProject): Entities {
 
 // Serialization
 export type SerializableEntities = {
-  channels: Array<SerializableChannel>;
+  channels: Array<SerializableInstrumentChannel>;
   instruments: Array<SerializableInstrument>;
   timelines: Array<SerializableTimeline>;
   clips: Array<SerializableClip>;
@@ -66,7 +69,7 @@ export const serializeEntities = (entities: Entities): SerializableEntities => {
 export const getChannelsBySlotId = (
   entities: Pick<Entities, 'channels'>,
   slotId: string,
-): Array<ChannelEntity> => {
+): Array<InstrumentChannelEntity> => {
   return Object.values(entities.channels).filter((channel) => {
     return channel.slotIds.includes(slotId);
   });

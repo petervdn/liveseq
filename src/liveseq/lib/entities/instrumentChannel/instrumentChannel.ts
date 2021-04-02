@@ -3,24 +3,25 @@ import type { AddEntity, EntityManagementProps, RemoveEntity } from '../entityMa
 import { without } from '../../utils/without';
 
 export type InstrumentChannel = CommonProps & {
-  type: 'instrumentChannel';
   instrumentId: string;
   slotIds: Array<string>;
 };
 
 // ready for adding more types of channels
-export type SerializableChannel = InstrumentChannel;
+export type SerializableInstrumentChannel = InstrumentChannel;
 
-export type ChannelEntity = ReturnType<typeof createInstrumentChannelEntity>;
+export type InstrumentChannelEntity = ReturnType<typeof createInstrumentChannelEntity>;
 
 // might be the same as config for now but for the sake of consistency and to get the interface used internally
-export const createInstrumentChannelEntity = (props: SerializableChannel): InstrumentChannel => {
+export const createInstrumentChannelEntity = (
+  props: SerializableInstrumentChannel,
+): InstrumentChannel => {
   return props;
 };
 
 // MANAGER
 export type ChannelManager = {
-  addChannel: AddEntity<OmitId<SerializableChannel>>;
+  addChannel: AddEntity<OmitId<SerializableInstrumentChannel>>;
   removeChannel: RemoveEntity;
   addSlotReference: (channelId: string, slotId: string) => void;
   removeSlotReference: (channelId: string, slotId: string) => void;
@@ -46,7 +47,7 @@ export const getChannelManager = ({
     },
     addSlotReference: (channelId, slotId) => {
       // TODO: validate slotId (channel id is validated by the update)
-      return updateEntity<ChannelEntity>(channelId, (channel) => {
+      return updateEntity<InstrumentChannelEntity>(channelId, (channel) => {
         return {
           ...channel,
           slotIds: [...channel.slotIds, slotId],
@@ -55,7 +56,7 @@ export const getChannelManager = ({
     },
     removeSlotReference: (channelId, slotId) => {
       // TODO: validate slotId (channel id is validated by the update)
-      return updateEntity<ChannelEntity>(channelId, (channel) => {
+      return updateEntity<InstrumentChannelEntity>(channelId, (channel) => {
         return {
           ...channel,
           slotIds: without(channel.slotIds, slotId),

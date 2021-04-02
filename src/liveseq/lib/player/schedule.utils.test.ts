@@ -12,7 +12,6 @@ export const testProject = {
       {
         id: 'channels_1',
         name: 'Channel Name',
-        type: 'instrumentChannel',
         instrumentId: 'samplers_1',
         slotIds: ['slots_1', 'slot_2'],
       },

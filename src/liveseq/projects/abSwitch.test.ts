@@ -22,14 +22,12 @@ it('abSwitch is correct', () => {
           instrumentId: 'instruments_0',
           name: 'Channel Name',
           slotIds: ['slots_0'],
-          type: 'instrumentChannel',
         },
         {
           id: 'channels_1',
           instrumentId: 'instruments_1',
           name: 'Channel Name',
           slotIds: ['slots_1'],
-          type: 'instrumentChannel',
         },
       ],
       clips: [

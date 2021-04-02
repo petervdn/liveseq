@@ -42,7 +42,6 @@ function getAddOnce() {
         id: 'channels_0',
         instrumentId: 'instruments_0',
         slotIds: ['slots_0'],
-        type: 'instrumentChannel',
       },
     ],
     clips: [{ duration: 10, id: 'clips_0', notes: [], type: 'noteClip' }],
@@ -68,13 +67,11 @@ function getAddTwice() {
         id: 'channels_0',
         instrumentId: 'instruments_0',
         slotIds: ['slots_0'],
-        type: 'instrumentChannel',
       },
       {
         id: 'channels_1',
         instrumentId: 'instruments_1',
         slotIds: ['slots_1'],
-        type: 'instrumentChannel',
       },
     ],
     clips: [
@@ -145,7 +142,6 @@ function addAllTypesOfEntities(liveseq: Liveseq) {
   });
 
   liveseq.addChannel({
-    type: 'instrumentChannel',
     instrumentId: liveseq.addInstrument({
       type: 'samplerInstrument',
     }),
