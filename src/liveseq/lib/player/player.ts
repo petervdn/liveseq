@@ -1,9 +1,9 @@
 import type { Note } from '../note/note';
 import type { TimeRange } from '../time/timeRange';
-import type { getScheduleItemsWithinRange } from './slotPlaybackState';
 import { isContextSuspended } from '../utils/isContextSuspended';
 import type { TimeInSeconds } from '../types';
 import { errorMessages } from '../errors';
+import type { getScheduleItemsWithinRange } from './getScheduleItemsWithinRange';
 
 export type ScheduleNote = Note & {
   startTime: TimeInSeconds;

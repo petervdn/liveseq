@@ -1,16 +1,14 @@
 import { createStore, StoreActions } from './store/store';
 import type { TimeRange } from './time/timeRange';
 import { BeatsRange, timeRangeToBeatsRange } from './time/beatsRange';
-import {
-  getScheduleItemsWithinRange,
-  getSlotPlaybackStatesWithinRange,
-} from './player/slotPlaybackState';
 import { createPlayer, PlayerActions, ScheduleNote } from './player/player';
 
 import { createProject, SerializableProject } from './project/project';
 import type { Bpm, TimeInSeconds } from './types';
 import { libraryVersion } from './meta';
 import { createEntities, Entities } from './entities/entities';
+import { getScheduleItemsWithinRange } from './player/getScheduleItemsWithinRange';
+import { getSlotPlaybackStatesWithinRange } from './player/getSlotPlaybackStatesWithinRange';
 
 export type EngineCallbacks = {
   onPlay: () => void;
