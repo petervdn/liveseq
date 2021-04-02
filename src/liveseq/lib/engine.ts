@@ -4,7 +4,7 @@ import type { TimeRange } from './time/timeRange';
 import { timeRangeToBeatsRange } from './time/beatsRange';
 import { getScheduleItemsWithinRange } from './player/slotPlaybackState';
 import { createPlayer, PlayerActions, ScheduleNote } from './player/player';
-import { createEntities, serializeEntities } from './entities/entities';
+import { createEntities } from './entities/entities';
 import { createProject, SerializableProject } from './project/project';
 import type { Bpm, TimeInSeconds } from './types';
 import { libraryVersion } from './meta';
@@ -94,7 +94,7 @@ export const createEngine = ({
 
   // SELECTORS
   const getProject = () => {
-    const serializableEntities = serializeEntities(entities.selectors.getEntities());
+    const serializableEntities = entities.serializeEntities();
     const slotPlaybackState = store.selectors.getSlotPlaybackState();
 
     return createProject({

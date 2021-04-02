@@ -42,6 +42,17 @@ export type Entities = {
   timelines: Record<string, TimelineEntity>;
 };
 
+// Serialization
+export type SerializableEntities = {
+  instrumentChannels: Array<SerializableInstrumentChannel>;
+  noteClips: Array<SerializableClip>;
+  samplers: Array<SerializableSampler>;
+  samples: Array<SerializableSample>;
+  scenes: Array<SerializableScene>;
+  slots: Array<SerializableSlot>;
+  timelines: Array<SerializableTimeline>;
+};
+
 export function createEntities(project: SerializableProject) {
   // TODO: create one way links between entities when initializing
 
@@ -156,31 +167,20 @@ export function createEntities(project: SerializableProject) {
     selectors: {
       getEntities,
     },
+    serializeEntities: (): SerializableEntities => {
+      const entities = currentEntities;
+      return {
+        instrumentChannels: Object.values(entities.instrumentChannels),
+        noteClips: Object.values(entities.noteClips),
+        samplers: Object.values(entities.samplers).map((instrument) => {
+          const { schedule, ...withoutSchedule } = instrument;
+          return withoutSchedule;
+        }),
+        samples: [],
+        scenes: Object.values(entities.scenes),
+        slots: Object.values(entities.slots),
+        timelines: Object.values(entities.timelines),
+      };
+    },
   };
 }
-
-// Serialization
-export type SerializableEntities = {
-  instrumentChannels: Array<SerializableInstrumentChannel>;
-  noteClips: Array<SerializableClip>;
-  samplers: Array<SerializableSampler>;
-  samples: Array<SerializableSample>;
-  scenes: Array<SerializableScene>;
-  slots: Array<SerializableSlot>;
-  timelines: Array<SerializableTimeline>;
-};
-
-export const serializeEntities = (entities: Entities): SerializableEntities => {
-  return {
-    instrumentChannels: Object.values(entities.instrumentChannels),
-    noteClips: Object.values(entities.noteClips),
-    samplers: Object.values(entities.samplers).map((instrument) => {
-      const { schedule, ...withoutSchedule } = instrument;
-      return withoutSchedule;
-    }),
-    samples: [],
-    scenes: Object.values(entities.scenes),
-    slots: Object.values(entities.slots),
-    timelines: Object.values(entities.timelines),
-  };
-};
