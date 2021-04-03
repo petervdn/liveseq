@@ -1,4 +1,4 @@
-import { PlaybackStates, createPlayer } from './player/player';
+import { createPlayer } from './player/player';
 import type { TimeRange } from './time/timeRange';
 import { BeatsRange, timeRangeToBeatsRange } from './time/beatsRange';
 import { createProject, SerializableProject } from './project/project';
@@ -8,11 +8,7 @@ import { createEntities } from './entities/entities';
 import { getScheduleItemsWithinRange } from './player/utils/getScheduleItemsWithinRange';
 import { getSlotPlaybackStatesWithinRange } from './player/utils/getSlotPlaybackStatesWithinRange';
 import { createMixer } from './mixer/mixer';
-import { createPubSub } from './utils/pubSub';
-import { objectValues } from './utils/objUtils';
 import type { SlotPlaybackState } from './player/slotPlaybackState';
-
-type ScheduleData = ReturnType<typeof getScheduleItemsWithinRange>;
 
 export type EngineProps = {
   project: SerializableProject;
@@ -23,26 +19,12 @@ export type EngineProps = {
 
 export type Engine = ReturnType<typeof createEngine>;
 
-export type EngineEvents = ReturnType<typeof createEngineEvents>;
-
-const createEngineEvents = () => {
-  const events = {
-    playbackChange: createPubSub<PlaybackStates>(),
-    tempoChange: createPubSub<Bpm>(),
-    onSchedule: createPubSub<ScheduleData>(),
-  };
-  return events;
-};
-
 export const createEngine = ({
   project,
   audioContext,
   lookAheadTime,
   scheduleInterval,
 }: EngineProps) => {
-  // TODO: move inside player
-  const engineEvents = createEngineEvents();
-
   const mixer = createMixer(audioContext);
   const entities = createEntities({
     project,
@@ -71,14 +53,10 @@ export const createEngine = ({
 
   const player = createPlayer({
     getScheduleItems,
-    onSchedule: (info) => {
-      engineEvents.onSchedule.dispatch(info);
-    },
     audioContext,
     lookAheadTime,
     scheduleInterval,
     initialState: project.initialState,
-    engineEvents,
   });
 
   // SELECTORS
@@ -119,8 +97,6 @@ export const createEngine = ({
   // CORE
   const dispose = () => {
     player.dispose();
-
-    objectValues(engineEvents).forEach((pubSub) => pubSub.dispose());
   };
 
   return {
@@ -131,9 +107,9 @@ export const createEngine = ({
     pause: player.pause,
     stop: player.stop,
     getPlaybackState: player.getPlaybackState,
-    onPlaybackChange: engineEvents.playbackChange.subscribe,
-    onTempoChange: engineEvents.tempoChange.subscribe,
-    onSchedule: engineEvents.onSchedule.subscribe,
+    onPlaybackChange: player.onPlaybackChange,
+    onTempoChange: player.onTempoChange,
+    onSchedule: player.onSchedule,
     setTempo: player.setTempo,
     setIsMuted: player.setIsMuted,
     addSceneToQueue: player.addSceneToQueue,

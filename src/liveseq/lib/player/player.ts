@@ -1,7 +1,7 @@
 import type { Note } from '../note/note';
 import type { TimeRange } from '../time/timeRange';
 import { isContextSuspended } from '../utils/isContextSuspended';
-import type { TimeInSeconds, Bpm } from '../types';
+import type { Bpm, TimeInSeconds } from '../types';
 import { errorMessages } from '../errors';
 import type { getScheduleItemsWithinRange } from './utils/getScheduleItemsWithinRange';
 import type { Instrument } from '../entities/instrumentChannel';
@@ -13,7 +13,8 @@ import {
   removeScenesFromQueue,
   SlotPlaybackState,
 } from './slotPlaybackState';
-import type { EngineEvents } from '../engine';
+import { createPubSub } from '../utils/pubSub';
+import { objectValues } from '../utils/objUtils';
 
 export type ScheduleNote = Note & {
   startTime: TimeInSeconds;
@@ -27,6 +28,17 @@ export type ScheduleItem = {
   instrument: Instrument;
 };
 
+type ScheduleData = ReturnType<typeof getScheduleItemsWithinRange>;
+
+export const createEngineEvents = () => {
+  const events = {
+    onPlaybackChange: createPubSub<PlaybackStates>(),
+    onTempoChange: createPubSub<Bpm>(),
+    onSchedule: createPubSub<ScheduleData>(),
+  };
+  return events;
+};
+
 export type PlayerProps = {
   audioContext: AudioContext;
   lookAheadTime: TimeInSeconds;
@@ -38,9 +50,7 @@ export type PlayerProps = {
     currentBpm: Bpm,
     currentSlotPlaybackState: SlotPlaybackState,
   ) => ReturnType<typeof getScheduleItemsWithinRange>;
-  onSchedule: (value: ReturnType<typeof getScheduleItemsWithinRange>) => void;
   initialState: Partial<PlayerState>;
-  engineEvents: EngineEvents;
 };
 
 export type PlaybackStates = 'playing' | 'paused' | 'stopped';
@@ -57,10 +67,9 @@ export const createPlayer = ({
   getScheduleItems,
   scheduleInterval,
   lookAheadTime,
-  onSchedule,
-  engineEvents,
   initialState = {},
 }: PlayerProps) => {
+  const engineEvents = createEngineEvents();
   let playStartTime: number | null = null;
   let timeoutId: number | null = null;
 
@@ -118,7 +127,7 @@ export const createPlayer = ({
       playbackState,
     });
 
-    engineEvents.playbackChange.dispatch(playbackState);
+    engineEvents.onPlaybackChange.dispatch(playbackState);
   };
 
   const addSceneToQueue = (scene: QueuedScene) => {
@@ -151,7 +160,7 @@ export const createPlayer = ({
       tempo: bpm,
     });
 
-    engineEvents.tempoChange.dispatch(bpm);
+    engineEvents.onTempoChange.dispatch(bpm);
   };
 
   const setSlotPlaybackState = (slotPlaybackState: SlotPlaybackState) => {
@@ -186,8 +195,7 @@ export const createPlayer = ({
     const { scheduleItems } = stuff;
 
     setSlotPlaybackState(stuff.nextSlotPlaybackState);
-
-    onSchedule(stuff);
+    engineEvents.onSchedule.dispatch(stuff);
 
     // TODO: this will grow indefinitely so we need to clean up
     previouslyScheduledNoteIds = previouslyScheduledNoteIds.concat(
@@ -239,6 +247,7 @@ export const createPlayer = ({
   // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
   const dispose = () => {
     stop();
+    objectValues(engineEvents).forEach((pubSub) => pubSub.dispose());
     // TODO: we probably want to do some more stuff
   };
 
@@ -251,6 +260,9 @@ export const createPlayer = ({
     getPlaybackState,
     getSlotPlaybackState,
     getTempo,
+    onPlaybackChange: engineEvents.onPlaybackChange.subscribe,
+    onSchedule: engineEvents.onSchedule.subscribe,
+    onTempoChange: engineEvents.onTempoChange.subscribe,
     pause,
     play,
     removeSceneFromQueue,
