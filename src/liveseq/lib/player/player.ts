@@ -39,14 +39,13 @@ export type PlayerProps = {
     currentSlotPlaybackState: SlotPlaybackState,
   ) => ReturnType<typeof getScheduleItemsWithinRange>;
   onSchedule: (value: ReturnType<typeof getScheduleItemsWithinRange>) => void;
-  initialState: Partial<LiveseqState>;
+  initialState: Partial<PlayerState>;
   engineEvents: EngineEvents;
 };
 
 export type PlaybackStates = 'playing' | 'paused' | 'stopped';
 
-// TODO: rename to PlayerState
-export type LiveseqState = {
+export type PlayerState = {
   playbackState: PlaybackStates;
   tempo: Bpm;
   slotPlaybackState: SlotPlaybackState;
@@ -65,7 +64,7 @@ export const createPlayer = ({
   let playStartTime: number | null = null;
   let timeoutId: number | null = null;
 
-  let state: LiveseqState = {
+  let state: PlayerState = {
     playbackState: 'stopped',
     tempo: 120 as Bpm,
     slotPlaybackState: createSlotPlaybackState(), // TODO: this line always executes
@@ -74,7 +73,7 @@ export const createPlayer = ({
   };
 
   // UTILS
-  const setState = (newState: Partial<LiveseqState>) => {
+  const setState = (newState: Partial<PlayerState>) => {
     // mutation!
     state = {
       ...state,
@@ -112,7 +111,6 @@ export const createPlayer = ({
     return state.slotPlaybackState;
   };
 
-  // ACTIONS
   const setPlaybackState = (playbackState: PlaybackStates) => {
     if (state.playbackState === playbackState) return;
 
@@ -137,6 +135,7 @@ export const createPlayer = ({
     });
   };
 
+  // TODO: move to mixer
   const setIsMuted = (isMuted: boolean) => {
     if (getIsMuted() === isMuted) return;
 
@@ -160,8 +159,6 @@ export const createPlayer = ({
       slotPlaybackState,
     });
   };
-
-  // CORE
 
   // todo: probably make this an object for more efficient lookup
   // todo: how does this work when slots are played again later on (and loop count is reset)
@@ -240,7 +237,10 @@ export const createPlayer = ({
   };
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
-  const dispose = () => {};
+  const dispose = () => {
+    stop();
+    // TODO: we probably want to do some more stuff
+  };
 
   return {
     addSceneToQueue,

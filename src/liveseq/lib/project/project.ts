@@ -1,4 +1,4 @@
-import type { LiveseqState } from '../player/player';
+import type { PlayerState } from '../player/player';
 import { libraryVersion } from '../meta';
 import { createSlotPlaybackState } from '../player/slotPlaybackState';
 import { validateProject } from './validateProject';
@@ -8,7 +8,7 @@ import type { SerializableEntities } from '../entities/entities';
 export type SerializableProject = {
   libraryVersion: number;
   name: string;
-  initialState: Partial<LiveseqState>;
+  initialState: Partial<PlayerState>;
   entities: SerializableEntities;
 };
 
