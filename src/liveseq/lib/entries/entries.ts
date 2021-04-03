@@ -4,6 +4,8 @@ import { getIdGenerator } from '../utils/getIdGenerator';
 import { getHighestId } from '../utils/getHighestId';
 import { enable } from '../utils/enable';
 import { disable } from '../utils/disable';
+import { objectValues } from '../utils/objUtils';
+import { createPubSub } from '../utils/pubSub';
 
 // TODO: rename Instance to Entity
 export type EntriesInstance<
@@ -15,12 +17,14 @@ export type EntriesInstance<
   create: (serializable: OmitId<Serializable>) => string;
   encode: (id: string) => Serializable;
   getRecord: () => Record<string, Instance & Extra>;
+  getList: () => Array<Instance & Extra>;
   get: (id: string) => Instance & Extra;
   remove: (id: string) => void;
   update: (id: string, update: (entity: Instance & Extra) => Instance & Extra) => void;
   enable: (id: string) => void;
   disable: (id: string) => void;
   dispose: () => void;
+  subscribe: (callback: () => void) => () => void;
 };
 
 type Entries<T> = Record<string, Record<string, T>>;
@@ -52,6 +56,10 @@ export const createEntries = <
 
   const getRecord = () => {
     return currentEntries[key];
+  };
+
+  const getList = () => {
+    return objectValues(getRecord());
   };
 
   const setEntries = (entities: Record<string, Instance & Extra>) => {
@@ -96,13 +104,17 @@ export const createEntries = <
     });
   };
 
+  const pubSub = createPubSub();
+
   const dispose = () => {
+    pubSub.dispose();
     setEntries({});
   };
 
   const entriesInstance: EntriesInstance<Instance, Serializable, Extra> = {
     get,
     getRecord,
+    getList,
     add,
     remove,
     update,
@@ -111,6 +123,7 @@ export const createEntries = <
     // TODO: fix casts
     create: (serializable) => add(decode(serializable as Serializable) as Instance & Extra),
     encode: (id) => encode(get(id)),
+    subscribe: pubSub.subscribe,
     dispose,
   };
 

@@ -1,9 +1,8 @@
 import { createContext, useContext, useMemo } from 'react';
-import type { SubscribableLiveseq } from '../lib/subscribableLiveseq';
-import { createSubscribableLiveseq } from '../lib/subscribableLiveseq';
-import type { LiveseqProps } from '..';
+import type { Liveseq, LiveseqProps } from '..';
+import { createLiveseq } from '..';
 
-const liveseqContext = createContext<SubscribableLiveseq>({} as SubscribableLiveseq);
+const liveseqContext = createContext<Liveseq>({} as Liveseq);
 
 type LiveseqProvider = ({ children }: { children: React.ReactNode }) => JSX.Element;
 
@@ -12,8 +11,8 @@ export const useLiveseq = (props: LiveseqProps) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const initialProps = useMemo(() => props, []);
 
-  const liveseq = useMemo<SubscribableLiveseq>(() => {
-    return createSubscribableLiveseq(initialProps);
+  const liveseq = useMemo<Liveseq>(() => {
+    return createLiveseq(initialProps);
   }, [initialProps]);
 
   const LiveseqProvider = useMemo<LiveseqProvider>(() => {

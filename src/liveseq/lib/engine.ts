@@ -1,63 +1,47 @@
-import { createStore, StoreActions } from './store/store';
+import { createStore, PlaybackStates } from './player/store';
 import type { TimeRange } from './time/timeRange';
 import { BeatsRange, timeRangeToBeatsRange } from './time/beatsRange';
-import { createPlayer, PlayerActions, ScheduleNote } from './player/player';
+import { createPlayer } from './player/player';
 import { createProject, SerializableProject } from './project/project';
 import type { Bpm, TimeInSeconds } from './types';
 import { libraryVersion } from './meta';
-import { createEntities, Entities } from './entities/entities';
+import { createEntities } from './entities/entities';
 import { getScheduleItemsWithinRange } from './player/utils/getScheduleItemsWithinRange';
 import { getSlotPlaybackStatesWithinRange } from './player/utils/getSlotPlaybackStatesWithinRange';
 import { createMixer } from './mixer/mixer';
+import { createPubSub } from './utils/pubSub';
+import { objectValues } from './utils/objUtils';
 
-export type EngineCallbacks = {
-  onPlay: () => void;
-  onPause: () => void;
-  onStop: () => void;
-  onTempoChange: () => void;
-  onSchedule: (info: ReturnType<typeof getScheduleItemsWithinRange>) => void;
-};
+type ScheduleData = ReturnType<typeof getScheduleItemsWithinRange>;
 
-export type EngineProps = EngineCallbacks & {
+export type EngineProps = {
   project: SerializableProject;
   audioContext: AudioContext;
   lookAheadTime: TimeInSeconds;
   scheduleInterval: TimeInSeconds;
 };
 
-export type EngineActions = PlayerActions &
-  Pick<StoreActions, 'setIsMuted' | 'setTempo' | 'addSceneToQueue' | 'removeSceneFromQueue'> &
-  Entities;
+export type Engine = ReturnType<typeof createEngine>;
 
-// TODO: do similar to EngineActions
-export type EngineSelectors = {
-  getTempo: () => Bpm;
-  getScheduleItemsInfo: (timeRange: TimeRange) => Array<{ notes: Array<ScheduleNote> }>;
-  getIsPlaying: () => boolean;
-  getIsPaused: () => boolean;
-  getIsStopped: () => boolean;
-  getProject: () => SerializableProject;
-  getAudioContext: () => AudioContext;
-  getIsMuted: () => void;
-  getSlotPlaybackStatesWithinRange: (
-    beatsRange: BeatsRange,
-  ) => ReturnType<typeof getSlotPlaybackStatesWithinRange>;
-};
+export type EngineEvents = ReturnType<typeof createEngineEvents>;
 
-// for now it's flat, maybe could use the same pattern as used internally of having actions and selectors in their own keys
-export type Engine = EngineActions &
-  EngineSelectors & {
-    dispose: () => void;
+const createEngineEvents = () => {
+  const events = {
+    playbackChange: createPubSub<PlaybackStates>(),
+    tempoChange: createPubSub<Bpm>(),
+    onSchedule: createPubSub<ScheduleData>(),
   };
+  return events;
+};
 
 export const createEngine = ({
   project,
   audioContext,
   lookAheadTime,
   scheduleInterval,
-  ...callbacks
-}: EngineProps): Engine => {
-  const store = createStore(project.initialState, callbacks);
+}: EngineProps) => {
+  const engineEvents = createEngineEvents();
+  const store = createStore(project.initialState, engineEvents);
   const mixer = createMixer(audioContext);
   const entities = createEntities({
     project,
@@ -88,7 +72,7 @@ export const createEngine = ({
     getScheduleItems,
     onSchedule: (info) => {
       store.actions.setSlotPlaybackState(info.nextSlotPlaybackState);
-      callbacks.onSchedule(info);
+      engineEvents.onSchedule.dispatch(info);
     },
     onPlay: () => store.actions.setPlaybackState('playing'),
     onPause: () => store.actions.setPlaybackState('paused'),
@@ -129,12 +113,19 @@ export const createEngine = ({
   const dispose = () => {
     player.dispose();
     store.dispose();
+
+    objectValues(engineEvents).forEach((pubSub) => pubSub.dispose());
   };
 
   return {
     // actions
     ...entities.getEntries(),
     ...player.actions,
+    subscribe: {
+      playbackChange: engineEvents.playbackChange.subscribe,
+      tempoChange: engineEvents.tempoChange.subscribe,
+      schedule: engineEvents.onSchedule.subscribe,
+    },
     setTempo: store.actions.setTempo,
     setIsMuted: store.actions.setIsMuted,
     addSceneToQueue: store.actions.addSceneToQueue,

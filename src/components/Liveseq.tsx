@@ -1,6 +1,7 @@
 import type React from 'react';
 import { LiveseqProps, useLiveseq } from '../liveseq';
 import { PlaybackButton } from './PlaybackButton';
+import { EntityInspector } from './EntityInspector';
 
 export const Liveseq: React.FunctionComponent<LiveseqProps> = (props) => {
   const { LiveseqProvider } = useLiveseq(props);
@@ -9,6 +10,7 @@ export const Liveseq: React.FunctionComponent<LiveseqProps> = (props) => {
     <div>
       <LiveseqProvider>
         <PlaybackButton />
+        <EntityInspector />
       </LiveseqProvider>
     </div>
   );

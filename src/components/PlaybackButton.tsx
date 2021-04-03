@@ -8,7 +8,7 @@ export const PlaybackButton: React.FunctionComponent = () => {
 
   useEffect(() => {
     const disposers = [
-      liveseq.subscribe('playbackChange', () => {
+      liveseq.subscribe.playbackChange(() => {
         setIsPlaying(liveseq.getIsPlaying());
       }),
     ];

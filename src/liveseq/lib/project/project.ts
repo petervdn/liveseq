@@ -1,4 +1,4 @@
-import type { LiveseqState } from '../store/store';
+import type { LiveseqState } from '../player/store';
 import { libraryVersion } from '../meta';
 import { createSlotPlaybackState } from '../player/slotPlaybackState';
 import { validateProject } from './validateProject';

@@ -4,12 +4,13 @@ import {
   QueuedScene,
   removeScenesFromQueue,
   SlotPlaybackState,
-} from '../player/slotPlaybackState';
-import type { EngineCallbacks } from '../engine';
+} from './slotPlaybackState';
+import type { EngineEvents } from '../engine';
 import type { Bpm } from '../types';
 
+// TODO: rename whole thing to createTransport and handle only playback states and actions
 // TODO: better naming (rename some keys in objs as well)
-type PlaybackStates = 'playing' | 'paused' | 'stopped';
+export type PlaybackStates = 'playing' | 'paused' | 'stopped';
 
 export type LiveseqState = {
   playbackState: PlaybackStates;
@@ -44,7 +45,7 @@ export type Store = {
 
 export const createStore = (
   initialState: Partial<LiveseqState> = {},
-  callbacks: EngineCallbacks,
+  engineEvents: EngineEvents,
 ): Store => {
   let state: LiveseqState = {
     playbackState: 'stopped',
@@ -97,13 +98,7 @@ export const createStore = (
       playbackState,
     });
 
-    if (getIsPlaying()) {
-      callbacks.onPlay();
-    } else if (getIsPaused()) {
-      callbacks.onPause();
-    } else if (getIsStopped()) {
-      callbacks.onStop();
-    }
+    engineEvents.playbackChange.dispatch(playbackState);
   };
 
   const addSceneToQueue = (scene: QueuedScene) => {
@@ -135,7 +130,7 @@ export const createStore = (
       tempo: bpm,
     });
 
-    callbacks.onTempoChange();
+    engineEvents.tempoChange.dispatch(bpm);
   };
 
   const setSlotPlaybackState = (slotPlaybackState: SlotPlaybackState) => {
