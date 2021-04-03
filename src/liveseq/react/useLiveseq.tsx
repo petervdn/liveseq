@@ -6,7 +6,7 @@ const liveseqContext = createContext<Liveseq>({} as Liveseq);
 
 type LiveseqProvider = ({ children }: { children: React.ReactNode }) => JSX.Element;
 
-// The idea is to use context to get liveseq deep in the tree and subscribe to it
+// use context so we can get liveseq deep in the tree and subscribe to it
 export const useLiveseq = (props: LiveseqProps) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const initialProps = useMemo(() => props, []);
