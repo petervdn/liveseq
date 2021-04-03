@@ -4,23 +4,15 @@ import { useLiveseqContext } from '../liveseq/react/useLiveseq';
 
 export const PlaybackButton: React.FunctionComponent = () => {
   const liveseq = useLiveseqContext();
-  const [isPlaying, setIsPlaying] = useState(liveseq.getIsPlaying);
+  const [playbackState, setPlaybackState] = useState(liveseq.getPlaybackState);
 
   useEffect(() => {
-    const disposers = [
-      liveseq.subscribe.playbackChange(() => {
-        setIsPlaying(liveseq.getIsPlaying());
-      }),
-    ];
-
-    return () => {
-      disposers.forEach((dispose) => dispose());
-    };
+    return liveseq.onPlaybackChange(setPlaybackState);
   }, [liveseq]);
 
   return (
     <>
-      {isPlaying ? (
+      {playbackState === 'playing' ? (
         <button
           type="button"
           onClick={() => {

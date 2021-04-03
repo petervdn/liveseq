@@ -1,11 +1,19 @@
 import type { Note } from '../note/note';
 import type { TimeRange } from '../time/timeRange';
 import { isContextSuspended } from '../utils/isContextSuspended';
-import type { TimeInSeconds } from '../types';
+import type { TimeInSeconds, Bpm } from '../types';
 import { errorMessages } from '../errors';
 import type { getScheduleItemsWithinRange } from './utils/getScheduleItemsWithinRange';
 import type { Instrument } from '../entities/instrumentChannel';
 import type { MixerChannel } from '../mixer/mixer';
+import {
+  addScenesToQueue,
+  createSlotPlaybackState,
+  QueuedScene,
+  removeScenesFromQueue,
+  SlotPlaybackState,
+} from './slotPlaybackState';
+import type { EngineEvents } from '../engine';
 
 export type ScheduleNote = Note & {
   startTime: TimeInSeconds;
@@ -27,22 +35,22 @@ export type PlayerProps = {
   getScheduleItems: (
     timeRange: TimeRange,
     previouslyScheduledNoteIds: Array<string>,
+    currentBpm: Bpm,
+    currentSlotPlaybackState: SlotPlaybackState,
   ) => ReturnType<typeof getScheduleItemsWithinRange>;
-  onPlay: () => void;
-  onPause: () => void;
-  onStop: () => void;
   onSchedule: (value: ReturnType<typeof getScheduleItemsWithinRange>) => void;
+  initialState: Partial<LiveseqState>;
+  engineEvents: EngineEvents;
 };
 
-export type PlayerActions = {
-  play: () => void;
-  pause: () => void;
-  stop: () => void;
-};
+export type PlaybackStates = 'playing' | 'paused' | 'stopped';
 
-export type Player = {
-  actions: PlayerActions;
-  dispose: () => void;
+// TODO: rename to PlayerState
+export type LiveseqState = {
+  playbackState: PlaybackStates;
+  tempo: Bpm;
+  slotPlaybackState: SlotPlaybackState;
+  isMuted: boolean;
 };
 
 export const createPlayer = ({
@@ -50,13 +58,111 @@ export const createPlayer = ({
   getScheduleItems,
   scheduleInterval,
   lookAheadTime,
-  onPlay,
-  onPause,
-  onStop,
   onSchedule,
-}: PlayerProps): Player => {
+  engineEvents,
+  initialState = {},
+}: PlayerProps) => {
   let playStartTime: number | null = null;
   let timeoutId: number | null = null;
+
+  let state: LiveseqState = {
+    playbackState: 'stopped',
+    tempo: 120 as Bpm,
+    slotPlaybackState: createSlotPlaybackState(), // TODO: this line always executes
+    isMuted: false,
+    ...initialState,
+  };
+
+  // UTILS
+  const setState = (newState: Partial<LiveseqState>) => {
+    // mutation!
+    state = {
+      ...state,
+      ...newState,
+    };
+    return state;
+  };
+
+  // SELECTORS
+  const getTempo = () => {
+    return state.tempo;
+  };
+
+  const getPlaybackState = () => {
+    return state.playbackState;
+  };
+
+  const getIsPlaying = () => {
+    return state.playbackState === 'playing';
+  };
+
+  const getIsPaused = () => {
+    return state.playbackState === 'paused';
+  };
+
+  const getIsStopped = () => {
+    return state.playbackState === 'stopped';
+  };
+
+  const getIsMuted = () => {
+    return state.isMuted;
+  };
+
+  const getSlotPlaybackState = () => {
+    return state.slotPlaybackState;
+  };
+
+  // ACTIONS
+  const setPlaybackState = (playbackState: PlaybackStates) => {
+    if (state.playbackState === playbackState) return;
+
+    setState({
+      playbackState,
+    });
+
+    engineEvents.playbackChange.dispatch(playbackState);
+  };
+
+  const addSceneToQueue = (scene: QueuedScene) => {
+    // TODO: consider duplicates
+    setState({
+      slotPlaybackState: addScenesToQueue([scene], state.slotPlaybackState),
+    });
+  };
+
+  const removeSceneFromQueue = (scene: QueuedScene) => {
+    // TODO: consider duplicates
+    setState({
+      slotPlaybackState: removeScenesFromQueue([scene], state.slotPlaybackState),
+    });
+  };
+
+  const setIsMuted = (isMuted: boolean) => {
+    if (getIsMuted() === isMuted) return;
+
+    setState({
+      isMuted,
+    });
+  };
+
+  const setTempo = (bpm: Bpm) => {
+    if (state.tempo === bpm) return;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    setState({
+      tempo: bpm,
+    });
+
+    engineEvents.tempoChange.dispatch(bpm);
+  };
+
+  const setSlotPlaybackState = (slotPlaybackState: SlotPlaybackState) => {
+    setState({
+      slotPlaybackState,
+    });
+  };
+
+  // CORE
+
   // todo: probably make this an object for more efficient lookup
   // todo: how does this work when slots are played again later on (and loop count is reset)
   let previouslyScheduledNoteIds: Array<string> = [];
@@ -77,8 +183,12 @@ export const createPlayer = ({
         end: (songTime + lookAheadTime) as TimeInSeconds,
       },
       previouslyScheduledNoteIds,
+      getTempo(),
+      getSlotPlaybackState(),
     );
     const { scheduleItems } = stuff;
+
+    setSlotPlaybackState(stuff.nextSlotPlaybackState);
 
     onSchedule(stuff);
 
@@ -101,7 +211,7 @@ export const createPlayer = ({
       playStartTime = audioContext.currentTime;
 
       schedule();
-      onPlay();
+      setPlaybackState('playing');
     };
 
     isContextSuspended(audioContext)
@@ -121,23 +231,32 @@ export const createPlayer = ({
 
     playStartTime = null;
     timeoutId !== null && window.clearTimeout(timeoutId);
-    onStop();
+    setPlaybackState('stopped');
   };
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   const pause = () => {
-    onPause();
+    setPlaybackState('paused');
   };
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
   const dispose = () => {};
 
   return {
-    actions: {
-      play,
-      stop,
-      pause,
-    },
+    addSceneToQueue,
+    getIsMuted,
+    getIsPaused,
+    getIsPlaying,
+    getIsStopped,
+    getPlaybackState,
+    getSlotPlaybackState,
+    getTempo,
+    pause,
+    play,
+    removeSceneFromQueue,
+    setIsMuted,
+    setTempo,
+    stop,
     dispose,
   };
 };

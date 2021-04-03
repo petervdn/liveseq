@@ -1,7 +1,6 @@
-import { createStore, PlaybackStates } from './player/store';
+import { PlaybackStates, createPlayer } from './player/player';
 import type { TimeRange } from './time/timeRange';
 import { BeatsRange, timeRangeToBeatsRange } from './time/beatsRange';
-import { createPlayer } from './player/player';
 import { createProject, SerializableProject } from './project/project';
 import type { Bpm, TimeInSeconds } from './types';
 import { libraryVersion } from './meta';
@@ -11,6 +10,7 @@ import { getSlotPlaybackStatesWithinRange } from './player/utils/getSlotPlayback
 import { createMixer } from './mixer/mixer';
 import { createPubSub } from './utils/pubSub';
 import { objectValues } from './utils/objUtils';
+import type { SlotPlaybackState } from './player/slotPlaybackState';
 
 type ScheduleData = ReturnType<typeof getScheduleItemsWithinRange>;
 
@@ -40,8 +40,9 @@ export const createEngine = ({
   lookAheadTime,
   scheduleInterval,
 }: EngineProps) => {
+  // TODO: move inside player
   const engineEvents = createEngineEvents();
-  const store = createStore(project.initialState, engineEvents);
+
   const mixer = createMixer(audioContext);
   const entities = createEntities({
     project,
@@ -54,9 +55,9 @@ export const createEngine = ({
   const getScheduleItems = (
     timeRange: TimeRange,
     previouslyScheduledNoteIds: Array<string> = [],
+    currentBpm: Bpm,
+    currentSlotPlaybackState: SlotPlaybackState,
   ) => {
-    const currentBpm = store.selectors.getTempo();
-    const currentSlotPlaybackState = store.selectors.getSlotPlaybackState();
     const beatsRange = timeRangeToBeatsRange(timeRange, currentBpm);
 
     return getScheduleItemsWithinRange(
@@ -71,21 +72,19 @@ export const createEngine = ({
   const player = createPlayer({
     getScheduleItems,
     onSchedule: (info) => {
-      store.actions.setSlotPlaybackState(info.nextSlotPlaybackState);
       engineEvents.onSchedule.dispatch(info);
     },
-    onPlay: () => store.actions.setPlaybackState('playing'),
-    onPause: () => store.actions.setPlaybackState('paused'),
-    onStop: () => store.actions.setPlaybackState('stopped'),
     audioContext,
     lookAheadTime,
     scheduleInterval,
+    initialState: project.initialState,
+    engineEvents,
   });
 
   // SELECTORS
   const getProject = () => {
     const serializableEntities = entities.encodeEntities();
-    const slotPlaybackState = store.selectors.getSlotPlaybackState();
+    const slotPlaybackState = player.getSlotPlaybackState();
 
     return createProject({
       ...project,
@@ -102,7 +101,12 @@ export const createEngine = ({
   // TODO: better naming
   const getScheduleItemsInfo = (timeRange: TimeRange) => {
     // TODO: allow simulating player by looping to make sure it is correct
-    return getScheduleItems(timeRange).scheduleItems.flatMap((scheduleItem) => {
+    return getScheduleItems(
+      timeRange,
+      [],
+      player.getTempo(),
+      player.getSlotPlaybackState(),
+    ).scheduleItems.flatMap((scheduleItem) => {
       return scheduleItem.notes.map((note) => {
         return {
           ...note,
@@ -115,41 +119,42 @@ export const createEngine = ({
   // CORE
   const dispose = () => {
     player.dispose();
-    store.dispose();
 
     objectValues(engineEvents).forEach((pubSub) => pubSub.dispose());
   };
 
   return {
-    // actions
+    // all entity types
     ...entities.getEntries(),
-    ...player.actions,
-    subscribe: {
-      playbackChange: engineEvents.playbackChange.subscribe,
-      tempoChange: engineEvents.tempoChange.subscribe,
-      schedule: engineEvents.onSchedule.subscribe,
-    },
-    setTempo: store.actions.setTempo,
-    setIsMuted: store.actions.setIsMuted,
-    addSceneToQueue: store.actions.addSceneToQueue,
-    removeSceneFromQueue: store.actions.removeSceneFromQueue,
-    // selectors
+    // player
+    play: player.play,
+    pause: player.pause,
+    stop: player.stop,
+    getPlaybackState: player.getPlaybackState,
+    onPlaybackChange: engineEvents.playbackChange.subscribe,
+    onTempoChange: engineEvents.tempoChange.subscribe,
+    onSchedule: engineEvents.onSchedule.subscribe,
+    setTempo: player.setTempo,
+    setIsMuted: player.setIsMuted,
+    addSceneToQueue: player.addSceneToQueue,
+    removeSceneFromQueue: player.removeSceneFromQueue,
+    getTempo: player.getTempo,
+    getIsPlaying: player.getIsPlaying,
+    getIsPaused: player.getIsPaused,
+    getIsStopped: player.getIsStopped,
+    getIsMuted: player.getIsMuted,
+    getScheduleItemsInfo,
+    // TODO: move out of here
     getSlotPlaybackStatesWithinRange: (beatsRange: BeatsRange) => {
       return getSlotPlaybackStatesWithinRange(
         beatsRange,
         entities.getEntries(),
-        store.selectors.getSlotPlaybackState(),
+        player.getSlotPlaybackState(),
       );
     },
-    getScheduleItemsInfo,
-    getTempo: store.selectors.getTempo,
-    getIsPlaying: store.selectors.getIsPlaying,
-    getIsPaused: store.selectors.getIsPaused,
-    getIsStopped: store.selectors.getIsStopped,
-    getIsMuted: store.selectors.getIsMuted,
+    // core
     getProject,
     getAudioContext,
-    // core
     dispose,
   };
 };

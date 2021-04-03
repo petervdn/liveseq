@@ -8,7 +8,7 @@ export const useScheduleInfo = (start: number, end: number) => {
   const [info, setInfo] = useState(liveseq.getScheduleItemsInfo({ start, end } as TimeRange));
 
   useEffect(() => {
-    return liveseq.subscribe.schedule((data) =>
+    return liveseq.onSchedule((data) =>
       // TODO: fix
       setInfo(liveseq.getScheduleItemsInfo((data.nextSlotPlaybackState as unknown) as TimeRange)),
     );

@@ -7,7 +7,7 @@ export const useTempo = () => {
   const [tempo, setTempoInternal] = useState(liveseq.getTempo);
 
   useEffect(() => {
-    return liveseq.subscribe.tempoChange((tempo) => setTempoInternal(tempo));
+    return liveseq.onTempoChange((tempo) => setTempoInternal(tempo));
   }, [liveseq]);
 
   const setTempo = (tempo: number) => {
