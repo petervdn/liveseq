@@ -13,8 +13,8 @@ export const Liveseq: React.FunctionComponent<LiveseqProps> = (props) => {
       <LiveseqProvider>
         <Tempo />
         <PlaybackButton />
-        <EntityInspector />
         <SchedulerInspector />
+        <EntityInspector />
       </LiveseqProvider>
     </div>
   );

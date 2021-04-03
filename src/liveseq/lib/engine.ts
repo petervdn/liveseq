@@ -101,11 +101,14 @@ export const createEngine = ({
 
   // TODO: better naming
   const getScheduleItemsInfo = (timeRange: TimeRange) => {
-    return getScheduleItems(timeRange).scheduleItems.map((scheduleItem) => {
-      return {
-        notes: scheduleItem.notes,
-        // TODO: add SerializableInstrument here as well
-      };
+    // TODO: allow simulating player by looping to make sure it is correct
+    return getScheduleItems(timeRange).scheduleItems.flatMap((scheduleItem) => {
+      return scheduleItem.notes.map((note) => {
+        return {
+          ...note,
+          ...scheduleItem.instrument,
+        };
+      });
     });
   };
 

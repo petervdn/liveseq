@@ -5,7 +5,9 @@ import type { TimeRange } from '../lib/time/timeRange';
 
 export const useScheduleInfo = () => {
   const liveseq = useLiveseqContext();
-  const [info, setInfo] = useState(liveseq.getScheduleItemsInfo({ start: 0, end: 0 } as TimeRange));
+  const [info, setInfo] = useState(
+    liveseq.getScheduleItemsInfo({ start: 0, end: 10 } as TimeRange),
+  );
 
   useEffect(() => {
     return liveseq.subscribe.schedule((data) =>
