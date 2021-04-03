@@ -1,30 +1,6 @@
 import type React from 'react';
-import { useInstrumentChannels, useScenes } from '../liveseq/react/useEntities';
-import type { CommonProps } from '../liveseq/lib/types';
-
-type EntityDetailsProps<T extends CommonProps> = {
-  title: string;
-  items: Array<T>;
-  renderDetails: (item: T) => React.ReactNode;
-};
-
-const EntityDetails = <T extends CommonProps>(props: EntityDetailsProps<T>) => {
-  return (
-    <>
-      <h3>{props.title}</h3>
-      {props.items.map((item) => {
-        return (
-          <ul key={item.id}>
-            <li>id: {item.id}</li>
-            <li>name: {item.name}</li>
-            <li>isEnabled: {String(!!item.isEnabled)}</li>
-            {props.renderDetails(item)}
-          </ul>
-        );
-      })}
-    </>
-  );
-};
+import { useInstrumentChannels, useScenes } from '../../liveseq/react/useEntities';
+import { EntityDetails } from './EntityDetails';
 
 const InstrumentChannels = () => {
   const instrumentChannels = useInstrumentChannels();
@@ -57,8 +33,19 @@ const Scenes = () => {
                 return (
                   // eslint-disable-next-line react/no-array-index-key
                   <li key={index}>
-                    {enterAction.type}:{' '}
+                    enter - {enterAction.type}:{' '}
                     {enterAction.slotIds ? enterAction.slotIds.join(',') : 'all'};
+                  </li>
+                );
+              })}
+
+            {scene.leave &&
+              scene.leave.map((leaveAction, index) => {
+                return (
+                  // eslint-disable-next-line react/no-array-index-key
+                  <li key={index}>
+                    leave - {leaveAction.type}:{' '}
+                    {leaveAction.slotIds ? leaveAction.slotIds.join(',') : 'all'};
                   </li>
                 );
               })}
