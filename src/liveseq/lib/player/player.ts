@@ -5,7 +5,7 @@ import type { TimeInSeconds } from '../types';
 import { errorMessages } from '../errors';
 import type { getScheduleItemsWithinRange } from './utils/getScheduleItemsWithinRange';
 import type { Instrument } from '../entities/instrumentChannel';
-import type { ChannelMixer } from '../mixer/mixer';
+import type { MixerChannel } from '../mixer/mixer';
 
 export type ScheduleNote = Note & {
   startTime: TimeInSeconds;
@@ -15,7 +15,7 @@ export type ScheduleNote = Note & {
 
 export type ScheduleItem = {
   notes: Array<ScheduleNote>;
-  channelMixer: ChannelMixer;
+  channelMixer: MixerChannel;
   instrument: Instrument;
 };
 

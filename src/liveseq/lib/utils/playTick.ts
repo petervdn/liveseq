@@ -1,8 +1,8 @@
 import type { Hertz } from '../note/note';
-import type { ChannelMixer } from '../mixer/mixer';
+import type { MixerChannel } from '../mixer/mixer';
 
 export const playTick = (
-  channelMixer: ChannelMixer,
+  channelMixer: MixerChannel,
   frequency: Hertz,
   atTime: number,
   releaseTime = 0.1,

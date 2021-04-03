@@ -5,7 +5,7 @@ type CreateMixerChannelProps = {
   pan: number;
 };
 
-export type ChannelMixer = ReturnType<typeof createMixerChannel>;
+export type MixerChannel = ReturnType<typeof createMixerChannel>;
 
 const createMixerChannel = ({ audioContext, masterGain, gain, pan }: CreateMixerChannelProps) => {
   const { currentTime } = audioContext;
