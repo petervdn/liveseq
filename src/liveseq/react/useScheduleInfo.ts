@@ -3,11 +3,9 @@ import { useLiveseqContext } from './useLiveseq';
 // TODO: needs to be exported from index if we plan to use it
 import type { TimeRange } from '../lib/time/timeRange';
 
-export const useScheduleInfo = () => {
+export const useScheduleInfo = (start: number, end: number) => {
   const liveseq = useLiveseqContext();
-  const [info, setInfo] = useState(
-    liveseq.getScheduleItemsInfo({ start: 0, end: 10 } as TimeRange),
-  );
+  const [info, setInfo] = useState(liveseq.getScheduleItemsInfo({ start, end } as TimeRange));
 
   useEffect(() => {
     return liveseq.subscribe.schedule((data) =>

@@ -11,9 +11,8 @@ const scaleFrequency = (value: number) => {
 };
 
 export const SchedulerInspector: React.FunctionComponent = () => {
-  const info = useScheduleInfo();
+  const info = useScheduleInfo(0, 8);
   const height = 200;
-  // 5 octaves for now
   const noteHeight = height / (12 * 2);
 
   return (
