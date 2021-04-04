@@ -11,14 +11,7 @@ import {
 } from '../../time/beatsRange';
 import type { Beats } from '../../types';
 import type { NoteClip } from '../noteClip';
-
-const getTimelineDuration = (timeline: SerializableTimeline): Beats => {
-  return timeline.duration !== undefined
-    ? timeline.duration
-    : timeline.clipRanges.reduce((accumulator, current) => {
-        return accumulator !== null && current.end > accumulator! ? current.end : accumulator;
-      }, 0 as Beats);
-};
+import { getTimelineDuration } from './getTimelineDuration';
 
 export const getTimelineNotesInRange = (
   range: BeatsRange,
