@@ -10,7 +10,7 @@ import { applyScenesToSlotPlaybackState } from './applyScenesToSlotPlaybackState
 export const getAppliedStatesForQueuedScenes = (
   beatsRange: BeatsRange,
   queuedScenesByStart: QueuedScenesByStart,
-  entities: Pick<Entities, 'scenes' | 'slots'>,
+  entities: Entities,
   slotPlaybackState: SlotPlaybackState,
 ) => {
   return Object.entries(queuedScenesByStart)

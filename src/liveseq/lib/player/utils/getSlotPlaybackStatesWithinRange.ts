@@ -8,7 +8,7 @@ import { getAppliedStatesForQueuedScenes } from './getAppliedStatesForQueuedScen
 // given a range and a slotPlaybackState, get an array of slotPlaybackState with the respective sub ranges
 export const getSlotPlaybackStatesWithinRange = (
   beatsRange: BeatsRange,
-  entities: Pick<Entities, 'scenes' | 'slots'>,
+  entities: Entities,
   slotPlaybackState: SlotPlaybackState,
 ): Array<BeatsRange & SlotPlaybackState> => {
   const queuedScenes = getQueuedScenesWithinRange(beatsRange, slotPlaybackState);

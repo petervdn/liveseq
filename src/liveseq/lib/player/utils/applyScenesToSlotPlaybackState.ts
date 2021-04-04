@@ -4,14 +4,20 @@ import type { Beats } from '../../types';
 import type { SlotPlaybackState } from '../slotPlaybackState';
 
 export const applyScenesToSlotPlaybackState = (
-  scenes: Array<Pick<SceneInstance, 'id' | 'isEnabled' | 'enter' | 'leave'>>,
-  entities: Pick<Entities, 'slots'>,
+  scenes: Array<SceneInstance>,
+  entities: Entities,
   slotPlaybackState: SlotPlaybackState,
   start: Beats,
 ): SlotPlaybackState => {
-  // TODO: consider isEnabled
+  // TODO: all of them are disabled by default, fix
+  // TODO: should be scene.getIsEnabled (we gotta pass the whole thing here)
+  // const enabledScenes = scenes.filter((scene) => true /* scene.isEnabled */);
+  const enabledScenes = scenes;
+
   // TODO: incomplete implementation, only plays
-  const appliedScenes = scenes.flatMap((scene) => {
+  const appliedScenes = enabledScenes.flatMap((scene) => {
+    // TODO: consider leave
+    // TODO: consider disabled slots
     return (scene.enter || []).flatMap((action) => {
       if (action.type === 'playSlots') {
         // if not specified we get all
@@ -33,7 +39,7 @@ export const applyScenesToSlotPlaybackState = (
 
   const playingSlots = slotPlaybackState.playingSlots.concat(appliedScenes);
 
-  const activeSceneIds = scenes.map((scene) => scene.id); // TODO: incomplete
+  const activeSceneIds = enabledScenes.map((scene) => scene.id); // TODO: incomplete
 
   return {
     ...slotPlaybackState,
