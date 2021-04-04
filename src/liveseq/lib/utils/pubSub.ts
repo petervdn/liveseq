@@ -5,7 +5,6 @@ export type PubSub<Payload> = {
 };
 
 export const createPubSub = <Payload>(): PubSub<Payload> => {
-  // TODO: use an object to find by eventName without running through the whole array
   let subscriptions: Array<(payload: Payload) => void> = [];
 
   const subscribe = (callback: (payload: Payload) => void) => {
