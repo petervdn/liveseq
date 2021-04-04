@@ -5,18 +5,14 @@ import { errorMessages } from '../errors';
 import { getScheduleItemsWithinRange } from './utils/getScheduleItemsWithinRange';
 import type { Instrument } from '../entities/instrumentChannel';
 import type { MixerChannel } from '../mixer/mixer';
-import {
-  addScenesToQueue,
-  createSlotPlaybackState,
-  QueuedScene,
-  removeScenesFromQueue,
-  SlotPlaybackState,
-} from './slotPlaybackState';
+import { createSlotPlaybackState, QueuedScene, SlotPlaybackState } from './slotPlaybackState';
 import { createPubSub } from '../utils/pubSub';
 import { objectValues } from '../utils/objUtils';
 import { BeatsRange, timeRangeToBeatsRange } from '../time/beatsRange';
 import type { Entities } from '../entities/entities';
 import { getSlotPlaybackStatesWithinRange } from './utils/getSlotPlaybackStatesWithinRange';
+import { removeScenesFromQueue } from './utils/removeScenesFromQueue';
+import { addScenesToQueue } from './utils/addScenesToQueue';
 
 export type ScheduleNote = Note & {
   startTime: TimeInSeconds;
@@ -169,6 +165,8 @@ export const createPlayer = ({
 
   // todo: probably make this an object for more efficient lookup
   // todo: how does this work when slots are played again later on (and loop count is reset)
+  // ^ we could assign new ids at every play if that is an issue
+  // but we gotta clean up based on some criteria
   let previouslyScheduledNoteIds: Array<string> = [];
 
   if (lookAheadTime <= scheduleInterval) {
