@@ -1,12 +1,13 @@
 import { playTick } from '../utils/playTick';
 import { getFrequency } from '../note/note';
-import type { CommonProps } from '../types';
+import type { CommonProps, Disposable } from '../types';
 import { createEntries } from '../entries/entries';
 import { always } from '../utils/always';
 import type { Instrument } from './instrumentChannel';
+import { noop } from '../utils/noop';
 
 export type SerializableSampler = CommonProps;
-export type SamplerInstance = Instrument & SerializableSampler;
+export type SamplerInstance = Disposable<Instrument & SerializableSampler>;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const decode = (serializable: SerializableSampler): SamplerInstance => {
@@ -23,6 +24,7 @@ export const decode = (serializable: SerializableSampler): SamplerInstance => {
         // TODO returns a "cancel" fn
       };
     },
+    dispose: noop,
   };
 };
 

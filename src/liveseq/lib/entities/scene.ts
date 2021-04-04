@@ -1,7 +1,8 @@
-import type { CommonProps } from '../types';
+import type { CommonProps, Disposable } from '../types';
 import { createEntries } from '../entries/entries';
 import { identity } from '../utils/identity';
 import { always } from '../utils/always';
+import { noop } from '../utils/noop';
 
 type PlaySlotsAction = {
   type: 'playSlots';
@@ -36,13 +37,18 @@ export type SerializableScene = CommonProps & {
   leave?: ReadonlyArray<SceneAction>; // when it becomes inactive
 };
 
-export type SceneInstance = SerializableScene;
+export type SceneInstance = Disposable<SerializableScene>;
 
 export const createSceneEntries = () => {
   // eslint-disable-next-line @typescript-eslint/ban-types
   return createEntries<'scenes', SceneInstance, SerializableScene, {}>(
     'scenes',
-    identity,
+    (serializable) => {
+      return {
+        ...serializable,
+        dispose: noop,
+      };
+    },
     identity,
     always({}),
   );

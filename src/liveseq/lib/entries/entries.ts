@@ -9,8 +9,9 @@ import { createPubSub } from '../utils/pubSub';
 
 // TODO: rename Instance to Entity
 export type EntriesInstance<
-  Instance extends CommonProps,
+  Instance extends CommonProps & { dispose: () => void },
   Serializable extends CommonProps,
+  // TODO: see if we can remove Extra by just passing everything in Instance
   Extra extends Record<string, unknown>
 > = {
   add: (instance: OmitId<Instance & Extra>) => string;
@@ -32,7 +33,7 @@ type Entries<T> = Record<string, Record<string, T>>;
 // GENERIC ENTRIES BY KEY AND ID
 export const createEntries = <
   Key extends string,
-  Instance extends CommonProps,
+  Instance extends CommonProps & { dispose: () => void },
   Serializable extends CommonProps,
   Extra extends Record<string, unknown>
 >(
@@ -108,6 +109,9 @@ export const createEntries = <
 
   const dispose = () => {
     pubSub.dispose();
+    getList().forEach((entry) => {
+      entry.dispose();
+    });
     setEntries({});
   };
 

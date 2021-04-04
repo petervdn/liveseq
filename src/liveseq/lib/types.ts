@@ -1,5 +1,6 @@
 import type { Opaque } from 'type-fest';
 
+export type Disposable<T> = T & { dispose: () => void };
 export type CommonProps = {
   id: string;
   name?: string;

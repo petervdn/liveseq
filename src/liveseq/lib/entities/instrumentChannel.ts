@@ -1,4 +1,4 @@
-import type { CommonProps } from '../types';
+import type { CommonProps, Disposable } from '../types';
 import { createEntries } from '../entries/entries';
 import { identity } from '../utils/identity';
 import { without } from '../utils/without';
@@ -15,9 +15,11 @@ export type SerializableInstrumentChannel = CommonProps & {
   slotIds: Array<string>;
 };
 
-export type InstrumentChannelInstance = SerializableInstrumentChannel & {
-  getMixerChannel: () => MixerChannel;
-};
+export type InstrumentChannelInstance = Disposable<
+  SerializableInstrumentChannel & {
+    getMixerChannel: () => MixerChannel;
+  }
+>;
 
 type ExtraMethods = {
   addSlotReference: (channelId: string, slotId: string) => void;
@@ -39,7 +41,6 @@ export const createInstrumentChannelEntries = (mixer: Mixer) => {
         getMixerChannel: () => {
           return mixerChannel;
         },
-        // TODO: this must be called
         dispose: () => {
           mixerChannel.dispose();
         },

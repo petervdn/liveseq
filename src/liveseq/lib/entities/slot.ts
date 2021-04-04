@@ -1,7 +1,8 @@
-import type { CommonProps } from '../types';
+import type { CommonProps, Disposable } from '../types';
 import { createEntries } from '../entries/entries';
 import { identity } from '../utils/identity';
 import { always } from '../utils/always';
+import { noop } from '../utils/noop';
 
 export type TimelineSlot = CommonProps & {
   type: 'timelineSlot';
@@ -10,13 +11,18 @@ export type TimelineSlot = CommonProps & {
 };
 
 export type SerializableSlot = TimelineSlot;
-export type SlotInstance = SerializableSlot;
+export type SlotInstance = Disposable<SerializableSlot>;
 
 export const createSlotEntries = () => {
   // eslint-disable-next-line @typescript-eslint/ban-types
   return createEntries<'slots', SlotInstance, SerializableSlot, {}>(
     'slots',
-    identity,
+    (serializable) => {
+      return {
+        ...serializable,
+        dispose: noop,
+      };
+    },
     identity,
     always({}),
   );
