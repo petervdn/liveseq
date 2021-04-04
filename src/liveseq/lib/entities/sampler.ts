@@ -18,6 +18,10 @@ export const decode = (serializable: SerializableSampler): SamplerInstance => {
         console.log('scheduling', note.schedulingId);
         playTick(mixer, getFrequency(note.pitch), note.startTime, note.endTime - note.startTime);
       });
+
+      return () => {
+        // TODO returns a "cancel" fn
+      };
     },
   };
 };

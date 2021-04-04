@@ -87,6 +87,8 @@ export const createPlayer = ({
     return state;
   };
 
+  let onStopCallbacks: Array<() => void> = [];
+
   // SELECTORS
   const getTempo = () => {
     return state.tempo;
@@ -210,7 +212,7 @@ export const createPlayer = ({
     );
 
     scheduleItems.forEach((item) => {
-      item.instrument.schedule(item.notes, item.channelMixer);
+      onStopCallbacks.push(item.instrument.schedule(item.notes, item.channelMixer));
     });
 
     timeoutId = window.setTimeout(() => schedule(), scheduleInterval * 1000);
@@ -237,11 +239,14 @@ export const createPlayer = ({
   };
 
   const stop = () => {
-    // todo actually stop current sounds
-
     playStartTime = null;
     timeoutId !== null && window.clearTimeout(timeoutId);
     setPlaybackState('stopped');
+
+    onStopCallbacks.forEach((callback) => {
+      callback();
+    });
+    onStopCallbacks = [];
   };
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function

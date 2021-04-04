@@ -7,8 +7,7 @@ import type { ScheduleNote } from '../player/player';
 
 export type Instrument = {
   // when the player calls instrument.schedule, it will already pass notes with time in seconds
-  // TODO: maybe the instrument returns a "cancel" fn
-  schedule: (notes: Array<ScheduleNote>, channelMixer: MixerChannel) => void;
+  schedule: (notes: Array<ScheduleNote>, channelMixer: MixerChannel) => () => void;
 };
 
 export type SerializableInstrumentChannel = CommonProps & {
