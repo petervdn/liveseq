@@ -72,7 +72,7 @@ export const createPlayer = ({
   let state: PlayerState = {
     playbackState: 'stopped',
     tempo: 120 as Bpm,
-    slotPlaybackState: createSlotPlaybackState(), // TODO: this line always executes
+    slotPlaybackState: initialState.slotPlaybackState || createSlotPlaybackState(),
     isMuted: false,
     ...initialState,
   };

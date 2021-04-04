@@ -39,6 +39,7 @@ export const applyScenesToSlotPlaybackState = (
 
   const playingSlots = slotPlaybackState.playingSlots.concat(appliedScenes);
 
+  // TODO: don't return just ids, return the obj
   const activeSceneIds = enabledScenes.map((scene) => scene.id); // TODO: incomplete
 
   return {
