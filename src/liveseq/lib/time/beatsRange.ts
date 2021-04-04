@@ -10,11 +10,11 @@ export type BeatsRange = {
 
 // todo: shouldnt a lot of these methods accept numbers regardless of them being beats?
 
-export const createRange = (start: Beats, end: Beats): BeatsRange => {
+export const createRange = (start: number, end: number): BeatsRange => {
   return {
     start,
     end,
-  };
+  } as BeatsRange;
 };
 
 export const createRangeFromDuration = (duration: Beats, start = 0 as Beats) => {

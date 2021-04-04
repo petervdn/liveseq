@@ -2,6 +2,7 @@ import type { Beats } from '../lib/types';
 import { createLiveseq } from '..';
 import { playSlots } from '../lib/entities/scene';
 import type { BeatsRange } from '../lib/time/beatsRange';
+import { createRange } from '../lib/time/beatsRange';
 
 it('getSlotPlaybackStatesWithinRange', () => {
   const liveseq = createLiveseq();
@@ -19,7 +20,7 @@ it('getSlotPlaybackStatesWithinRange', () => {
     sceneId: sceneIdA,
   });
 
-  expect(liveseq.getSlotPlaybackStatesWithinRange({ start: 0, end: 4 } as BeatsRange)).toEqual([
+  expect(liveseq.getSlotPlaybackStatesWithinRange(createRange(0, 4))).toEqual([
     {
       start: 0,
       end: 4,
@@ -48,17 +49,8 @@ it('getSlotPlaybackStatesWithinRange', () => {
       activeSceneIds: ['scenes_1'],
       end: 4,
       playingSlots: [
+        // TODO: THIS IS WRONG!!!!
         { slotId: 'slot1', start: 0 },
-        { slotId: 'get', start: 2 },
-        { slotId: 'getRecord', start: 2 },
-        { slotId: 'add', start: 2 },
-        { slotId: 'remove', start: 2 },
-        { slotId: 'update', start: 2 },
-        { slotId: 'enable', start: 2 },
-        { slotId: 'disable', start: 2 },
-        { slotId: 'create', start: 2 },
-        { slotId: 'encode', start: 2 },
-        { slotId: 'dispose', start: 2 },
       ],
       queuedScenes: [],
       start: 2,

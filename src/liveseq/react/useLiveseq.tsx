@@ -1,6 +1,6 @@
 import { createContext, useContext, useMemo } from 'react';
-import type { Liveseq, LiveseqProps } from '..';
-import { createLiveseq } from '..';
+import type { Liveseq, LiveseqProps } from '../lib/liveseq';
+import { createLiveseq } from '../lib/liveseq';
 
 const liveseqContext = createContext<Liveseq>({} as Liveseq);
 

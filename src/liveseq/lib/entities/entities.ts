@@ -56,14 +56,14 @@ const encodeEntities = (entities: Entities): SerializableEntities => {
 };
 
 export const createEntities = (props: CreateEntitiesProps) => {
-  const entries = decodeProjectEntities(props);
+  const entities = decodeProjectEntities(props);
 
   return {
     getEntries: () => {
-      return entries;
+      return entities;
     },
     encodeEntities: () => {
-      return encodeEntities(entries);
+      return encodeEntities(entities);
     },
   };
 };

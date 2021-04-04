@@ -1,14 +1,9 @@
 import { createPlayer } from './player/player';
-import type { TimeRange } from './time/timeRange';
-import { BeatsRange, timeRangeToBeatsRange } from './time/beatsRange';
 import { createProject, SerializableProject } from './project/project';
-import type { Bpm, TimeInSeconds } from './types';
+import type { TimeInSeconds } from './types';
 import { libraryVersion } from './meta';
 import { createEntities } from './entities/entities';
-import { getScheduleItemsWithinRange } from './player/utils/getScheduleItemsWithinRange';
-import { getSlotPlaybackStatesWithinRange } from './player/utils/getSlotPlaybackStatesWithinRange';
 import { createMixer } from './mixer/mixer';
-import type { SlotPlaybackState } from './player/slotPlaybackState';
 
 export type EngineProps = {
   project: SerializableProject;
@@ -30,33 +25,12 @@ export const createEngine = ({
     project,
     mixer,
   });
-
-  // UTILS
-  // TODO: better naming
-  // separate function so we can use for getScheduleItemsInfo below as it's part of the API
-  const getScheduleItems = (
-    timeRange: TimeRange,
-    previouslyScheduledNoteIds: Array<string> = [],
-    currentBpm: Bpm,
-    currentSlotPlaybackState: SlotPlaybackState,
-  ) => {
-    const beatsRange = timeRangeToBeatsRange(timeRange, currentBpm);
-
-    return getScheduleItemsWithinRange(
-      beatsRange,
-      entities.getEntries(),
-      currentBpm,
-      currentSlotPlaybackState,
-      previouslyScheduledNoteIds,
-    );
-  };
-
   const player = createPlayer({
-    getScheduleItems,
     audioContext,
     lookAheadTime,
     scheduleInterval,
     initialState: project.initialState,
+    entities: entities.getEntries(),
   });
 
   // SELECTORS
@@ -74,24 +48,6 @@ export const createEngine = ({
 
   const getAudioContext = () => {
     return audioContext;
-  };
-
-  // TODO: better naming
-  const getScheduleItemsInfo = (timeRange: TimeRange) => {
-    // TODO: allow simulating player by looping to make sure it is correct
-    return getScheduleItems(
-      timeRange,
-      [],
-      player.getTempo(),
-      player.getSlotPlaybackState(),
-    ).scheduleItems.flatMap((scheduleItem) => {
-      return scheduleItem.notes.map((note) => {
-        return {
-          ...note,
-          ...scheduleItem.instrument,
-        };
-      });
-    });
   };
 
   // CORE
@@ -119,15 +75,8 @@ export const createEngine = ({
     getIsPaused: player.getIsPaused,
     getIsStopped: player.getIsStopped,
     getIsMuted: player.getIsMuted,
-    getScheduleItemsInfo,
-    // TODO: move out of here
-    getSlotPlaybackStatesWithinRange: (beatsRange: BeatsRange) => {
-      return getSlotPlaybackStatesWithinRange(
-        beatsRange,
-        entities.getEntries(),
-        player.getSlotPlaybackState(),
-      );
-    },
+    getScheduleItemsInfo: player.getScheduleItemsInfo,
+    getSlotPlaybackStatesWithinRange: player.getSlotPlaybackStatesWithinRange,
     // core
     getProject,
     getAudioContext,

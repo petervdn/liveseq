@@ -1,9 +1,8 @@
 import type { Note } from '../note/note';
-import type { TimeRange } from '../time/timeRange';
 import { isContextSuspended } from '../utils/isContextSuspended';
 import type { Bpm, TimeInSeconds } from '../types';
 import { errorMessages } from '../errors';
-import type { getScheduleItemsWithinRange } from './utils/getScheduleItemsWithinRange';
+import { getScheduleItemsWithinRange } from './utils/getScheduleItemsWithinRange';
 import type { Instrument } from '../entities/instrumentChannel';
 import type { MixerChannel } from '../mixer/mixer';
 import {
@@ -15,6 +14,9 @@ import {
 } from './slotPlaybackState';
 import { createPubSub } from '../utils/pubSub';
 import { objectValues } from '../utils/objUtils';
+import { BeatsRange, timeRangeToBeatsRange } from '../time/beatsRange';
+import type { Entities } from '../entities/entities';
+import { getSlotPlaybackStatesWithinRange } from './utils/getSlotPlaybackStatesWithinRange';
 
 export type ScheduleNote = Note & {
   startTime: TimeInSeconds;
@@ -43,14 +45,8 @@ export type PlayerProps = {
   audioContext: AudioContext;
   lookAheadTime: TimeInSeconds;
   scheduleInterval: TimeInSeconds;
-  // called every time schedule runs to get "what" to schedule from the project
-  getScheduleItems: (
-    timeRange: TimeRange,
-    previouslyScheduledNoteIds: Array<string>,
-    currentBpm: Bpm,
-    currentSlotPlaybackState: SlotPlaybackState,
-  ) => ReturnType<typeof getScheduleItemsWithinRange>;
   initialState: Partial<PlayerState>;
+  entities: Entities;
 };
 
 export type PlaybackStates = 'playing' | 'paused' | 'stopped';
@@ -64,10 +60,10 @@ export type PlayerState = {
 
 export const createPlayer = ({
   audioContext,
-  getScheduleItems,
   scheduleInterval,
   lookAheadTime,
   initialState = {},
+  entities,
 }: PlayerProps) => {
   const engineEvents = createEngineEvents();
   let playStartTime: number | null = null;
@@ -182,18 +178,27 @@ export const createPlayer = ({
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const songTime = (audioContext.currentTime - playStartTime!) as TimeInSeconds;
 
-    // TODO: naming
-    const stuff = getScheduleItems(
+    const tempo = getTempo();
+
+    const beatsRange = timeRangeToBeatsRange(
       {
         start: songTime,
         end: (songTime + lookAheadTime) as TimeInSeconds,
       },
-      previouslyScheduledNoteIds,
-      getTempo(),
-      getSlotPlaybackState(),
+      tempo,
     );
+
+    const stuff = getScheduleItemsWithinRange(
+      beatsRange,
+      entities,
+      tempo,
+      getSlotPlaybackState(),
+      previouslyScheduledNoteIds,
+    );
+
     const { scheduleItems } = stuff;
 
+    // TODO: first calculate one and then the other so we don't need stuff to be an obj
     setSlotPlaybackState(stuff.nextSlotPlaybackState);
     engineEvents.onSchedule.dispatch(stuff);
 
@@ -251,6 +256,24 @@ export const createPlayer = ({
     // TODO: we probably want to do some more stuff
   };
 
+  // TODO: better naming
+  const getScheduleItemsInfo = (beatsRange: BeatsRange) => {
+    return getScheduleItemsWithinRange(
+      beatsRange,
+      entities,
+      getTempo(),
+      getSlotPlaybackState(),
+      previouslyScheduledNoteIds, // TODO: use []
+    ).scheduleItems.flatMap((scheduleItem) => {
+      return scheduleItem.notes.map((note) => {
+        return {
+          ...note,
+          ...scheduleItem.instrument,
+        };
+      });
+    });
+  };
+
   return {
     addSceneToQueue,
     getIsMuted,
@@ -258,6 +281,7 @@ export const createPlayer = ({
     getIsPlaying,
     getIsStopped,
     getPlaybackState,
+    getScheduleItemsInfo,
     getSlotPlaybackState,
     getTempo,
     onPlaybackChange: engineEvents.onPlaybackChange.subscribe,
@@ -266,6 +290,9 @@ export const createPlayer = ({
     pause,
     play,
     removeSceneFromQueue,
+    getSlotPlaybackStatesWithinRange: (beatsRange: BeatsRange) => {
+      return getSlotPlaybackStatesWithinRange(beatsRange, entities, getSlotPlaybackState());
+    },
     setIsMuted,
     setTempo,
     stop,
