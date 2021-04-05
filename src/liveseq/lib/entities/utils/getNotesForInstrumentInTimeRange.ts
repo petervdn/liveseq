@@ -1,4 +1,3 @@
-import type { ScheduleItem } from '../../player/player';
 import { getTimelineNotesInRange } from './getTimelineNotesInRange';
 import { beatsToTime } from '../../time/musicTime';
 import type { Entities } from '../entities';
@@ -6,6 +5,7 @@ import type { BeatsRange } from '../../time/beatsRange';
 import type { Bpm } from '../../types';
 import { getInstrumentChannelsBySlotId } from './getInstrumentChannelsBySlotId';
 import { getClipsByTimelineId } from './getClipsByTimelineId';
+import type { ScheduleItem } from '../../scheduler/scheduler';
 
 export const getNotesForInstrumentInTimeRange = (
   entities: Entities,

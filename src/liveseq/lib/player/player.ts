@@ -1,32 +1,20 @@
-import type { Note } from '../note/note';
 import { isContextSuspended } from '../utils/isContextSuspended';
 import type { Bpm, TimeInSeconds } from '../types';
 import { errorMessages } from '../errors';
-import { getScheduleItemsWithinRange } from './utils/getScheduleItemsWithinRange';
-import type { Instrument } from '../entities/instrumentChannel';
-import type { MixerChannel } from '../mixer/mixer';
-import { createSlotPlaybackState, QueuedScene, SlotPlaybackState } from './slotPlaybackState';
+import { getScheduleItemsWithinRange } from '../scheduler/utils/getScheduleItemsWithinRange';
+import {
+  createSlotPlaybackState,
+  QueuedScene,
+  SlotPlaybackState,
+} from '../scheduler/slotPlaybackState';
 import { createPubSub } from '../utils/pubSub';
 import { objectValues } from '../utils/objUtils';
 import { BeatsRange, timeRangeToBeatsRange } from '../time/beatsRange';
 import type { Entities } from '../entities/entities';
-import { getSlotPlaybackStatesWithinRange } from './utils/getSlotPlaybackStatesWithinRange';
-import { removeScenesFromQueue } from './utils/removeScenesFromQueue';
-import { addScenesToQueue } from './utils/addScenesToQueue';
-
-export type ScheduleNote = Note & {
-  startTime: TimeInSeconds;
-  endTime: TimeInSeconds;
-  schedulingId: string;
-};
-
-export type ScheduleItem = {
-  notes: Array<ScheduleNote>;
-  channelMixer: MixerChannel;
-  instrument: Instrument;
-};
-
-type ScheduleData = ReturnType<typeof getScheduleItemsWithinRange>;
+import { getSlotPlaybackStatesWithinRange } from '../scheduler/utils/getSlotPlaybackStatesWithinRange';
+import { removeScenesFromQueue } from '../scheduler/utils/removeScenesFromQueue';
+import { addScenesToQueue } from '../scheduler/utils/addScenesToQueue';
+import type { ScheduleData } from '../scheduler/scheduler';
 
 export const createEngineEvents = () => {
   const events = {

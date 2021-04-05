@@ -1,6 +1,6 @@
 import type { PlayerState } from '../player/player';
 import { libraryVersion } from '../meta';
-import { createSlotPlaybackState } from '../player/slotPlaybackState';
+import { createSlotPlaybackState } from '../scheduler/slotPlaybackState';
 import { validateProject } from './validateProject';
 
 import type { SerializableEntities } from '../entities/entities';

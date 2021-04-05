@@ -3,7 +3,7 @@ import { createEntries } from '../entries/entries';
 import { identity } from '../utils/identity';
 import { without } from '../utils/without';
 import type { MixerChannel, Mixer } from '../mixer/mixer';
-import type { ScheduleNote } from '../player/player';
+import type { ScheduleNote } from '../scheduler/scheduler';
 
 export type Instrument = {
   // when the player calls instrument.schedule, it will already pass notes with time in seconds

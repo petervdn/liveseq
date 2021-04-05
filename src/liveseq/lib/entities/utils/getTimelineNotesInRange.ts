@@ -1,6 +1,6 @@
 import type { SerializableTimeline } from '../timeline';
 import type { Note } from '../../note/note';
-import { getUniqueSchedulingId } from '../../player/utils/getUniqueSchedulingId';
+import { getUniqueSchedulingId } from '../../scheduler/utils/getUniqueSchedulingId';
 import type { BeatsRange } from '../../time/beatsRange';
 import {
   addToRange,
