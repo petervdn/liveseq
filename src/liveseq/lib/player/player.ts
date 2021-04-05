@@ -56,7 +56,9 @@ export const createPlayer = ({
   let state: PlayerState = {
     playbackState: 'stopped',
     tempo: 120 as Bpm,
+    // TODO: move slotPlaybackState to scheduler
     slotPlaybackState: initialState.slotPlaybackState || createSlotPlaybackState(),
+    // TODO: move isMuted to mixer
     isMuted: false,
     ...initialState,
   };
