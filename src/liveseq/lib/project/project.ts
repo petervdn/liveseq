@@ -1,14 +1,14 @@
 import type { PlayerState } from '../player/player';
 import { libraryVersion } from '../meta';
-import { createSlotPlaybackState } from '../scheduler/slotPlaybackState';
 import { validateProject } from './validateProject';
 
 import type { SerializableEntities } from '../entities/entities';
+import { createSlotPlaybackState, SchedulerState } from '../scheduler/scheduler';
 
 export type SerializableProject = {
   libraryVersion: number;
   name: string;
-  initialState: Partial<PlayerState>;
+  initialState: Partial<PlayerState & SchedulerState>;
   entities: SerializableEntities;
 };
 

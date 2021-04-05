@@ -1,6 +1,6 @@
-import type { Entities } from '../entities';
+import type { EntityEntries } from '../entities';
 
-export const getClipsByTimelineId = (entities: Entities, timelineId: string) => {
+export const getClipsByTimelineId = (entities: EntityEntries, timelineId: string) => {
   const timeline = entities.timelines.get(timelineId);
   return timeline.clipRanges.map((clip) => ({
     ...clip,

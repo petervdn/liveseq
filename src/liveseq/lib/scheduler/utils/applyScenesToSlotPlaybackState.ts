@@ -1,11 +1,11 @@
 import type { SceneInstance } from '../../entities/scene';
-import type { Entities } from '../../entities/entities';
+import type { EntityEntries } from '../../entities/entities';
 import type { Beats } from '../../types';
-import type { SlotPlaybackState } from '../slotPlaybackState';
+import type { SlotPlaybackState } from '../scheduler';
 
 export const applyScenesToSlotPlaybackState = (
   scenes: Array<SceneInstance>,
-  entities: Entities,
+  entities: EntityEntries,
   slotPlaybackState: SlotPlaybackState,
   start: Beats,
 ): SlotPlaybackState => {

@@ -1,5 +1,5 @@
-import type { QueuedScene, SlotPlaybackState } from '../slotPlaybackState';
 import { isSameQueuedScene } from './isSameQueuedScene';
+import type { QueuedScene, SlotPlaybackState } from '../scheduler';
 
 export const removeScenesFromQueue = (
   scenes: Array<QueuedScene>,

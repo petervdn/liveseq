@@ -1,4 +1,4 @@
-import type { QueuedScene, SlotPlaybackState } from '../slotPlaybackState';
+import type { QueuedScene, SlotPlaybackState } from '../scheduler';
 
 export const addScenesToQueue = (
   scenes: Array<QueuedScene>,

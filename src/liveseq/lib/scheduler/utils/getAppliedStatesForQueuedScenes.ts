@@ -1,17 +1,17 @@
 import { BeatsRange, createRange } from '../../time/beatsRange';
 import type { QueuedScenesByStart } from './groupQueuedScenesByStart';
-import type { Entities } from '../../entities/entities';
+import type { EntityEntries } from '../../entities/entities';
 import type { Beats } from '../../types';
-import type { SlotPlaybackState } from '../slotPlaybackState';
 import { applyScenesToSlotPlaybackState } from './applyScenesToSlotPlaybackState';
 import { removeScenesFromQueue } from './removeScenesFromQueue';
+import type { SlotPlaybackState } from '../scheduler';
 
 // TODO: better naming
 // this is probably the reason it doesn't work at all right now
 export const getAppliedStatesForQueuedScenes = (
   beatsRange: BeatsRange,
   queuedScenesByStart: QueuedScenesByStart,
-  entities: Entities,
+  entities: EntityEntries,
   slotPlaybackState: SlotPlaybackState,
 ) => {
   return Object.entries(queuedScenesByStart)

@@ -1,13 +1,13 @@
 import type { BeatsRange } from '../../time/beatsRange';
-import type { Entities } from '../../entities/entities';
+import type { EntityEntries } from '../../entities/entities';
 import type { Bpm } from '../../types';
 import { getNotesForInstrumentInTimeRange } from '../../entities/utils/getNotesForInstrumentInTimeRange';
-import type { SlotPlaybackState } from '../slotPlaybackState';
 import { getSlotPlaybackStatesWithinRange } from './getSlotPlaybackStatesWithinRange';
+import type { SlotPlaybackState } from '../scheduler';
 
 export const getScheduleItemsWithinRange = (
   beatsRange: BeatsRange,
-  entities: Entities,
+  entities: EntityEntries,
   bpm: Bpm,
   slotPlaybackState: SlotPlaybackState,
   previouslyScheduledNoteIds: Array<string>,

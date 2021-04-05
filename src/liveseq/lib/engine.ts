@@ -4,6 +4,7 @@ import type { TimeInSeconds } from './types';
 import { libraryVersion } from './meta';
 import { createEntities } from './entities/entities';
 import { createMixer } from './mixer/mixer';
+import { createScheduler } from './scheduler/scheduler';
 
 export type EngineProps = {
   project: SerializableProject;
@@ -25,18 +26,25 @@ export const createEngine = ({
     project,
     mixer,
   });
+  const entityEntries = entities.getEntries();
+  const scheduler = createScheduler({
+    entityEntries,
+    initialState: project.initialState,
+  });
+
   const player = createPlayer({
+    scheduler,
     audioContext,
     lookAheadTime,
     scheduleInterval,
     initialState: project.initialState,
-    entities: entities.getEntries(),
+    entityEntries,
   });
 
   // SELECTORS
   const getProject = () => {
     const serializableEntities = entities.encodeEntities();
-    const slotPlaybackState = player.getSlotPlaybackState();
+    const slotPlaybackState = scheduler.getSlotPlaybackState();
 
     return createProject({
       ...project,
@@ -55,6 +63,7 @@ export const createEngine = ({
     player.dispose();
   };
 
+  // TODO: export everything here with spread and select what we want to expose in createLiveseq
   return {
     // all entity types
     ...entities.getEntries(),
@@ -68,15 +77,15 @@ export const createEngine = ({
     onSchedule: player.onSchedule,
     setTempo: player.setTempo,
     setIsMuted: player.setIsMuted,
-    addSceneToQueue: player.addSceneToQueue,
-    removeSceneFromQueue: player.removeSceneFromQueue,
+    addSceneToQueue: scheduler.addSceneToQueue,
+    removeSceneFromQueue: scheduler.removeSceneFromQueue,
     getTempo: player.getTempo,
     getIsPlaying: player.getIsPlaying,
     getIsPaused: player.getIsPaused,
     getIsStopped: player.getIsStopped,
     getIsMuted: player.getIsMuted,
     getScheduleItemsInfo: player.getScheduleItemsInfo,
-    getSlotPlaybackStatesWithinRange: player.getSlotPlaybackStatesWithinRange,
+    getSlotPlaybackStatesWithinRange: scheduler.getSlotPlaybackStatesWithinRange,
     // core
     getProject,
     getAudioContext,

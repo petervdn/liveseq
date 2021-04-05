@@ -34,7 +34,7 @@ const decodeProjectEntities = (props: CreateEntitiesProps) => {
   return entries;
 };
 
-export type Entities = ReturnType<typeof decodeProjectEntities>;
+export type EntityEntries = ReturnType<typeof decodeProjectEntities>;
 
 export type SerializableEntities = {
   instrumentChannels: Array<SerializableInstrumentChannel>;
@@ -46,7 +46,7 @@ export type SerializableEntities = {
   timelines: Array<SerializableTimeline>;
 };
 
-const encodeEntities = (entities: Entities): SerializableEntities => {
+const encodeEntities = (entities: EntityEntries): SerializableEntities => {
   return objectEntries(entities).reduce((accumulator, [key, entity]) => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore

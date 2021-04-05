@@ -2,21 +2,13 @@ import { isContextSuspended } from '../utils/isContextSuspended';
 import type { Bpm, TimeInSeconds } from '../types';
 import { errorMessages } from '../errors';
 import { getScheduleItemsWithinRange } from '../scheduler/utils/getScheduleItemsWithinRange';
-import {
-  createSlotPlaybackState,
-  QueuedScene,
-  SlotPlaybackState,
-} from '../scheduler/slotPlaybackState';
 import { createPubSub } from '../utils/pubSub';
 import { objectValues } from '../utils/objUtils';
 import { BeatsRange, timeRangeToBeatsRange } from '../time/beatsRange';
-import type { Entities } from '../entities/entities';
-import { getSlotPlaybackStatesWithinRange } from '../scheduler/utils/getSlotPlaybackStatesWithinRange';
-import { removeScenesFromQueue } from '../scheduler/utils/removeScenesFromQueue';
-import { addScenesToQueue } from '../scheduler/utils/addScenesToQueue';
-import type { ScheduleData } from '../scheduler/scheduler';
+import type { EntityEntries } from '../entities/entities';
+import type { ScheduleData, Scheduler } from '../scheduler/scheduler';
 
-export const createEngineEvents = () => {
+export const createPlayerEvents = () => {
   const events = {
     onPlaybackChange: createPubSub<PlaybackStates>(),
     onTempoChange: createPubSub<Bpm>(),
@@ -30,7 +22,8 @@ export type PlayerProps = {
   lookAheadTime: TimeInSeconds;
   scheduleInterval: TimeInSeconds;
   initialState: Partial<PlayerState>;
-  entities: Entities;
+  entityEntries: EntityEntries;
+  scheduler: Scheduler;
 };
 
 export type PlaybackStates = 'playing' | 'paused' | 'stopped';
@@ -38,7 +31,6 @@ export type PlaybackStates = 'playing' | 'paused' | 'stopped';
 export type PlayerState = {
   playbackState: PlaybackStates;
   tempo: Bpm;
-  slotPlaybackState: SlotPlaybackState;
   isMuted: boolean;
 };
 
@@ -47,17 +39,16 @@ export const createPlayer = ({
   scheduleInterval,
   lookAheadTime,
   initialState = {},
-  entities,
+  entityEntries,
+  scheduler,
 }: PlayerProps) => {
-  const engineEvents = createEngineEvents();
+  const engineEvents = createPlayerEvents();
   let playStartTime: number | null = null;
   let timeoutId: number | null = null;
 
   let state: PlayerState = {
     playbackState: 'stopped',
     tempo: 120 as Bpm,
-    // TODO: move slotPlaybackState to scheduler
-    slotPlaybackState: initialState.slotPlaybackState || createSlotPlaybackState(),
     // TODO: move isMuted to mixer
     isMuted: false,
     ...initialState,
@@ -100,10 +91,6 @@ export const createPlayer = ({
     return state.isMuted;
   };
 
-  const getSlotPlaybackState = () => {
-    return state.slotPlaybackState;
-  };
-
   const setPlaybackState = (playbackState: PlaybackStates) => {
     if (state.playbackState === playbackState) return;
 
@@ -112,20 +99,6 @@ export const createPlayer = ({
     });
 
     engineEvents.onPlaybackChange.dispatch(playbackState);
-  };
-
-  const addSceneToQueue = (scene: QueuedScene) => {
-    // TODO: consider duplicates
-    setState({
-      slotPlaybackState: addScenesToQueue([scene], state.slotPlaybackState),
-    });
-  };
-
-  const removeSceneFromQueue = (scene: QueuedScene) => {
-    // TODO: consider duplicates
-    setState({
-      slotPlaybackState: removeScenesFromQueue([scene], state.slotPlaybackState),
-    });
   };
 
   // TODO: move to mixer
@@ -147,12 +120,7 @@ export const createPlayer = ({
     engineEvents.onTempoChange.dispatch(bpm);
   };
 
-  const setSlotPlaybackState = (slotPlaybackState: SlotPlaybackState) => {
-    setState({
-      slotPlaybackState,
-    });
-  };
-
+  // move to scheduler
   // todo: probably make this an object for more efficient lookup
   // todo: how does this work when slots are played again later on (and loop count is reset)
   // ^ we could assign new ids at every play if that is an issue
@@ -163,6 +131,7 @@ export const createPlayer = ({
     throw new Error(errorMessages.invalidLookahead());
   }
 
+  // move to scheduler
   const schedule = () => {
     // playStartTime should always be defined when playing
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -180,16 +149,16 @@ export const createPlayer = ({
 
     const stuff = getScheduleItemsWithinRange(
       beatsRange,
-      entities,
+      entityEntries,
       tempo,
-      getSlotPlaybackState(),
+      scheduler.getSlotPlaybackState(),
       previouslyScheduledNoteIds,
     );
 
     const { scheduleItems } = stuff;
 
     // TODO: first calculate one and then the other so we don't need stuff to be an obj
-    setSlotPlaybackState(stuff.nextSlotPlaybackState);
+    scheduler.setSlotPlaybackState(stuff.nextSlotPlaybackState);
     engineEvents.onSchedule.dispatch(stuff);
 
     // TODO: this will grow indefinitely so we need to clean up
@@ -249,13 +218,14 @@ export const createPlayer = ({
     // TODO: we probably want to do some more stuff
   };
 
+  // TODO: move to scheduler
   // TODO: better naming
   const getScheduleItemsInfo = (beatsRange: BeatsRange) => {
     return getScheduleItemsWithinRange(
       beatsRange,
-      entities,
+      entityEntries,
       getTempo(),
-      getSlotPlaybackState(),
+      scheduler.getSlotPlaybackState(),
       previouslyScheduledNoteIds, // TODO: use []
     ).scheduleItems.flatMap((scheduleItem) => {
       return scheduleItem.notes.map((note) => {
@@ -268,24 +238,18 @@ export const createPlayer = ({
   };
 
   return {
-    addSceneToQueue,
     getIsMuted,
     getIsPaused,
     getIsPlaying,
     getIsStopped,
     getPlaybackState,
     getScheduleItemsInfo,
-    getSlotPlaybackState,
     getTempo,
     onPlaybackChange: engineEvents.onPlaybackChange.subscribe,
     onSchedule: engineEvents.onSchedule.subscribe,
     onTempoChange: engineEvents.onTempoChange.subscribe,
     pause,
     play,
-    removeSceneFromQueue,
-    getSlotPlaybackStatesWithinRange: (beatsRange: BeatsRange) => {
-      return getSlotPlaybackStatesWithinRange(beatsRange, entities, getSlotPlaybackState());
-    },
     setIsMuted,
     setTempo,
     stop,
