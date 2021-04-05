@@ -65,5 +65,8 @@ export const createEntities = (props: CreateEntitiesProps) => {
     encodeEntities: () => {
       return encodeEntities(entities);
     },
+    dispose: () => {
+      objectValues(entities).forEach((entity) => entity.dispose());
+    },
   };
 };

@@ -4,17 +4,25 @@ import { errorMessages } from '../errors';
 import { getScheduleItemsWithinRange } from '../scheduler/utils/getScheduleItemsWithinRange';
 import { createPubSub } from '../utils/pubSub';
 import { objectValues } from '../utils/objUtils';
-import { BeatsRange, timeRangeToBeatsRange } from '../time/beatsRange';
+import type { BeatsRange } from '../time/beatsRange';
 import type { EntityEntries } from '../entities/entities';
-import type { ScheduleData, Scheduler } from '../scheduler/scheduler';
+import type { Scheduler } from '../scheduler/scheduler';
 
+// TODO: this is a bit repeated in scheduler
 export const createPlayerEvents = () => {
   const events = {
     onPlaybackChange: createPubSub<PlaybackStates>(),
     onTempoChange: createPubSub<Bpm>(),
-    onSchedule: createPubSub<ScheduleData>(),
   };
-  return events;
+
+  const dispose = () => {
+    objectValues(events).forEach((pubSub) => pubSub.dispose());
+  };
+
+  return {
+    ...events,
+    dispose,
+  };
 };
 
 export type PlayerProps = {
@@ -42,9 +50,12 @@ export const createPlayer = ({
   entityEntries,
   scheduler,
 }: PlayerProps) => {
-  const engineEvents = createPlayerEvents();
+  if (lookAheadTime <= scheduleInterval) {
+    throw new Error(errorMessages.invalidLookahead());
+  }
+
+  const playerEvents = createPlayerEvents();
   let playStartTime: number | null = null;
-  let timeoutId: number | null = null;
 
   let state: PlayerState = {
     playbackState: 'stopped',
@@ -53,6 +64,8 @@ export const createPlayer = ({
     isMuted: false,
     ...initialState,
   };
+
+  let onStopHandlers: Array<() => void> = [];
 
   // UTILS
   const setState = (newState: Partial<PlayerState>) => {
@@ -63,8 +76,6 @@ export const createPlayer = ({
     };
     return state;
   };
-
-  let onStopCallbacks: Array<() => void> = [];
 
   // SELECTORS
   const getTempo = () => {
@@ -87,10 +98,6 @@ export const createPlayer = ({
     return state.playbackState === 'stopped';
   };
 
-  const getIsMuted = () => {
-    return state.isMuted;
-  };
-
   const setPlaybackState = (playbackState: PlaybackStates) => {
     if (state.playbackState === playbackState) return;
 
@@ -98,7 +105,12 @@ export const createPlayer = ({
       playbackState,
     });
 
-    engineEvents.onPlaybackChange.dispatch(playbackState);
+    playerEvents.onPlaybackChange.dispatch(playbackState);
+  };
+
+  // TODO: move to mixer
+  const getIsMuted = () => {
+    return state.isMuted;
   };
 
   // TODO: move to mixer
@@ -117,69 +129,20 @@ export const createPlayer = ({
       tempo: bpm,
     });
 
-    engineEvents.onTempoChange.dispatch(bpm);
+    playerEvents.onTempoChange.dispatch(bpm);
   };
 
-  // move to scheduler
-  // todo: probably make this an object for more efficient lookup
-  // todo: how does this work when slots are played again later on (and loop count is reset)
-  // ^ we could assign new ids at every play if that is an issue
-  // but we gotta clean up based on some criteria
-  let previouslyScheduledNoteIds: Array<string> = [];
-
-  if (lookAheadTime <= scheduleInterval) {
-    throw new Error(errorMessages.invalidLookahead());
-  }
-
-  // move to scheduler
-  const schedule = () => {
-    // playStartTime should always be defined when playing
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const songTime = (audioContext.currentTime - playStartTime!) as TimeInSeconds;
-
-    const tempo = getTempo();
-
-    const beatsRange = timeRangeToBeatsRange(
-      {
-        start: songTime,
-        end: (songTime + lookAheadTime) as TimeInSeconds,
-      },
-      tempo,
-    );
-
-    const stuff = getScheduleItemsWithinRange(
-      beatsRange,
-      entityEntries,
-      tempo,
-      scheduler.getSlotPlaybackState(),
-      previouslyScheduledNoteIds,
-    );
-
-    const { scheduleItems } = stuff;
-
-    // TODO: first calculate one and then the other so we don't need stuff to be an obj
-    scheduler.setSlotPlaybackState(stuff.nextSlotPlaybackState);
-    engineEvents.onSchedule.dispatch(stuff);
-
-    // TODO: this will grow indefinitely so we need to clean up
-    previouslyScheduledNoteIds = previouslyScheduledNoteIds.concat(
-      scheduleItems.flatMap((scheduleItem) => {
-        return scheduleItem.notes.map((note) => note.schedulingId);
-      }),
-    );
-
-    scheduleItems.forEach((item) => {
-      onStopCallbacks.push(item.instrument.schedule(item.notes, item.channelMixer));
-    });
-
-    timeoutId = window.setTimeout(() => schedule(), scheduleInterval * 1000);
+  const getTime = () => {
+    // will error if called and it's not playing
+    return (audioContext.currentTime - playStartTime!) as TimeInSeconds;
   };
 
   const play = () => {
     const handlePlay = () => {
       playStartTime = audioContext.currentTime;
 
-      schedule();
+      onStopHandlers.push(scheduler.loop(getTime, getTempo, scheduleInterval, lookAheadTime));
+
       setPlaybackState('playing');
     };
 
@@ -197,13 +160,10 @@ export const createPlayer = ({
 
   const stop = () => {
     playStartTime = null;
-    timeoutId !== null && window.clearTimeout(timeoutId);
-    setPlaybackState('stopped');
 
-    onStopCallbacks.forEach((callback) => {
-      callback();
-    });
-    onStopCallbacks = [];
+    onStopHandlers.forEach((callback) => callback());
+    onStopHandlers = [];
+    setPlaybackState('stopped');
   };
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -214,7 +174,7 @@ export const createPlayer = ({
   // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
   const dispose = () => {
     stop();
-    objectValues(engineEvents).forEach((pubSub) => pubSub.dispose());
+    playerEvents.dispose();
     // TODO: we probably want to do some more stuff
   };
 
@@ -226,7 +186,7 @@ export const createPlayer = ({
       entityEntries,
       getTempo(),
       scheduler.getSlotPlaybackState(),
-      previouslyScheduledNoteIds, // TODO: use []
+      [],
     ).scheduleItems.flatMap((scheduleItem) => {
       return scheduleItem.notes.map((note) => {
         return {
@@ -245,9 +205,8 @@ export const createPlayer = ({
     getPlaybackState,
     getScheduleItemsInfo,
     getTempo,
-    onPlaybackChange: engineEvents.onPlaybackChange.subscribe,
-    onSchedule: engineEvents.onSchedule.subscribe,
-    onTempoChange: engineEvents.onTempoChange.subscribe,
+    onPlaybackChange: playerEvents.onPlaybackChange.subscribe,
+    onTempoChange: playerEvents.onTempoChange.subscribe,
     pause,
     play,
     setIsMuted,

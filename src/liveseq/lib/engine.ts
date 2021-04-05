@@ -31,7 +31,6 @@ export const createEngine = ({
     entityEntries,
     initialState: project.initialState,
   });
-
   const player = createPlayer({
     scheduler,
     audioContext,
@@ -60,7 +59,9 @@ export const createEngine = ({
 
   // CORE
   const dispose = () => {
+    scheduler.dispose();
     player.dispose();
+    entities.dispose();
   };
 
   // TODO: export everything here with spread and select what we want to expose in createLiveseq
@@ -74,7 +75,7 @@ export const createEngine = ({
     getPlaybackState: player.getPlaybackState,
     onPlaybackChange: player.onPlaybackChange,
     onTempoChange: player.onTempoChange,
-    onSchedule: player.onSchedule,
+    onSchedule: scheduler.onSchedule,
     setTempo: player.setTempo,
     setIsMuted: player.setIsMuted,
     addSceneToQueue: scheduler.addSceneToQueue,
