@@ -14,24 +14,30 @@ export const getAbSwitch = (): SerializableProject => {
   return liveseq.getProject();
 };
 
-// adds a new channel + slot + timeline + metronome clip
-function addMetronome(liveseq: Liveseq, isAlternative: boolean) {
+export const getMetronomeNotes = (isAlternative: boolean) => {
   const notes = isAlternative
     ? { emphasis: 'C5' as NoteName, regular: 'C4' as NoteName }
     : { emphasis: 'G5' as NoteName, regular: 'G6' as NoteName };
 
+  return times(4, (index) => {
+    return {
+      start: (1 * index) as Beats,
+      end: (1 * index + 1) as Beats,
+      pitch: index === 0 ? notes.emphasis : notes.regular,
+    };
+  });
+};
+
+// adds a new channel + slot + timeline + metronome clip
+function addMetronome(liveseq: Liveseq, isAlternative: boolean) {
   const noteClipId = liveseq.noteClips.create({
     name: 'Clip Name',
     duration: 4 as Beats,
     notes: [], // TODO: remove
   });
 
-  times(4, (index) => {
-    return liveseq.noteClips.addNote(noteClipId, {
-      start: (1 * index) as Beats,
-      end: (1 * index + 1) as Beats,
-      pitch: index === 0 ? notes.emphasis : notes.regular,
-    });
+  getMetronomeNotes(isAlternative).forEach((note) => {
+    return liveseq.noteClips.addNote(noteClipId, note);
   });
 
   const timelineId = liveseq.timelines.create({
