@@ -1,5 +1,4 @@
 import type { Liveseq, SerializableProject } from '../index';
-import { musicTimeToBeats } from '../lib/time/musicTime';
 import type { NoteName } from '../lib/note/note';
 import type { Beats } from '../lib/types';
 import { createLiveseq } from '../lib/liveseq';
@@ -23,14 +22,14 @@ function addMetronome(liveseq: Liveseq, isAlternative: boolean) {
 
   const noteClipId = liveseq.noteClips.create({
     name: 'Clip Name',
-    duration: musicTimeToBeats([1, 0, 0]),
+    duration: 4 as Beats,
     notes: [], // TODO: remove
   });
 
   times(4, (index) => {
     return liveseq.noteClips.addNote(noteClipId, {
-      start: musicTimeToBeats([0, 1 * index, 0]),
-      end: musicTimeToBeats([0, 1 * index + 1, 0]),
+      start: (1 * index) as Beats,
+      end: (1 * index + 1) as Beats,
       pitch: index === 0 ? notes.emphasis : notes.regular,
     });
   });
@@ -41,8 +40,8 @@ function addMetronome(liveseq: Liveseq, isAlternative: boolean) {
     clipRanges: [
       {
         noteClipId,
-        start: musicTimeToBeats([0, 0, 0]),
-        end: musicTimeToBeats([1, 0, 0]),
+        start: 0 as Beats,
+        end: 4 as Beats,
       },
     ],
   });
