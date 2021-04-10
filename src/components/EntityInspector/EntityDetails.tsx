@@ -1,5 +1,6 @@
 import type React from 'react';
 import type { CommonProps } from '../../liveseq/lib/types';
+import { Heading } from '../general/Heading';
 
 type EntityDetailsProps<T extends CommonProps> = {
   title: string;
@@ -9,7 +10,8 @@ type EntityDetailsProps<T extends CommonProps> = {
 export const EntityDetails = <T extends CommonProps>(props: EntityDetailsProps<T>) => {
   return (
     <>
-      <h3>{props.title}</h3>
+      <Heading sizeLevel={4}>{props.title}</Heading>
+
       {props.items.map((item) => {
         return (
           <ul key={item.id}>

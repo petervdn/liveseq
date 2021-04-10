@@ -1,5 +1,6 @@
 import { getFrequency } from '../../liveseq/lib/note/note';
 import type { ScheduleItem } from '../../liveseq/lib/scheduler/scheduler';
+import { Heading } from '../general/Heading';
 
 type ScheduleNotesProps = {
   scheduleItem: ScheduleItem;
@@ -24,7 +25,8 @@ export const ScheduleNotes = ({
 
   return (
     <>
-      <h3>Scheduled Notes</h3>
+      <Heading sizeLevel={4}>Scheduled Notes</Heading>
+
       {/* note output per instrument (instrument channel??) */}
       <div style={{ position: 'relative', height, width: '100%', border: '1px solid black' }}>
         {scheduleItem.notes.map((note) => {

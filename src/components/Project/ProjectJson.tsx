@@ -1,8 +1,8 @@
-import { JsonViewer } from '../general/JsonViewer';
+import { CodeViewer } from '../general/CodeViewer';
 import { useLiveseqContext } from '../../liveseq';
 
 export const ProjectJson = () => {
   const liveseq = useLiveseqContext();
   const project = liveseq.getProject();
-  return <JsonViewer name={project.name}>{project}</JsonViewer>;
+  return <CodeViewer name={project.name}>{project}</CodeViewer>;
 };

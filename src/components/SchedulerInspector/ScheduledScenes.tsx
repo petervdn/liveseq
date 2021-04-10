@@ -1,5 +1,6 @@
 import type { BeatsRange } from '../../liveseq';
 import type { SlotPlaybackState } from '../../liveseq/lib/scheduler/scheduler';
+import { Heading } from '../general/Heading';
 
 type ScheduleScenesProps = {
   slotPlaybackStateRanges: Array<BeatsRange & SlotPlaybackState>;
@@ -22,7 +23,8 @@ export const ScheduleScenes = ({
 
   return (
     <>
-      <h3>Queued Scenes</h3>
+      <Heading sizeLevel={4}>Queued Scenes</Heading>
+
       {/* note output per instrument (instrument channel??) */}
       <div style={{ position: 'relative', height, width: '100%', border: '1px solid black' }}>
         {slotPlaybackStateRanges.flatMap(({ start, end, ...slotPlaybackStanteRange }, index) => {
