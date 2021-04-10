@@ -3,7 +3,7 @@ import { LiveseqProps, useLiveseq } from '../liveseq';
 import { PlaybackButton } from './PlaybackButton';
 import { EntityInspector } from './EntityInspector/EntityInspector';
 import { Tempo } from './Tempo';
-import { SchedulerInspector } from './SchedulerInspector';
+import { SchedulerInspector } from './SchedulerInspector/SchedulerInspector';
 
 export const Liveseq: React.FunctionComponent<LiveseqProps> = (props) => {
   const { LiveseqProvider } = useLiveseq(props);
