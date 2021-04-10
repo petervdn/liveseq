@@ -13,12 +13,8 @@ export type SamplerInstance = Disposable<Instrument & SerializableSampler>;
 export const decode = (serializable: SerializableSampler): SamplerInstance => {
   return {
     ...serializable,
-    schedule: (notes, mixer) => {
-      notes.forEach((note) => {
-        // eslint-disable-next-line no-console
-        console.log('scheduling', note.schedulingId);
-        playTick(mixer, getFrequency(note.pitch), note.startTime, note.endTime - note.startTime);
-      });
+    schedule: (note, mixer) => {
+      playTick(mixer, getFrequency(note.pitch), note.startTime, note.endTime - note.startTime);
 
       return () => {
         // TODO returns a "cancel" fn

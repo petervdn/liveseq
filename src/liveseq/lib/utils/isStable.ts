@@ -1,5 +1,4 @@
 import type { Liveseq } from '../liveseq';
-import type { BeatsRange } from '../..';
 
 // calling these functions should not cause liveseq to throw
 export const isStable = (liveseq: Liveseq, mutate = false) => {
@@ -8,6 +7,6 @@ export const isStable = (liveseq: Liveseq, mutate = false) => {
   liveseq.setTempo(liveseq.getTempo());
   liveseq.getIsPlaying();
   liveseq.getProject();
-  liveseq.getScheduleItemsInfo({ start: 0, end: 0 } as BeatsRange);
+  // liveseq.getScheduledata({ start: 0, end: 0 } as BeatsRange, );
   mutate && liveseq.dispose();
 };

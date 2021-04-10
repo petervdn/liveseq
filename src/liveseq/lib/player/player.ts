@@ -1,11 +1,8 @@
 import { isContextSuspended } from '../utils/isContextSuspended';
 import type { Bpm, TimeInSeconds } from '../types';
 import { errorMessages } from '../errors';
-import { getScheduleItemsWithinRange } from '../scheduler/utils/getScheduleItemsWithinRange';
 import { createPubSub } from '../utils/pubSub';
 import { objectValues } from '../utils/objUtils';
-import type { BeatsRange } from '../time/beatsRange';
-import type { EntityEntries } from '../entities/entities';
 import type { Scheduler } from '../scheduler/scheduler';
 
 // TODO: this is a bit repeated in scheduler
@@ -30,7 +27,6 @@ export type PlayerProps = {
   lookAheadTime: TimeInSeconds;
   scheduleInterval: TimeInSeconds;
   initialState: Partial<PlayerState>;
-  entityEntries: EntityEntries;
   scheduler: Scheduler;
 };
 
@@ -47,7 +43,6 @@ export const createPlayer = ({
   scheduleInterval,
   lookAheadTime,
   initialState = {},
-  entityEntries,
   scheduler,
 }: PlayerProps) => {
   if (lookAheadTime <= scheduleInterval) {
@@ -178,32 +173,12 @@ export const createPlayer = ({
     // TODO: we probably want to do some more stuff
   };
 
-  // TODO: move to scheduler
-  // TODO: better naming
-  const getScheduleItemsInfo = (beatsRange: BeatsRange) => {
-    return getScheduleItemsWithinRange(
-      beatsRange,
-      entityEntries,
-      getTempo(),
-      scheduler.getSlotPlaybackState(),
-      [],
-    ).scheduleItems.flatMap((scheduleItem) => {
-      return scheduleItem.notes.map((note) => {
-        return {
-          ...note,
-          ...scheduleItem.instrument,
-        };
-      });
-    });
-  };
-
   return {
     getIsMuted,
     getIsPaused,
     getIsPlaying,
     getIsStopped,
     getPlaybackState,
-    getScheduleItemsInfo,
     getTempo,
     onPlaybackChange: playerEvents.onPlaybackChange.subscribe,
     onTempoChange: playerEvents.onTempoChange.subscribe,

@@ -1,16 +1,18 @@
-import { getScheduleItemsWithinRange } from './utils/getScheduleItemsWithinRange';
 import type { Note } from '../note/note';
 import type { TimeInSeconds, Beats, Bpm } from '../types';
 import type { MixerChannel } from '../mixer/mixer';
 import type { Instrument } from '../entities/instrumentChannel';
 import type { BeatsRange } from '../..';
-import { getSlotPlaybackStatesWithinRange } from './utils/getSlotPlaybackStatesWithinRange';
 import { addScenesToQueue } from './utils/addScenesToQueue';
 import { removeScenesFromQueue } from './utils/removeScenesFromQueue';
 import type { EntityEntries } from '../entities/entities';
 import { timeRangeToBeatsRange } from '../time/beatsRange';
 import { createPubSub } from '../utils/pubSub';
 import { objectValues } from '../utils/objUtils';
+import { getQueuedScenesWithinRange } from './utils/getQueuedScenesWithinRange';
+import { groupQueuedScenesByStart } from './utils/groupQueuedScenesByStart';
+import { getAppliedStatesForQueuedScenes } from './utils/getAppliedStatesForQueuedScenes';
+import { getNotesForInstrumentInTimeRange } from '../entities/utils/getNotesForInstrumentInTimeRange';
 
 // TODO: this is a bit repeated in player
 export const createSchedulerEvents = () => {
@@ -38,7 +40,10 @@ export type ScheduleItem = {
   channelMixer: MixerChannel;
   instrument: Instrument;
 };
-export type ScheduleData = ReturnType<typeof getScheduleItemsWithinRange>;
+export type ScheduleData = {
+  slotPlaybackStateRanges: Array<BeatsRange & SlotPlaybackState>;
+  scheduleItems: Array<ScheduleItem>;
+};
 
 type PlayingSlot = {
   slotId: string;
@@ -77,6 +82,7 @@ export type Scheduler = ReturnType<typeof createScheduler>;
 export const createScheduler = ({ initialState, entityEntries }: SchedulerProps) => {
   const schedulerEvents = createSchedulerEvents();
   let state: SchedulerState = {
+    // TODO: make a visualizer for this state
     slotPlaybackState: initialState.slotPlaybackState || createSlotPlaybackState(),
   };
 
@@ -116,37 +122,13 @@ export const createScheduler = ({ initialState, entityEntries }: SchedulerProps)
     });
   };
 
-  // move to scheduler
   // todo: probably make this an object for more efficient lookup
   // todo: how does this work when slots are played again later on (and loop count is reset)
   // ^ we could assign new ids at every play if that is an issue
   // but we gotta clean up based on some criteria
   let previouslyScheduledNoteIds: Array<string> = [];
 
-  // move to scheduler
-  const schedule = (songTime: TimeInSeconds, tempo: Bpm, lookAheadTime: TimeInSeconds) => {
-    const beatsRange = timeRangeToBeatsRange(
-      {
-        start: songTime,
-        end: (songTime + lookAheadTime) as TimeInSeconds,
-      },
-      tempo,
-    );
-
-    const stuff = getScheduleItemsWithinRange(
-      beatsRange,
-      entityEntries,
-      tempo,
-      getSlotPlaybackState(),
-      previouslyScheduledNoteIds,
-    );
-
-    const { scheduleItems } = stuff;
-
-    // TODO: first calculate one and then the other so we don't need stuff to be an obj
-    setSlotPlaybackState(stuff.nextSlotPlaybackState);
-    schedulerEvents.onSchedule.dispatch(stuff);
-
+  const schedule = (scheduleItems: Array<ScheduleItem>) => {
     // TODO: this will grow indefinitely so we need to clean up
     previouslyScheduledNoteIds = previouslyScheduledNoteIds.concat(
       scheduleItems.flatMap((scheduleItem) => {
@@ -155,8 +137,38 @@ export const createScheduler = ({ initialState, entityEntries }: SchedulerProps)
     );
 
     scheduleItems.forEach((item) => {
-      onStopCallbacks.push(item.instrument.schedule(item.notes, item.channelMixer));
+      item.notes.forEach((note) => {
+        const hasBeenScheduled = previouslyScheduledNoteIds.includes(note.schedulingId);
+        if (hasBeenScheduled) return;
+        // eslint-disable-next-line no-console
+        console.log('scheduling', note.schedulingId);
+        onStopCallbacks.push(item.instrument.schedule(note, item.channelMixer));
+      });
     });
+  };
+
+  const getScheduleDataWithinRange = (beatsRange: BeatsRange, tempo: Bpm): ScheduleData => {
+    const slotPlaybackState = getSlotPlaybackState();
+    const queuedScenes = getQueuedScenesWithinRange(beatsRange, slotPlaybackState);
+    const queuedScenesByStart = groupQueuedScenesByStart(beatsRange.start, queuedScenes);
+    const slotPlaybackStateRanges = getAppliedStatesForQueuedScenes(
+      beatsRange,
+      queuedScenesByStart,
+      entityEntries,
+      slotPlaybackState,
+    );
+
+    // get schedule items according to split slotPlaybackState ranges and their playing slots
+    const scheduleItems = slotPlaybackStateRanges.flatMap((slotRange) => {
+      const slotIds = slotRange.playingSlots.map((slot) => slot.slotId);
+
+      return getNotesForInstrumentInTimeRange(entityEntries, slotIds, slotRange, tempo);
+    });
+
+    return {
+      slotPlaybackStateRanges,
+      scheduleItems,
+    };
   };
 
   const loop = (
@@ -168,7 +180,26 @@ export const createScheduler = ({ initialState, entityEntries }: SchedulerProps)
     let timeoutId: number | null = null;
 
     const internalSchedule = () => {
-      schedule(getTime(), getTempo(), lookAheadTime);
+      const songTime = getTime();
+      const tempo = getTempo();
+      const beatsRange = timeRangeToBeatsRange(
+        {
+          start: songTime,
+          end: (songTime + lookAheadTime) as TimeInSeconds,
+        },
+        tempo,
+      );
+
+      // we must split the beatsRange into sections where the playing slots in the slotPlaybackState changes
+      const scheduleData = getScheduleDataWithinRange(beatsRange, tempo);
+
+      // TODO: not sure this logic is correct
+      // the first slotPlaybackState becomes the new slotPlaybackState assuming we always move ahead in time
+      setSlotPlaybackState(scheduleData.slotPlaybackStateRanges[0]);
+
+      schedule(scheduleData.scheduleItems);
+
+      schedulerEvents.onSchedule.dispatch(scheduleData);
     };
 
     const handleSchedule = () => {
@@ -201,10 +232,9 @@ export const createScheduler = ({ initialState, entityEntries }: SchedulerProps)
     addSceneToQueue,
     removeSceneFromQueue,
     getSlotPlaybackState,
-    getSlotPlaybackStatesWithinRange: (beatsRange: BeatsRange) => {
-      return getSlotPlaybackStatesWithinRange(beatsRange, entityEntries, getSlotPlaybackState());
-    },
+    getScheduleDataWithinRange,
     onSchedule: schedulerEvents.onSchedule.subscribe,
+    schedule,
     loop,
     dispose,
   };

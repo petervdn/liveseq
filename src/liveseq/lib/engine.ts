@@ -37,7 +37,6 @@ export const createEngine = ({
     lookAheadTime,
     scheduleInterval,
     initialState: project.initialState,
-    entityEntries,
   });
 
   // SELECTORS
@@ -85,8 +84,7 @@ export const createEngine = ({
     getIsPaused: player.getIsPaused,
     getIsStopped: player.getIsStopped,
     getIsMuted: player.getIsMuted,
-    getScheduleItemsInfo: player.getScheduleItemsInfo,
-    getSlotPlaybackStatesWithinRange: scheduler.getSlotPlaybackStatesWithinRange,
+    getScheduleDataWithinRange: scheduler.getScheduleDataWithinRange,
     // core
     getProject,
     getAudioContext,

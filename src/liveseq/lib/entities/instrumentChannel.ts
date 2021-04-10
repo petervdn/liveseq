@@ -7,7 +7,7 @@ import type { ScheduleNote } from '../scheduler/scheduler';
 
 export type Instrument = {
   // when the player calls instrument.schedule, it will already pass notes with time in seconds
-  schedule: (notes: Array<ScheduleNote>, channelMixer: MixerChannel) => () => void;
+  schedule: (notes: ScheduleNote, channelMixer: MixerChannel) => () => void;
 };
 
 export type SerializableInstrumentChannel = CommonProps & {

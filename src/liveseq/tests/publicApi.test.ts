@@ -20,7 +20,7 @@ it('returns an object with the expected keys from createLiveseq', () => {
   expect(liveseq.getTempo).toBeDefined();
   expect(liveseq.getIsMuted).toBeDefined();
   // core
-  expect(liveseq.getScheduleItemsInfo).toBeDefined();
+  expect(liveseq.getScheduleDataWithinRange).toBeDefined();
   expect(liveseq.getProject).toBeDefined();
   expect(liveseq.getAudioContext).toBeDefined();
 

@@ -5,6 +5,7 @@ import { getQueuedScenesWithinRange } from './getQueuedScenesWithinRange';
 import { getAppliedStatesForQueuedScenes } from './getAppliedStatesForQueuedScenes';
 import type { SlotPlaybackState } from '../scheduler';
 
+// TODO: we don't need this anymore as it is internal to schedule atm
 // given a range and a slotPlaybackState, get an array of slotPlaybackState with the respective sub ranges
 export const getSlotPlaybackStatesWithinRange = (
   beatsRange: BeatsRange,

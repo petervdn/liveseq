@@ -20,7 +20,6 @@ export const getTimelineNotesInRange = (
   channelId: string,
   slotId: string,
   timelineLoops: number,
-  previouslyScheduledNoteIds: Array<string>,
 ) => {
   const timelineRange = createRangeFromDuration(getTimelineDuration(timeline));
   const loopedRanges = getWrappedRanges(range, timelineRange, timelineLoops);
@@ -47,15 +46,11 @@ export const getTimelineNotesInRange = (
           noteClipId: noteClip.id,
         });
 
-        const hasBeenScheduled = previouslyScheduledNoteIds.includes(schedulingId);
-
-        if (!hasBeenScheduled) {
-          accumulator.push({
-            ...noteWithTimelineTime,
-            // to easily know if note has been scheduled
-            schedulingId,
-          });
-        }
+        accumulator.push({
+          ...noteWithTimelineTime,
+          // to easily know if note has been scheduled
+          schedulingId,
+        });
 
         return accumulator;
       }, []);

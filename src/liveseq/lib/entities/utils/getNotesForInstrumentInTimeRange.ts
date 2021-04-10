@@ -12,7 +12,6 @@ export const getNotesForInstrumentInTimeRange = (
   activeSlotIds: Array<string>,
   beatsRange: BeatsRange,
   bpm: Bpm,
-  previouslyScheduledNoteIds: Array<string>,
 ): Array<ScheduleItem> => {
   return activeSlotIds.flatMap((slotId) => {
     const slot = entities.slots.get(slotId);
@@ -28,7 +27,6 @@ export const getNotesForInstrumentInTimeRange = (
         instrumentChannel.id,
         slot.id,
         slot.loops,
-        previouslyScheduledNoteIds,
       );
 
       if (notes.length === 0) return accumulator;
