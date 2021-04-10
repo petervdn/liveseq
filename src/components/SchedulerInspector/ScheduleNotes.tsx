@@ -40,7 +40,7 @@ export const ScheduleNotes = ({
                 background: 'rgba(0,1,0,0.5)',
               }}
             >
-              {note.pitch}
+              {note.start} {note.pitch}
             </div>
           );
         })}

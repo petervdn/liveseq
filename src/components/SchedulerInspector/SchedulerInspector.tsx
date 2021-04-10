@@ -2,16 +2,19 @@ import type React from 'react';
 import { useScheduleData } from '../../liveseq/react/useScheduleData';
 import { ScheduleNotes } from './ScheduleNotes';
 import { ScheduleSlots } from './ScheduleSlots';
+import { ScheduleScenes } from './ScheduledScenes';
 
 export const SchedulerInspector: React.FunctionComponent = () => {
-  const scheduleData = useScheduleData(0, 8);
+  const scheduleData = useScheduleData(0, 32);
 
-  // TODO: render queue and slots
   return (
     <>
       <h3>Scheduler Info</h3>
 
       <ScheduleSlots slotPlaybackStateRanges={scheduleData.slotPlaybackStateRanges}></ScheduleSlots>
+      <ScheduleScenes
+        slotPlaybackStateRanges={scheduleData.slotPlaybackStateRanges}
+      ></ScheduleScenes>
 
       {/* note output per instrument (instrument channel??) */}
       {scheduleData.scheduleItems.map((scheduleItem, index) => {
