@@ -9,11 +9,8 @@ export const applyScenesToSlotPlaybackState = (
   slotPlaybackState: SlotPlaybackState,
   start: Beats,
 ): SlotPlaybackState => {
-  // TODO: all of them are disabled by default, fix
   // TODO: should be scene.getIsEnabled (we gotta pass the whole thing here)
-  // const enabledScenes = scenes.filter((scene) => true /* scene.isEnabled */);
-  const enabledScenes = scenes;
-
+  const enabledScenes = scenes.filter((scene) => scene.isEnabled);
   // TODO: incomplete implementation, only plays
   const appliedScenes = enabledScenes.flatMap((scene) => {
     // TODO: consider leave
