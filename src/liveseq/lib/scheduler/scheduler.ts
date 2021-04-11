@@ -133,6 +133,7 @@ export const createScheduler = ({ initialState, entityEntries }: SchedulerProps)
         handleSchedule();
       }, scheduleInterval * 1000);
 
+      // TODO: will keep adding until stopped, maybe just save this separately or improve cleanup
       onStopCallbacks.push(cancelTimer);
     };
 
