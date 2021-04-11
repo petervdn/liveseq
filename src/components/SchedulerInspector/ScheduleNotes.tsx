@@ -1,5 +1,8 @@
 import { getFrequency } from '../../liveseq/lib/note/note';
 import type { ScheduleItem } from '../../liveseq/lib/scheduler/scheduler';
+import { ItemsViewer } from '../general/ItemsViewer';
+import { Item } from '../general/Item';
+import { Box } from '../general/Box';
 import { Heading } from '../general/Heading';
 
 type ScheduleNotesProps = {
@@ -18,35 +21,30 @@ export const ScheduleNotes = ({
   height = 200,
 }: ScheduleNotesProps) => {
   const noteHeight = height / (12 * octaves);
-
-  const scaleHorizontally = (value: number) => {
-    return value * horizontalScale;
-  };
-
+  // TODO: note output per instrument (instrument channel??)
   return (
-    <>
-      <Heading sizeLevel={4}>Scheduled Notes</Heading>
-
-      {/* note output per instrument (instrument channel??) */}
-      <div style={{ position: 'relative', height, width: '100%', border: '1px solid black' }}>
-        {scheduleItem.notes.map((note) => {
-          return (
-            <div
-              key={note.schedulingId}
-              style={{
-                position: 'absolute',
-                height: noteHeight,
-                width: `${scaleHorizontally(note.end - note.start) - 1}px`,
-                bottom: getFrequency(note.pitch) * verticalScale,
-                left: scaleHorizontally(note.start),
-                background: 'rgba(0,1,0,0.5)',
-              }}
-            >
-              {note.start} {note.pitch}
-            </div>
-          );
-        })}
-      </div>
-    </>
+    <ItemsViewer title="Scheduled Notes" height={height}>
+      {scheduleItem.notes.map((note) => {
+        return (
+          <Item
+            key={note.schedulingId}
+            height={noteHeight}
+            width={note.end - note.start}
+            bottom={getFrequency(note.pitch)}
+            left={note.start}
+            horizontalScale={horizontalScale}
+            verticalScale={verticalScale}
+          >
+            <Box
+              width={`${note.velocity * 100}%`}
+              marginTop={1}
+              height={1}
+              style={{ background: 'red' }}
+            />
+            <Heading sizeLevel={5}>{`${note.start} ${note.pitch}`}</Heading>
+          </Item>
+        );
+      })}
+    </ItemsViewer>
   );
 };

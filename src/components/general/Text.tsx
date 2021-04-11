@@ -8,24 +8,18 @@ type InternalTextProps = BoxProps & TypographyProps & ColorProps;
 // because the types seem kinda weird, plus I want some defaults
 const InternalText = styled(Box)<InternalTextProps>(compose(typography, color));
 
-type TextProps = {
+export type TextProps = {
   // add more as needed
   as?: HeadingLevel | 'p' | 'span';
   fontFamily?: InternalTextProps['fontFamily'];
   fontSize?: InternalTextProps['fontSize'];
+  position?: InternalTextProps['position'];
   children: string;
-};
+} & BoxProps;
 
-const defaultFontFamily = `-apple-system,BlinkMacSystemFont,"Segoe UI","Roboto","Oxygen","Ubuntu","Cantarell","Fira Sans","Droid Sans","Helvetica Neue",sans-serif`;
-
-export const Text = ({
-  as = 'span',
-  fontFamily = defaultFontFamily,
-  children,
-  ...props
-}: TextProps) => {
+export const Text = ({ as = 'span', children, ...props }: TextProps) => {
   return (
-    <InternalText as={as} {...props} fontFamily={fontFamily}>
+    <InternalText as={as} {...props}>
       {children}
     </InternalText>
   );

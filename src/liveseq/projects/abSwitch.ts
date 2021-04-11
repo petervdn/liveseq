@@ -21,6 +21,7 @@ export const getMetronomeNotes = (isAlternative: boolean) => {
 
   return times(4, (index) => {
     return {
+      velocity: index === 0 ? 0.75 : 0.6,
       start: (1 * index) as Beats,
       end: (1 * index + 1) as Beats,
       pitch: index === 0 ? notes.emphasis : notes.regular,
