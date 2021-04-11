@@ -14,11 +14,8 @@ it('returns an object with the expected keys from createLiveseq', () => {
   const liveseq = createLiveseq();
   // SELECTORS
   // store
-  expect(liveseq.getIsPlaying).toBeDefined();
-  expect(liveseq.getIsPaused).toBeDefined();
-  expect(liveseq.getIsStopped).toBeDefined();
+  expect(liveseq.getPlaybackState).toBeDefined();
   expect(liveseq.getTempo).toBeDefined();
-  expect(liveseq.getIsMuted).toBeDefined();
   // core
   expect(liveseq.getScheduleDataWithinRange).toBeDefined();
   expect(liveseq.getProject).toBeDefined();
@@ -32,7 +29,6 @@ it('returns an object with the expected keys from createLiveseq', () => {
 
   // store
   expect(liveseq.setTempo).toBeDefined();
-  expect(liveseq.setIsMuted).toBeDefined();
 
   // entity manager
   // TODO:

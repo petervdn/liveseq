@@ -86,7 +86,6 @@ export type Scheduler = ReturnType<typeof createScheduler>;
 export const createScheduler = ({ initialState, entityEntries }: SchedulerProps) => {
   const schedulerEvents = createSchedulerEvents();
   let state: SchedulerState = {
-    // TODO: make a visualizer for this state
     slotPlaybackState: initialState.slotPlaybackState || createSlotPlaybackState(),
   };
 
@@ -135,12 +134,13 @@ export const createScheduler = ({ initialState, entityEntries }: SchedulerProps)
   const schedule = (scheduleItems: Array<ScheduleItem>) => {
     scheduleItems.forEach((item) => {
       item.notes.forEach((note) => {
-        const hasBeenScheduled = previouslyScheduledNoteIds.includes(note.schedulingId);
-        if (hasBeenScheduled) return;
+        if (previouslyScheduledNoteIds.includes(note.schedulingId)) return;
+
         previouslyScheduledNoteIds.push(note.schedulingId);
+        onStopCallbacks.push(item.instrument.schedule(note, item.channelMixer));
+
         // eslint-disable-next-line no-console
         console.log('scheduling', note.schedulingId);
-        onStopCallbacks.push(item.instrument.schedule(note, item.channelMixer));
       });
     });
   };
@@ -162,9 +162,6 @@ export const createScheduler = ({ initialState, entityEntries }: SchedulerProps)
 
       return getNotesForInstrumentInTimeRange(entityEntries, slotIds, slotRange, tempo);
     });
-
-    // TODO: remove non serializable
-    // return removeNonSerializableProps();
 
     return {
       slotPlaybackStateRanges,
@@ -204,7 +201,6 @@ export const createScheduler = ({ initialState, entityEntries }: SchedulerProps)
       // TODO: not sure this logic is correct, we gotta update the state
       // the first slotPlaybackState becomes the new slotPlaybackState assuming we always move ahead in time
       // setSlotPlaybackState(scheduleData.slotPlaybackStateRanges[0]);
-
       schedule(scheduleData.scheduleItems);
 
       schedulerEvents.onSchedule.dispatch(scheduleData);

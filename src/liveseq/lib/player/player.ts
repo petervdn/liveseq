@@ -35,7 +35,6 @@ export type PlaybackStates = 'playing' | 'paused' | 'stopped';
 export type PlayerState = {
   playbackState: PlaybackStates;
   tempo: Bpm;
-  isMuted: boolean;
 };
 
 export const createPlayer = ({
@@ -55,8 +54,6 @@ export const createPlayer = ({
   let state: PlayerState = {
     playbackState: 'stopped',
     tempo: 120 as Bpm,
-    // TODO: move isMuted to mixer
-    isMuted: false,
     ...initialState,
   };
 
@@ -77,20 +74,9 @@ export const createPlayer = ({
     return state.tempo;
   };
 
+  // TODO: rename to playback status instead of playback state everywhere
   const getPlaybackState = () => {
     return state.playbackState;
-  };
-
-  const getIsPlaying = () => {
-    return state.playbackState === 'playing';
-  };
-
-  const getIsPaused = () => {
-    return state.playbackState === 'paused';
-  };
-
-  const getIsStopped = () => {
-    return state.playbackState === 'stopped';
   };
 
   const setPlaybackState = (playbackState: PlaybackStates) => {
@@ -101,20 +87,6 @@ export const createPlayer = ({
     });
 
     playerEvents.onPlaybackChange.dispatch(playbackState);
-  };
-
-  // TODO: move to mixer
-  const getIsMuted = () => {
-    return state.isMuted;
-  };
-
-  // TODO: move to mixer
-  const setIsMuted = (isMuted: boolean) => {
-    if (getIsMuted() === isMuted) return;
-
-    setState({
-      isMuted,
-    });
   };
 
   const setTempo = (bpm: Bpm) => {
@@ -174,17 +146,12 @@ export const createPlayer = ({
   };
 
   return {
-    getIsMuted,
-    getIsPaused,
-    getIsPlaying,
-    getIsStopped,
     getPlaybackState,
     getTempo,
     onPlaybackChange: playerEvents.onPlaybackChange.subscribe,
     onTempoChange: playerEvents.onTempoChange.subscribe,
     pause,
     play,
-    setIsMuted,
     setTempo,
     stop,
     dispose,

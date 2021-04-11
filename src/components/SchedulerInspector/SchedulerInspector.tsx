@@ -11,13 +11,14 @@ export const SchedulerInspector: React.FunctionComponent = () => {
 
   return (
     <>
-      <ScheduleSlots slotPlaybackStateRanges={scheduleData.slotPlaybackStateRanges} />
-      <ScheduleScenes slotPlaybackStateRanges={scheduleData.slotPlaybackStateRanges} />
       {/* note output per instrument (instrument channel??) */}
       {scheduleData.scheduleItems.map((scheduleItem, index) => {
         // eslint-disable-next-line react/no-array-index-key
         return <ScheduleNotes key={index} scheduleItem={scheduleItem}></ScheduleNotes>;
       })}
+      <ScheduleSlots slotPlaybackStateRanges={scheduleData.slotPlaybackStateRanges} />
+      <ScheduleScenes slotPlaybackStateRanges={scheduleData.slotPlaybackStateRanges} />
+
       <CodeViewer name="Schedule Data">{removeNonSerializableProps(scheduleData)}</CodeViewer>
     </>
   );
