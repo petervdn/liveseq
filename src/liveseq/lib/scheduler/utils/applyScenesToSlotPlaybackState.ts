@@ -1,7 +1,7 @@
 import type { SceneInstance } from '../../entities/scene';
 import type { EntityEntries } from '../../entities/entities';
 import type { Beats } from '../../types';
-import type { SlotPlaybackState } from '../scheduler';
+import type { SlotPlaybackState } from '../schedulerState';
 
 export const applyScenesToSlotPlaybackState = (
   scenes: Array<SceneInstance>,

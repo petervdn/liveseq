@@ -1,6 +1,6 @@
 import type { BeatsRange } from '../../liveseq';
-import type { SlotPlaybackState } from '../../liveseq/lib/scheduler/scheduler';
 import { Heading } from '../general/Heading';
+import type { SlotPlaybackState } from '../../liveseq/lib/scheduler/schedulerState';
 
 type ScheduleScenesProps = {
   slotPlaybackStateRanges: Array<BeatsRange & SlotPlaybackState>;

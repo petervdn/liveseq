@@ -3,7 +3,8 @@ import { libraryVersion } from '../meta';
 import { validateProject } from './validateProject';
 
 import type { SerializableEntities } from '../entities/entities';
-import { createSlotPlaybackState, SchedulerState } from '../scheduler/scheduler';
+import type { SchedulerState } from '../scheduler/schedulerState';
+import { createSlotPlaybackState } from '../scheduler/schedulerState';
 
 export type SerializableProject = {
   libraryVersion: number;

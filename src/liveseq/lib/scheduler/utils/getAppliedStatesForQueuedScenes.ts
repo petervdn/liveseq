@@ -4,7 +4,7 @@ import type { EntityEntries } from '../../entities/entities';
 import type { Beats } from '../../types';
 import { applyScenesToSlotPlaybackState } from './applyScenesToSlotPlaybackState';
 import { removeScenesFromQueue } from './removeScenesFromQueue';
-import type { SlotPlaybackState } from '../scheduler';
+import type { SlotPlaybackState } from '../schedulerState';
 
 // TODO: better naming
 // this is probably the reason it doesn't work at all right now
