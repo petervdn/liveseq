@@ -10,9 +10,8 @@ export type ItemsViewerProps = {
 
 export const ItemsViewer = ({ title, height, children }: ItemsViewerProps) => {
   return (
-    <Wrapper marginTop={15} marginBottom={15} height={height}>
-      <Fill color="white" />
-      <Fill color="#a666ff" margin={-5} opacity={0.9} />
+    <Wrapper padding={10} marginTop={15} marginBottom={15} height={height}>
+      <Fill color="#292d3d" />
       <Heading position="absolute" sizeLevel={5}>
         {title}
       </Heading>

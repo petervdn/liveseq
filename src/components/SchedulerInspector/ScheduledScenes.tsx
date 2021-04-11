@@ -2,6 +2,7 @@ import type { BeatsRange } from '../../liveseq';
 import type { SlotPlaybackState } from '../../liveseq/lib/scheduler/schedulerState';
 import { ItemsViewer } from '../general/ItemsViewer';
 import { Item } from '../general/Item';
+import { Heading } from '../general/Heading';
 
 type ScheduleScenesProps = {
   slotPlaybackStateRanges: Array<BeatsRange & SlotPlaybackState>;
@@ -33,7 +34,7 @@ export const ScheduleScenes = ({
               horizontalScale={horizontalScale}
               left={start}
             >
-              {start} {activeSceneId}
+              <Heading sizeLevel={5}>{`${start} ${activeSceneId}`}</Heading>
             </Item>
           );
         });

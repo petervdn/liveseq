@@ -15,7 +15,7 @@ export const Liveseq: React.FunctionComponent<LiveseqProps> = (props) => {
     <>
       <GlobalStyle />
       <LiveseqProvider>
-        <Box position="relative" margin="auto 200px;" marginTop={30}>
+        <Box position="relative" margin="auto 200px;" marginTop={30} paddingBottom={150}>
           <Tabs
             items={[
               {
