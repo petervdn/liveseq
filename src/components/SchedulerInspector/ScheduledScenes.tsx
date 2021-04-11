@@ -5,14 +5,14 @@ import { Item } from '../general/Item';
 
 type ScheduleScenesProps = {
   slotPlaybackStateRanges: Array<BeatsRange & SlotPlaybackState>;
-  horizontalScale?: number;
+  horizontalScale: number;
   verticalScale?: number;
   height?: number;
 };
 
 export const ScheduleScenes = ({
   slotPlaybackStateRanges,
-  horizontalScale = 100,
+  horizontalScale,
   verticalScale = 18,
   height = 200,
 }: ScheduleScenesProps) => {

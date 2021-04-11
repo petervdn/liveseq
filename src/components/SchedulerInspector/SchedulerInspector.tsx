@@ -5,6 +5,8 @@ import { ScheduleScenes } from './ScheduledScenes';
 import { CodeViewer } from '../general/CodeViewer';
 import { removeNonSerializableProps } from '../utils/removeNonSerializableProps';
 
+const horizontalScale = 60;
+
 export const SchedulerInspector = () => {
   const scheduleData = useScheduleData(0, 32);
 
@@ -12,11 +14,23 @@ export const SchedulerInspector = () => {
     <>
       {/* note output per instrument (instrument channel??) */}
       {scheduleData.scheduleItems.map((scheduleItem, index) => {
-        // eslint-disable-next-line react/no-array-index-key
-        return <ScheduleNotes key={index} scheduleItem={scheduleItem}></ScheduleNotes>;
+        return (
+          <ScheduleNotes
+            // eslint-disable-next-line react/no-array-index-key
+            key={index}
+            horizontalScale={horizontalScale}
+            scheduleItem={scheduleItem}
+          />
+        );
       })}
-      <ScheduleSlots slotPlaybackStateRanges={scheduleData.slotPlaybackStateRanges} />
-      <ScheduleScenes slotPlaybackStateRanges={scheduleData.slotPlaybackStateRanges} />
+      <ScheduleSlots
+        horizontalScale={horizontalScale}
+        slotPlaybackStateRanges={scheduleData.slotPlaybackStateRanges}
+      />
+      <ScheduleScenes
+        horizontalScale={horizontalScale}
+        slotPlaybackStateRanges={scheduleData.slotPlaybackStateRanges}
+      />
 
       <CodeViewer name="Schedule Data">{removeNonSerializableProps(scheduleData)}</CodeViewer>
     </>

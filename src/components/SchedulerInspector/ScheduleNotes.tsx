@@ -7,7 +7,7 @@ import { Heading } from '../general/Heading';
 
 type ScheduleNotesProps = {
   scheduleItem: ScheduleItem;
-  horizontalScale?: number;
+  horizontalScale: number;
   verticalScale?: number;
   height?: number;
   octaves?: number;
@@ -15,7 +15,7 @@ type ScheduleNotesProps = {
 
 export const ScheduleNotes = ({
   scheduleItem,
-  horizontalScale = 100,
+  horizontalScale,
   verticalScale = 0.1,
   octaves = 2,
   height = 200,

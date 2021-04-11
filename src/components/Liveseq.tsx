@@ -22,11 +22,11 @@ export const Liveseq: React.FunctionComponent<LiveseqProps> = (props) => {
             items={[
               {
                 label: 'Scheduler',
-                component: SchedulerInspector,
+                component: () => <SchedulerInspector />,
               },
               {
                 label: 'Project',
-                component: ProjectJson,
+                component: () => <ProjectJson />,
               },
             ]}
           />
