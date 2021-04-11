@@ -13,7 +13,6 @@ import { getQueuedScenesWithinRange } from './utils/getQueuedScenesWithinRange';
 import { groupQueuedScenesByStart } from './utils/groupQueuedScenesByStart';
 import { getAppliedStatesForQueuedScenes } from './utils/getAppliedStatesForQueuedScenes';
 import { getNotesForInstrumentInTimeRange } from '../entities/utils/getNotesForInstrumentInTimeRange';
-import { removeNonSerializableProps } from '../../../components/utils/removeNonSerializableProps';
 
 // TODO: this is a bit repeated in player
 export const createSchedulerEvents = () => {
@@ -131,20 +130,14 @@ export const createScheduler = ({ initialState, entityEntries }: SchedulerProps)
   // todo: how does this work when slots are played again later on (and loop count is reset)
   // ^ we could assign new ids at every play if that is an issue
   // but we gotta clean up based on some criteria
-  let previouslyScheduledNoteIds: Array<string> = [];
+  const previouslyScheduledNoteIds: Array<string> = [];
 
   const schedule = (scheduleItems: Array<ScheduleItem>) => {
-    // TODO: this will grow indefinitely so we need to clean up
-    previouslyScheduledNoteIds = previouslyScheduledNoteIds.concat(
-      scheduleItems.flatMap((scheduleItem) => {
-        return scheduleItem.notes.map((note) => note.schedulingId);
-      }),
-    );
-
     scheduleItems.forEach((item) => {
       item.notes.forEach((note) => {
         const hasBeenScheduled = previouslyScheduledNoteIds.includes(note.schedulingId);
         if (hasBeenScheduled) return;
+        previouslyScheduledNoteIds.push(note.schedulingId);
         // eslint-disable-next-line no-console
         console.log('scheduling', note.schedulingId);
         onStopCallbacks.push(item.instrument.schedule(note, item.channelMixer));
@@ -170,11 +163,20 @@ export const createScheduler = ({ initialState, entityEntries }: SchedulerProps)
       return getNotesForInstrumentInTimeRange(entityEntries, slotIds, slotRange, tempo);
     });
 
-    // TODO: can be improved
-    return removeNonSerializableProps({
+    // TODO: remove non serializable
+    // return removeNonSerializableProps();
+
+    return {
       slotPlaybackStateRanges,
       scheduleItems,
+    };
+  };
+
+  const stopLoop = () => {
+    onStopCallbacks.forEach((callback) => {
+      callback();
     });
+    onStopCallbacks = [];
   };
 
   const loop = (
@@ -199,9 +201,9 @@ export const createScheduler = ({ initialState, entityEntries }: SchedulerProps)
       // we must split the beatsRange into sections where the playing slots in the slotPlaybackState changes
       const scheduleData = getScheduleDataWithinRange(beatsRange, tempo);
 
-      // TODO: not sure this logic is correct
+      // TODO: not sure this logic is correct, we gotta update the state
       // the first slotPlaybackState becomes the new slotPlaybackState assuming we always move ahead in time
-      setSlotPlaybackState(scheduleData.slotPlaybackStateRanges[0]);
+      // setSlotPlaybackState(scheduleData.slotPlaybackStateRanges[0]);
 
       schedule(scheduleData.scheduleItems);
 
@@ -219,17 +221,14 @@ export const createScheduler = ({ initialState, entityEntries }: SchedulerProps)
     handleSchedule();
 
     return () => {
-      // TODO: this should be done in the dispose as well
-      onStopCallbacks.forEach((callback) => {
-        callback();
-      });
-      onStopCallbacks = [];
+      stopLoop();
+      // TODO: move this to stopLoop
       timeoutId !== null && window.clearTimeout(timeoutId);
     };
   };
 
   const dispose = () => {
-    // TODO: kill loop immediately
+    stopLoop();
     schedulerEvents.dispose();
   };
 

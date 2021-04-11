@@ -4,6 +4,7 @@ import { ScheduleNotes } from './ScheduleNotes';
 import { ScheduleSlots } from './ScheduleSlots';
 import { ScheduleScenes } from './ScheduledScenes';
 import { CodeViewer } from '../general/CodeViewer';
+import { removeNonSerializableProps } from '../utils/removeNonSerializableProps';
 
 export const SchedulerInspector: React.FunctionComponent = () => {
   const scheduleData = useScheduleData(0, 32);
@@ -17,7 +18,7 @@ export const SchedulerInspector: React.FunctionComponent = () => {
         // eslint-disable-next-line react/no-array-index-key
         return <ScheduleNotes key={index} scheduleItem={scheduleItem}></ScheduleNotes>;
       })}
-      <CodeViewer name="Schedule Data">{scheduleData}</CodeViewer>
+      <CodeViewer name="Schedule Data">{removeNonSerializableProps(scheduleData)}</CodeViewer>
     </>
   );
 };
