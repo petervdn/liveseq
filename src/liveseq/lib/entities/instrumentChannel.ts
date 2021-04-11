@@ -1,4 +1,4 @@
-import type { CommonProps, Disposable } from '../types';
+import type { CommonProps, Disposable, PartialCommonProps } from '../types';
 import { createEntries } from '../entries/entries';
 import { identity } from '../utils/identity';
 import { without } from '../utils/without';
@@ -30,13 +30,14 @@ export const createInstrumentChannelEntries = (mixer: Mixer) => {
   return createEntries<
     'instrumentChannels',
     InstrumentChannelInstance,
-    SerializableInstrumentChannel,
+    PartialCommonProps<SerializableInstrumentChannel>,
     ExtraMethods
   >(
     'instrumentChannels',
     (serializable) => {
       const mixerChannel = mixer.addChannel(0.75, 0);
       return {
+        isEnabled: true,
         ...serializable,
         getMixerChannel: () => {
           return mixerChannel;

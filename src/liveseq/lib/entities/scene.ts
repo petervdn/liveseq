@@ -1,4 +1,4 @@
-import type { CommonProps, Disposable } from '../types';
+import type { CommonProps, Disposable, PartialCommonProps } from '../types';
 import { createEntries } from '../entries/entries';
 import { identity } from '../utils/identity';
 import { always } from '../utils/always';
@@ -41,10 +41,11 @@ export type SceneInstance = Disposable<SerializableScene>;
 
 export const createSceneEntries = () => {
   // eslint-disable-next-line @typescript-eslint/ban-types
-  return createEntries<'scenes', SceneInstance, SerializableScene, {}>(
+  return createEntries<'scenes', SceneInstance, PartialCommonProps<SerializableScene>, {}>(
     'scenes',
     (serializable) => {
       return {
+        isEnabled: true,
         ...serializable,
         dispose: noop,
       };

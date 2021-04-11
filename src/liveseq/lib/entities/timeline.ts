@@ -1,5 +1,5 @@
 import type { BeatsRange } from '../time/beatsRange';
-import type { Beats, CommonProps, Disposable } from '../types';
+import type { Beats, CommonProps, Disposable, PartialCommonProps } from '../types';
 import { createEntries } from '../entries/entries';
 import { identity } from '../utils/identity';
 import { always } from '../utils/always';
@@ -17,11 +17,12 @@ export type TimelineInstance = Disposable<SerializableTimeline>;
 
 export const createTimelineEntries = () => {
   // eslint-disable-next-line @typescript-eslint/ban-types
-  return createEntries<'timelines', TimelineInstance, SerializableTimeline, {}>(
+  return createEntries<'timelines', TimelineInstance, PartialCommonProps<SerializableTimeline>, {}>(
     'timelines',
     (serializable) => {
       return {
         ...serializable,
+        isEnabled: true,
         dispose: noop,
       };
     },

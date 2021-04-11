@@ -1,4 +1,4 @@
-import type { CommonProps, OmitId } from '../types';
+import type { CommonProps, OmitId, PartialCommonProps } from '../types';
 import { errorMessages } from '../errors';
 import { getIdGenerator } from '../utils/getIdGenerator';
 import { getHighestId } from '../utils/getHighestId';
@@ -10,7 +10,7 @@ import { createPubSub } from '../utils/pubSub';
 // TODO: rename Instance to Entity
 export type EntriesInstance<
   Instance extends CommonProps & { dispose: () => void },
-  Serializable extends CommonProps,
+  Serializable extends PartialCommonProps<CommonProps>,
   // TODO: see if we can remove Extra by just passing everything in Instance
   Extra extends Record<string, unknown>
 > = {
@@ -34,7 +34,7 @@ type Entries<T> = Record<string, Record<string, T>>;
 export const createEntries = <
   Key extends string,
   Instance extends CommonProps & { dispose: () => void },
-  Serializable extends CommonProps,
+  Serializable extends PartialCommonProps<CommonProps>,
   Extra extends Record<string, unknown>
 >(
   key: Key,

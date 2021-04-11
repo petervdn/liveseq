@@ -26,7 +26,7 @@ const decodeProjectEntities = (props: CreateEntitiesProps) => {
   };
 
   objectEntries(props.project.entities).forEach(([key, values]) => {
-    values.forEach((value) => {
+    values.forEach((value: unknown) => {
       entries[key as keyof typeof entries].create(value as never);
     });
   });

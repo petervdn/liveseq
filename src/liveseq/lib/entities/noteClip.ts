@@ -1,5 +1,5 @@
 import type { Note } from '../note/note';
-import type { Beats, CommonProps, Disposable } from '../types';
+import type { Beats, CommonProps, Disposable, PartialCommonProps } from '../types';
 import { createEntries } from '../entries/entries';
 import { identity } from '../utils/identity';
 import { createNote } from '../note/note';
@@ -11,8 +11,8 @@ export type NoteClip = CommonProps & {
   notes: Array<Note>;
 };
 
-export type SerializableClip = NoteClip;
-export type NoteClipInstance = Disposable<SerializableClip>;
+export type SerializableClip = PartialCommonProps<NoteClip>;
+export type NoteClipInstance = Disposable<NoteClip>;
 
 type ExtraMethods = {
   addNote: (noteClipId: string, note: Partial<Note>) => string;
@@ -25,6 +25,7 @@ export const createNoteClipEntries = () => {
     'noteClips',
     (serializable) => {
       return {
+        isEnabled: true,
         ...serializable,
         dispose: noop,
       };
