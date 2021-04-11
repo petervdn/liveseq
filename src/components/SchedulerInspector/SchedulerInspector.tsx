@@ -1,4 +1,3 @@
-import type React from 'react';
 import { useScheduleData } from '../../liveseq/react/useScheduleData';
 import { ScheduleNotes } from './ScheduleNotes';
 import { ScheduleSlots } from './ScheduleSlots';
@@ -6,7 +5,7 @@ import { ScheduleScenes } from './ScheduledScenes';
 import { CodeViewer } from '../general/CodeViewer';
 import { removeNonSerializableProps } from '../utils/removeNonSerializableProps';
 
-export const SchedulerInspector: React.FunctionComponent = () => {
+export const SchedulerInspector = () => {
   const scheduleData = useScheduleData(0, 32);
 
   return (

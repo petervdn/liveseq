@@ -6,6 +6,7 @@ import { SchedulerInspector } from './SchedulerInspector/SchedulerInspector';
 import { ProjectJson } from './Project/ProjectJson';
 import { GlobalStyle } from './general/GlobalStyle';
 import { Box } from './general/Box';
+import { Tabs } from './general/Tabs';
 
 export const Liveseq: React.FunctionComponent<LiveseqProps> = (props) => {
   const { LiveseqProvider } = useLiveseq(props);
@@ -17,8 +18,18 @@ export const Liveseq: React.FunctionComponent<LiveseqProps> = (props) => {
         <Box position="relative" margin="auto 150px;" marginTop={30}>
           <Tempo />
           <PlaybackButton />
-          <SchedulerInspector />
-          <ProjectJson />
+          <Tabs
+            items={[
+              {
+                label: 'Scheduler',
+                component: SchedulerInspector,
+              },
+              {
+                label: 'Project',
+                component: ProjectJson,
+              },
+            ]}
+          />
         </Box>
       </LiveseqProvider>
     </>
