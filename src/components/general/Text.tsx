@@ -1,12 +1,12 @@
 import styled from 'styled-components';
-import { compose, typography, TypographyProps, color, ColorProps } from 'styled-system';
+import { compose, typography, TypographyProps } from 'styled-system';
 import { Box, BoxProps } from './Box';
 import type { HeadingLevel } from './Heading';
 
-type InternalTextProps = BoxProps & TypographyProps & ColorProps;
+type InternalTextProps = BoxProps & TypographyProps;
 
 // because the types seem kinda weird, plus I want some defaults
-const InternalText = styled(Box)<InternalTextProps>(compose(typography, color));
+const InternalText = styled(Box)<InternalTextProps>(compose(typography));
 
 export type TextProps = {
   // add more as needed
@@ -19,6 +19,8 @@ export type TextProps = {
 
 export const Text = ({ as = 'span', children, ...props }: TextProps) => {
   return (
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     <InternalText as={as} {...props}>
       {children}
     </InternalText>

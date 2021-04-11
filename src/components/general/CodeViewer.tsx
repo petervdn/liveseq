@@ -9,6 +9,6 @@ export const CodeViewer = (props: { name: string; children: Record<string, unkno
       language="javascript"
       code={`const ${camelCase(props.name)} = ${stringify(props.children, undefined, 2)}` || ''}
       line={(props) => <CodeLine {...props} />}
-    ></ExtensibleCodeViewer>
+    />
   );
 };

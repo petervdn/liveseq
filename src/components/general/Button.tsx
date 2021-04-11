@@ -1,5 +1,6 @@
 import type React from 'react';
 import { Text } from './Text';
+import { Box } from './Box';
 
 type ButtonProps = {
   // add more as needed
@@ -9,8 +10,8 @@ type ButtonProps = {
 
 export const Button = ({ children, onClick }: ButtonProps) => {
   return (
-    <button type="button" onClick={onClick}>
+    <Box as="button" type="button" onClick={onClick}>
       <Text>{children}</Text>
-    </button>
+    </Box>
   );
 };

@@ -15,9 +15,7 @@ export const Liveseq: React.FunctionComponent<LiveseqProps> = (props) => {
     <>
       <GlobalStyle />
       <LiveseqProvider>
-        <Box position="relative" margin="auto 150px;" marginTop={30}>
-          <Tempo />
-          <PlaybackButton />
+        <Box position="relative" margin="auto 200px;" marginTop={30}>
           <Tabs
             items={[
               {
@@ -30,6 +28,10 @@ export const Liveseq: React.FunctionComponent<LiveseqProps> = (props) => {
               },
             ]}
           />
+        </Box>
+        <Box position="fixed" bottom={0} padding={20} width="100%" style={{ background: '#444' }}>
+          <Tempo />
+          <PlaybackButton />
         </Box>
       </LiveseqProvider>
     </>
