@@ -13,6 +13,7 @@ import { getQueuedScenesWithinRange } from './utils/getQueuedScenesWithinRange';
 import { groupQueuedScenesByStart } from './utils/groupQueuedScenesByStart';
 import { getAppliedStatesForQueuedScenes } from './utils/getAppliedStatesForQueuedScenes';
 import { getNotesForInstrumentInTimeRange } from '../entities/utils/getNotesForInstrumentInTimeRange';
+import { removeNonSerializableProps } from '../../../components/utils/removeNonSerializableProps';
 
 // TODO: this is a bit repeated in player
 export const createSchedulerEvents = () => {
@@ -35,11 +36,13 @@ export type ScheduleNote = Note & {
   endTime: TimeInSeconds;
   schedulingId: string;
 };
+
 export type ScheduleItem = {
   notes: Array<ScheduleNote>;
   channelMixer: MixerChannel;
   instrument: Instrument;
 };
+
 export type ScheduleData = {
   slotPlaybackStateRanges: Array<BeatsRange & SlotPlaybackState>;
   scheduleItems: Array<ScheduleItem>;
@@ -49,9 +52,11 @@ type PlayingSlot = {
   slotId: string;
   start: Beats;
 };
+
 export type QueuedScene = BeatsRange & {
   sceneId: string;
 };
+
 export type SlotPlaybackState = {
   playingSlots: Array<PlayingSlot>;
   activeSceneIds: Array<string>;
@@ -165,10 +170,11 @@ export const createScheduler = ({ initialState, entityEntries }: SchedulerProps)
       return getNotesForInstrumentInTimeRange(entityEntries, slotIds, slotRange, tempo);
     });
 
-    return {
+    // TODO: can be improved
+    return removeNonSerializableProps({
       slotPlaybackStateRanges,
       scheduleItems,
-    };
+    });
   };
 
   const loop = (

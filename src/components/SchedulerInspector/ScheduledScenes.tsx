@@ -23,12 +23,12 @@ export const ScheduleScenes = ({
 
   return (
     <>
-      <Heading sizeLevel={4}>Queued Scenes</Heading>
+      <Heading sizeLevel={4}>Active Scenes</Heading>
 
       {/* note output per instrument (instrument channel??) */}
       <div style={{ position: 'relative', height, width: '100%', border: '1px solid black' }}>
         {slotPlaybackStateRanges.flatMap(({ start, end, ...slotPlaybackStanteRange }, index) => {
-          return slotPlaybackStanteRange.queuedScenes.map((queuedScene, slotIndex) => {
+          return slotPlaybackStanteRange.activeSceneIds.map((activeSceneId, slotIndex) => {
             return (
               <div
                 // eslint-disable-next-line react/no-array-index-key
@@ -42,7 +42,7 @@ export const ScheduleScenes = ({
                   background: 'rgba(0,1,0,0.5)',
                 }}
               >
-                {start} {queuedScene.sceneId}
+                {start} {activeSceneId}
               </div>
             );
           });

@@ -8,8 +8,8 @@ const liveseq = createLiveseq({ project: { name: 'Test project' } });
 addCompleteRouting({
   liveseq,
   notes: getMetronomeNotes(false),
-  sceneEnd: 4 as Beats,
   sceneStart: 0 as Beats,
+  sceneEnd: 4 as Beats,
   name: 'test track',
 });
 

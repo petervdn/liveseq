@@ -5,6 +5,7 @@ import { libraryVersion } from './meta';
 import { createEntities } from './entities/entities';
 import { createMixer } from './mixer/mixer';
 import { createScheduler } from './scheduler/scheduler';
+import { removeNonSerializableProps } from '../../components/utils/removeNonSerializableProps';
 
 export type EngineProps = {
   project: SerializableProject;
@@ -44,12 +45,14 @@ export const createEngine = ({
     const serializableEntities = entities.encodeEntities();
     const slotPlaybackState = scheduler.getSlotPlaybackState();
 
-    return createProject({
-      ...project,
-      libraryVersion,
-      initialState: { slotPlaybackState },
-      entities: serializableEntities,
-    });
+    return removeNonSerializableProps<SerializableProject>(
+      createProject({
+        ...project,
+        libraryVersion,
+        initialState: { slotPlaybackState },
+        entities: serializableEntities,
+      }),
+    );
   };
 
   const getAudioContext = () => {
