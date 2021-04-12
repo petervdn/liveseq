@@ -15,7 +15,11 @@ export const Tabs = ({ items, ...props }: TabsProps) => {
     <Box {...props} position="relative">
       {items.map(({ label }, index) => {
         return (
-          <Button key={label} onClick={() => setActiveTabIndex(index)}>
+          <Button
+            key={label}
+            isActive={index === activeTabIndex}
+            onClick={() => setActiveTabIndex(index)}
+          >
             {label}
           </Button>
         );
