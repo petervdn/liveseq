@@ -1,7 +1,9 @@
 import { Liveseq } from './components/Liveseq';
-import { Beats, createLiveseq } from './liveseq';
+import { Beats, createLiveseq, getAbSwitch } from './liveseq';
 import { addCompleteRouting } from './components/utils/addCompletRouting';
 import { getMetronomeNotes } from './liveseq/projects/abSwitch';
+import { GlobalStyle } from './components/general/GlobalStyle';
+import { Tabs } from './components/general/Tabs';
 
 const liveseq = createLiveseq({ project: { name: 'Test project' } });
 
@@ -13,7 +15,30 @@ addCompleteRouting({
   name: 'test track',
 });
 
+const simpleMetronome = liveseq.getProject();
+
+const projects = [
+  {
+    label: 'A/B Switch',
+    project: getAbSwitch(),
+  },
+  {
+    label: 'Simple Metronome',
+    project: simpleMetronome,
+  },
+];
+
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default function App() {
-  return <Liveseq project={liveseq.getProject()}></Liveseq>;
+  return (
+    <>
+      <GlobalStyle />
+      <Tabs
+        items={projects.map(({ label, project }) => ({
+          label,
+          component: () => <Liveseq key={label} project={project} />,
+        }))}
+      />
+    </>
+  );
 }
