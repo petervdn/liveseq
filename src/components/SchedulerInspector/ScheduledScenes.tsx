@@ -6,6 +6,7 @@ import { Heading } from '../general/Heading';
 
 type ScheduleScenesProps = {
   slotPlaybackStateRanges: Array<BeatsRange & SlotPlaybackState>;
+  totalBeats: number;
   horizontalScale: number;
   verticalScale?: number;
   height?: number;
@@ -13,6 +14,7 @@ type ScheduleScenesProps = {
 
 export const ScheduleScenes = ({
   slotPlaybackStateRanges,
+  totalBeats,
   horizontalScale,
   verticalScale = 18,
   height = 200,
@@ -20,7 +22,12 @@ export const ScheduleScenes = ({
   const noteHeight = height / 12;
 
   return (
-    <ItemsViewer title="Active Scenes" height={height}>
+    <ItemsViewer
+      horizontalScale={horizontalScale}
+      totalBeats={totalBeats}
+      title="Active Scenes"
+      height={height}
+    >
       {slotPlaybackStateRanges.flatMap(({ start, end, ...slotPlaybackStanteRange }, index) => {
         return slotPlaybackStanteRange.activeSceneIds.map((activeSceneId, slotIndex) => {
           return (

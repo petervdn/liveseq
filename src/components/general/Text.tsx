@@ -11,11 +11,8 @@ const InternalText = styled(Box)<InternalTextProps>(compose(typography));
 export type TextProps = {
   // add more as needed
   as?: HeadingLevel | 'p' | 'span';
-  fontFamily?: InternalTextProps['fontFamily'];
-  fontSize?: InternalTextProps['fontSize'];
-  position?: InternalTextProps['position'];
   children: string;
-} & BoxProps;
+} & InternalTextProps;
 
 export const Text = ({ as = 'span', children, ...props }: TextProps) => {
   return (

@@ -7,6 +7,7 @@ import { Heading } from '../general/Heading';
 
 type ScheduleNotesProps = {
   scheduleItem: ScheduleItem;
+  totalBeats: number;
   horizontalScale: number;
   verticalScale?: number;
   height?: number;
@@ -16,6 +17,7 @@ type ScheduleNotesProps = {
 export const ScheduleNotes = ({
   scheduleItem,
   horizontalScale,
+  totalBeats,
   verticalScale = 0.1,
   octaves = 2,
   height = 200,
@@ -23,7 +25,12 @@ export const ScheduleNotes = ({
   const noteHeight = height / (12 * octaves);
   // TODO: note output per instrument (instrument channel??)
   return (
-    <ItemsViewer title="Scheduled Notes" height={height}>
+    <ItemsViewer
+      horizontalScale={horizontalScale}
+      totalBeats={totalBeats}
+      title="Scheduled Notes"
+      height={height}
+    >
       {scheduleItem.notes.map((note) => {
         return (
           <Item

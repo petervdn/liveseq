@@ -9,8 +9,17 @@ import {
   PositionProps,
   color,
   ColorProps,
+  opacity,
+  OpacityProps,
+  border,
+  BorderProps,
 } from 'styled-system';
 
-export type BoxProps = SpaceProps & LayoutProps & PositionProps & ColorProps;
+export type BoxProps = SpaceProps &
+  LayoutProps &
+  PositionProps &
+  ColorProps &
+  OpacityProps &
+  BorderProps;
 
-export const Box = styled.div<BoxProps>(compose(layout, space, position, color));
+export const Box = styled.div<BoxProps>(compose(layout, space, position, color, opacity, border));

@@ -13,7 +13,7 @@ export type HeadingLevel = keyof typeof sizesPerLevel;
 
 type HeadingProps = {
   sizeLevel: 1 | 2 | 3 | 4 | 5 | 6;
-  children: string;
+  children: React.ReactNode;
 } & Omit<TextProps, 'fontSize' | 'as'>;
 
 export const Heading = ({ sizeLevel, children, marginTop = 0, ...props }: HeadingProps) => {

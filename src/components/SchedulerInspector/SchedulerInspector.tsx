@@ -7,9 +7,10 @@ import { removeNonSerializableProps } from '../utils/removeNonSerializableProps'
 import { Tabs } from '../general/Tabs';
 
 const horizontalScale = 60;
+const totalBeats = 32;
 
 export const SchedulerInspector = () => {
-  const scheduleData = useScheduleData(0, 32);
+  const scheduleData = useScheduleData(0, totalBeats);
 
   return (
     <Tabs
@@ -24,16 +25,19 @@ export const SchedulerInspector = () => {
                   <ScheduleNotes
                     // eslint-disable-next-line react/no-array-index-key
                     key={index}
+                    totalBeats={totalBeats}
                     horizontalScale={horizontalScale}
                     scheduleItem={scheduleItem}
                   />
                 );
               })}
               <ScheduleSlots
+                totalBeats={totalBeats}
                 horizontalScale={horizontalScale}
                 slotPlaybackStateRanges={scheduleData.slotPlaybackStateRanges}
               />
               <ScheduleScenes
+                totalBeats={totalBeats}
                 horizontalScale={horizontalScale}
                 slotPlaybackStateRanges={scheduleData.slotPlaybackStateRanges}
               />
