@@ -2,8 +2,8 @@ import { Wrapper } from './Wrapper';
 import { Fill } from './Fill';
 import { Heading } from './Heading';
 import { Box } from './Box';
-import { Text } from './Text';
 import { times } from '../../liveseq/lib/utils/times';
+import { Label } from './Label';
 
 export type ItemsViewerProps = {
   title: string;
@@ -34,9 +34,7 @@ export const ItemsViewer = ({
             backgroundColor="grey"
             opacity={index % 4 === 0 ? 1 : 0.5}
           >
-            <Text marginLeft="-2px" fontSize={12}>
-              {index.toString()}
-            </Text>
+            <Label marginLeft="-2px">{index.toString()}</Label>
           </Box>
         );
       })}

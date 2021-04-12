@@ -3,7 +3,7 @@ import type { ScheduleItem } from '../../liveseq/lib/scheduler/scheduler';
 import { ItemsViewer } from '../general/ItemsViewer';
 import { Item } from '../general/Item';
 import { Box } from '../general/Box';
-import { Heading } from '../general/Heading';
+import { Label } from '../general/Label';
 
 type ScheduleNotesProps = {
   scheduleItem: ScheduleItem;
@@ -48,7 +48,7 @@ export const ScheduleNotes = ({
               height={1}
               style={{ background: 'red' }}
             />
-            <Heading sizeLevel={5}>{`${note.start} ${note.pitch}`}</Heading>
+            <Label>{note.pitch}</Label>
           </Item>
         );
       })}

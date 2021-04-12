@@ -2,7 +2,7 @@ import type { BeatsRange } from '../../liveseq';
 import type { SlotPlaybackState } from '../../liveseq/lib/scheduler/schedulerState';
 import { ItemsViewer } from '../general/ItemsViewer';
 import { Item } from '../general/Item';
-import { Heading } from '../general/Heading';
+import { Label } from '../general/Label';
 
 type ScheduleSlotsProps = {
   slotPlaybackStateRanges: Array<BeatsRange & SlotPlaybackState>;
@@ -41,7 +41,7 @@ export const ScheduleSlots = ({
               horizontalScale={horizontalScale}
               left={start}
             >
-              <Heading sizeLevel={5}>{`${start} ${playingSlot.slotId}`}</Heading>
+              <Label>{playingSlot.slotId}</Label>
             </Item>
           );
         });
