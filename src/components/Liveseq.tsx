@@ -12,7 +12,7 @@ export const Liveseq: React.FunctionComponent<LiveseqProps> = (props) => {
 
   return (
     <LiveseqProvider>
-      <Box position="relative" margin="auto 200px;" marginTop={30} paddingBottom={150}>
+      <Box position="relative" marginLeft="200px;" marginTop={30} paddingBottom={150}>
         <Tabs
           items={[
             {
