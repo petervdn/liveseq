@@ -67,4 +67,13 @@ export const addCompleteRouting = ({
     start: sceneStart,
     end: sceneEnd,
   });
+
+  return {
+    liveseq,
+    noteClipId,
+    timelineId,
+    slotId,
+    samplerId,
+    sceneId,
+  };
 };
