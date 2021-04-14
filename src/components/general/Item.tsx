@@ -29,6 +29,7 @@ export const Item = ({
       bottom={bottom * verticalScale}
       left={left * horizontalScale}
       style={{
+        // TODO: expose these from box
         border: '1px solid blue',
         background: 'rgba(0, 0, 0, 0.5)',
       }}

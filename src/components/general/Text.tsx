@@ -9,13 +9,13 @@ type InternalTextProps = BoxProps & TypographyProps;
 const InternalText = styled(Box)<InternalTextProps>(compose(typography));
 
 export type TextProps = {
-  // add more as needed
   as?: HeadingLevel | 'p' | 'span';
   children: string;
 } & InternalTextProps;
 
 export const Text = ({ as = 'span', children, ...props }: TextProps) => {
   return (
+    // TODO: whyyy
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     <InternalText as={as} {...props}>
