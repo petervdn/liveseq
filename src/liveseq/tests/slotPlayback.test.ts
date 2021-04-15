@@ -1,9 +1,10 @@
 import type { Beats } from '../lib/types';
 import { createLiveseq } from '..';
 import { playSlots } from '../lib/entities/scene';
+import { getMockedProps } from './getMockedProps';
 
 it('getSlotPlaybackStatesWithinRange', () => {
-  const liveseq = createLiveseq();
+  const liveseq = createLiveseq(getMockedProps());
   const slotPlaybackState = liveseq.getProject().initialState.slotPlaybackState!;
 
   // doesn't do anything if array is empty

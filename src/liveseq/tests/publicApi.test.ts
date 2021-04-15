@@ -1,4 +1,5 @@
 import { createLiveseq, useLiveseq, useLiveseqContext, libraryVersion } from '..';
+import { getMockedProps } from './getMockedProps';
 
 // these tests help ensure the public api of the library and of liveseq doesn't change
 // we should eventually add type testing as well
@@ -11,7 +12,7 @@ it('exports all the public members from index', () => {
 });
 
 it('returns an object with the expected keys from createLiveseq', () => {
-  const liveseq = createLiveseq();
+  const liveseq = createLiveseq(getMockedProps());
   // SELECTORS
   // store
   expect(liveseq.getPlaybackState).toBeDefined();

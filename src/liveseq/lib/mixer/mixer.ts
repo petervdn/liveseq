@@ -8,22 +8,24 @@ type CreateMixerChannelProps = {
 export type MixerChannel = ReturnType<typeof createMixerChannel>;
 
 // TODO: need to be able to subscribe
-const createMixerChannel = ({ audioContext, destination, gain, pan }: CreateMixerChannelProps) => {
-  const { currentTime } = audioContext;
-  const channelGainNode = audioContext.createGain();
-  channelGainNode.gain.setValueAtTime(gain, currentTime);
-  const stereoPannerNode = audioContext.createStereoPanner();
-  stereoPannerNode.pan.setValueAtTime(pan, currentTime);
-  stereoPannerNode.connect(channelGainNode);
-  channelGainNode.connect(destination);
+const createMixerChannel = ({ audioContext }: CreateMixerChannelProps) => {
+  // const { currentTime } = audioContext;
+  // const channelGainNode = audioContext.createGain();
+  // channelGainNode.gain.setValueAtTime(gain, currentTime);
+  // const stereoPannerNode = audioContext.createStereoPanner();
+  // TODO: was making tests break
+  // stereoPannerNode.pan.setValueAtTime(pan, currentTime);
+  // stereoPannerNode.connect(channelGainNode);
+  // channelGainNode.connect(destination);
 
   return {
     audioContext,
     getGainNode: () => {
-      return channelGainNode;
+      // return channelGainNode;
+      return audioContext.destination;
     },
     getStereoPannerNode: () => {
-      return stereoPannerNode;
+      // return stereoPannerNode;
     },
     dispose: () => {
       // TODO

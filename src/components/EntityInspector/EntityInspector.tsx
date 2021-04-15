@@ -11,7 +11,7 @@ const InstrumentChannels = () => {
       renderDetails={(item) => {
         return (
           <>
-            <li>channel gain: {item.getMixerChannel().getGainNode().gain.value};</li>
+            {/* <li>channel gain: {item.getMixerChannel().getGainNode().gain.value};</li> */}
             <li>instrument: {item.instrumentId};</li>
             <li>slotIds: {item.slotIds.join(',')};</li>
           </>
