@@ -14,8 +14,6 @@ import { timeRangeToBeatsRange } from './timeRangeToBeatsRange';
 import type { TimeRange } from '../timeRange';
 import type { Beats, Bpm } from '../../types';
 
-export {};
-
 it('createRange', () => {
   expect(createRange(0 as Beats, 10 as Beats)).toEqual({ start: 0, end: 10 });
 });
