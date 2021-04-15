@@ -1,4 +1,4 @@
-import type { BeatsRange } from '../time/beatsRange';
+import type { BeatsRange } from '../time/beatsRange/beatsRange';
 import type { Beats, CommonProps, Disposable, PartialCommonProps } from '../types';
 import { createEntries } from '../entries/entries';
 import { identity } from '../utils/identity';

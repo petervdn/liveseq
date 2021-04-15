@@ -4,7 +4,7 @@ import type { MixerChannel } from '../mixer/mixer';
 import type { Instrument } from '../entities/instrumentChannel';
 import type { BeatsRange } from '../..';
 import type { EntityEntries } from '../entities/entities';
-import { timeRangeToBeatsRange } from '../time/beatsRange';
+import { timeRangeToBeatsRange } from '../time/beatsRange/timeRangeToBeatsRange';
 import { getQueuedScenesWithinRange } from './utils/getQueuedScenesWithinRange';
 import { groupQueuedScenesByStart } from './utils/groupQueuedScenesByStart';
 import { getAppliedStatesForQueuedScenes } from './utils/getAppliedStatesForQueuedScenes';

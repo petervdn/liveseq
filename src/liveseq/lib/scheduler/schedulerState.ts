@@ -1,7 +1,7 @@
 import { addScenesToQueue } from './utils/addScenesToQueue';
 import { removeScenesFromQueue } from './utils/removeScenesFromQueue';
 import type { Beats } from '../types';
-import type { BeatsRange } from '../time/beatsRange';
+import type { BeatsRange } from '../time/beatsRange/beatsRange';
 
 type PlayingSlot = {
   slotId: string;

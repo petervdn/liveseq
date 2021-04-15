@@ -1,7 +1,7 @@
 import { getTimelineNotesInRange } from './getTimelineNotesInRange';
 import { beatsToTime } from '../../time/musicTime';
 import type { EntityEntries } from '../entities';
-import type { BeatsRange } from '../../time/beatsRange';
+import type { BeatsRange } from '../../time/beatsRange/beatsRange';
 import type { Bpm } from '../../types';
 import { getInstrumentChannelsBySlotId } from './getInstrumentChannelsBySlotId';
 import { getClipsByTimelineId } from './getClipsByTimelineId';
