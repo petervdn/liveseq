@@ -6,15 +6,20 @@ type PlayingSlot = {
   slotId: string;
   start: Beats;
 };
+
 export type QueuedScene = {
   sceneId: string;
   start: Beats;
 };
+
+// TODO: needs to be rethought
 export type SlotPlaybackState = {
   playingSlots: Array<PlayingSlot>;
+  // TODO: probably want to remove this
   activeSceneIds: Array<string>;
   queuedScenes: Array<QueuedScene>;
 };
+
 export const createSlotPlaybackState = (): SlotPlaybackState => {
   const defaultSlotPlaybackState = {
     playingSlots: [],
@@ -24,9 +29,11 @@ export const createSlotPlaybackState = (): SlotPlaybackState => {
 
   return defaultSlotPlaybackState;
 };
+
 export type SchedulerState = {
   slotPlaybackState: SlotPlaybackState;
 };
+
 export const createSchedulerState = (initialState: Partial<SchedulerState>) => {
   let state: SchedulerState = {
     slotPlaybackState: initialState.slotPlaybackState || createSlotPlaybackState(),
