@@ -34,7 +34,6 @@ export type SceneAction = PlaySlotsAction | StopSlotsAction;
 
 export type SerializableScene = CommonProps & {
   enter?: ReadonlyArray<SceneAction>; // when it becomes active
-  leave?: ReadonlyArray<SceneAction>; // when it becomes inactive
 };
 
 export type SceneInstance = Disposable<SerializableScene>;

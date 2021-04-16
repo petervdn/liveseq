@@ -68,15 +68,21 @@ function addMetronome(liveseq: Liveseq, isAlternative: boolean) {
     slotIds: [slotId],
   });
 
-  const sceneId = liveseq.scenes.create({
-    name: isAlternative ? 'B' : 'A',
+  const sceneEnterId = liveseq.scenes.create({
+    name: `Enter ${isAlternative ? 'B' : 'A'}`,
     enter: [playSlots([slotId])],
-    leave: [stopSlots([slotId])],
+  });
+  liveseq.addSceneToQueue({
+    sceneId: sceneEnterId,
+    start: (isAlternative ? 4 : 0) as Beats,
   });
 
+  const sceneLeaveId = liveseq.scenes.create({
+    name: `Leave ${isAlternative ? 'B' : 'A'}`,
+    enter: [stopSlots([slotId])],
+  });
   liveseq.addSceneToQueue({
-    sceneId,
+    sceneId: sceneLeaveId,
     start: (isAlternative ? 4 : 0) as Beats,
-    end: (isAlternative ? 8 : 4) as Beats,
   });
 }

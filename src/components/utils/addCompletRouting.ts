@@ -1,22 +1,15 @@
 import type { Beats, Liveseq } from '../../liveseq';
-import { playSlots, stopSlots } from '../../liveseq/lib/entities/scene';
+import { playSlots } from '../../liveseq/lib/entities/scene';
 import type { Note } from '../../liveseq/lib/note/note';
 
 type CompleteRoutingProps = {
   name: string;
   liveseq: Liveseq;
   sceneStart: Beats;
-  sceneEnd: Beats;
   notes: Array<Partial<Note>>;
 };
 
-export const addCompleteRouting = ({
-  name,
-  liveseq,
-  sceneEnd,
-  sceneStart,
-  notes,
-}: CompleteRoutingProps) => {
+export const addCompleteRouting = ({ name, liveseq, sceneStart, notes }: CompleteRoutingProps) => {
   const noteClipId = liveseq.noteClips.create({
     name: `Clip - ${name}`,
     duration: 4 as Beats,
@@ -59,13 +52,11 @@ export const addCompleteRouting = ({
   const sceneId = liveseq.scenes.create({
     name: `Scene - ${name}`,
     enter: [playSlots([slotId])],
-    leave: [stopSlots([slotId])],
   });
 
   liveseq.addSceneToQueue({
     sceneId,
     start: sceneStart,
-    end: sceneEnd,
   });
 
   return {

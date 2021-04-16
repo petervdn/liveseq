@@ -1,14 +1,14 @@
 import { addScenesToQueue } from './utils/addScenesToQueue';
 import { removeScenesFromQueue } from './utils/removeScenesFromQueue';
 import type { Beats } from '../types';
-import type { BeatsRange } from '../time/beatsRange/beatsRange';
 
 type PlayingSlot = {
   slotId: string;
   start: Beats;
 };
-export type QueuedScene = BeatsRange & {
+export type QueuedScene = {
   sceneId: string;
+  start: Beats;
 };
 export type SlotPlaybackState = {
   playingSlots: Array<PlayingSlot>;

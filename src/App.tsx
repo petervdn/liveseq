@@ -14,7 +14,6 @@ times(2, (index) => {
     liveseq,
     notes: getMetronomeNotes(index % 2 === 1),
     sceneStart: (offset * index) as Beats,
-    sceneEnd: (offset * (index + 1)) as Beats,
     name: `Routing ${index}`,
   });
 });

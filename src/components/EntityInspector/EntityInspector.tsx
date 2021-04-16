@@ -40,17 +40,6 @@ const Scenes = () => {
                   </li>
                 );
               })}
-
-            {scene.leave &&
-              scene.leave.map((leaveAction, index) => {
-                return (
-                  // eslint-disable-next-line react/no-array-index-key
-                  <li key={index}>
-                    leave - {leaveAction.type}:{' '}
-                    {leaveAction.slotIds ? leaveAction.slotIds.join(',') : 'all'};
-                  </li>
-                );
-              })}
           </>
         );
       }}

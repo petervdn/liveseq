@@ -15,7 +15,6 @@ it('getSlotPlaybackStatesWithinRange', () => {
   const sceneIdA = liveseq.scenes.create({ enter: [playSlots(['slot1'])] });
   liveseq.addSceneToQueue({
     start: 0 as Beats,
-    end: Infinity as Beats,
     sceneId: sceneIdA,
   });
   //
