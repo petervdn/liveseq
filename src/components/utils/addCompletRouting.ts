@@ -36,7 +36,7 @@ export const addCompleteRouting = ({ name, liveseq, sceneStart, notes }: Complet
     type: 'timelineSlot',
     name: `Slot - ${name}`,
     timelineId,
-    loops: 20,
+    loops: 4,
   });
 
   const samplerId = liveseq.samplers.create({

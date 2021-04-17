@@ -2,10 +2,17 @@ import type React from 'react';
 import { LiveseqProps, useLiveseq } from '../liveseq';
 import { PlaybackButton } from './PlaybackButton';
 import { Tempo } from './Tempo';
-import { SchedulerInspector } from './SchedulerInspector/SchedulerInspector';
+import { SchedulerInspector } from './Viewers/SchedulerInspector';
 import { ProjectJson } from './Project/ProjectJson';
 import { Box } from './general/Box';
 import { Tabs } from './general/Tabs';
+import { Timelines } from './Viewers/Timelines';
+
+const viewerProps = {
+  horizontalScale: 60,
+  totalBeats: 32,
+  height: 200,
+};
 
 export const Liveseq: React.FunctionComponent<LiveseqProps> = (props) => {
   const { LiveseqProvider } = useLiveseq(props);
@@ -17,7 +24,11 @@ export const Liveseq: React.FunctionComponent<LiveseqProps> = (props) => {
           items={[
             {
               label: 'Scheduler',
-              component: () => <SchedulerInspector />,
+              component: () => <SchedulerInspector {...viewerProps} />,
+            },
+            {
+              label: 'Timelines',
+              component: () => <Timelines {...viewerProps} />,
             },
             {
               label: 'Project',

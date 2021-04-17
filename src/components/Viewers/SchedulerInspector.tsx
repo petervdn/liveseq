@@ -5,11 +5,9 @@ import { ScheduleScenes } from './ScheduledScenes';
 import { CodeViewer } from '../general/CodeViewer';
 import { removeNonSerializableProps } from '../utils/removeNonSerializableProps';
 import { Tabs } from '../general/Tabs';
+import type { ViewerVisualProps } from '../general/ItemsViewer';
 
-const horizontalScale = 60;
-const totalBeats = 32;
-
-export const SchedulerInspector = () => {
+export const SchedulerInspector = ({ totalBeats, horizontalScale, height }: ViewerVisualProps) => {
   const scheduleData = useScheduleData(0, totalBeats);
 
   return (
@@ -28,6 +26,7 @@ export const SchedulerInspector = () => {
                     totalBeats={totalBeats}
                     horizontalScale={horizontalScale}
                     scheduleItem={scheduleItem}
+                    height={height}
                   />
                 );
               })}

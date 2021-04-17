@@ -5,13 +5,17 @@ import { Box } from './Box';
 import { times } from '../../liveseq/lib/utils/times';
 import { Label } from './Label';
 
-export type ItemsViewerProps = {
-  title: string;
+export type ViewerVisualProps = {
   totalBeats: number;
   horizontalScale: number;
+  // verticalScale?: number;
   height: number;
-  children: React.ReactNode;
 };
+
+export type ItemsViewerProps = {
+  title: string;
+  children: React.ReactNode;
+} & ViewerVisualProps;
 
 export const ItemsViewer = ({
   title,

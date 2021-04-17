@@ -1,26 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useLiveseqContext } from './useLiveseq';
 
-// TODO: DRY
-export const useInstrumentChannels = () => {
+export const useTimelines = () => {
   const liveseq = useLiveseqContext();
-  const [instrumentChannels, setInstrumentChannels] = useState(liveseq.instrumentChannels.getList);
+  const [timelines, setTimelines] = useState(liveseq.timelines.getList);
 
   useEffect(() => {
-    return liveseq.instrumentChannels.subscribe(() =>
-      setInstrumentChannels(liveseq.instrumentChannels.getList()),
-    );
+    return liveseq.timelines.subscribe(() => setTimelines(liveseq.timelines.getList()));
   }, [liveseq]);
-
-  return instrumentChannels;
-};
-
-export const useScenes = () => {
-  const liveseq = useLiveseqContext();
-  const [scenes, setScenes] = useState(liveseq.scenes.getList);
-
-  useEffect(() => {
-    return liveseq.scenes.subscribe(() => setScenes(liveseq.scenes.getList()));
-  }, [liveseq]);
-  return scenes;
+  return timelines;
 };

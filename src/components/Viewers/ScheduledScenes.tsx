@@ -28,8 +28,8 @@ export const ScheduleScenes = ({
       title="Active Scenes"
       height={height}
     >
-      {slotPlaybackStateRanges.flatMap(({ start, end, ...slotPlaybackStanteRange }, index) => {
-        return slotPlaybackStanteRange.activeSceneIds.map((activeSceneId, slotIndex) => {
+      {slotPlaybackStateRanges.flatMap(({ start, end, ...slotPlaybackStateRange }, index) => {
+        return slotPlaybackStateRange.queuedScenes.map((queuedScene, slotIndex) => {
           return (
             <Item
               // eslint-disable-next-line react/no-array-index-key
@@ -41,7 +41,7 @@ export const ScheduleScenes = ({
               horizontalScale={horizontalScale}
               left={start}
             >
-              <Label>{activeSceneId}</Label>
+              <Label>{queuedScene.sceneId}</Label>
             </Item>
           );
         });

@@ -13,7 +13,6 @@ export const applyScenesToSlotPlaybackState = (
   const enabledScenes = scenes.filter((scene) => scene.isEnabled);
   // TODO: incomplete implementation, only plays
   const appliedScenes = enabledScenes.flatMap((scene) => {
-    // TODO: consider leave
     // TODO: consider disabled slots
     return (scene.enter || []).flatMap((action) => {
       if (action.type === 'playSlots') {
@@ -36,12 +35,14 @@ export const applyScenesToSlotPlaybackState = (
 
   const playingSlots = slotPlaybackState.playingSlots.concat(appliedScenes);
 
-  // TODO: don't return just ids, return the obj
-  const activeSceneIds = enabledScenes.map((scene) => scene.id); // TODO: incomplete
+  // // TODO: don't return just ids, return the obj
+  // const queuedScenes = enabledScenes.map((scene) => ({
+  //   start: scene.,
+  //   sceneId: scene.id,
+  // })); // TODO: incomplete
 
   return {
-    ...slotPlaybackState,
+    queuedScenes: [],
     playingSlots,
-    activeSceneIds,
   };
 };

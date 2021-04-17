@@ -12,18 +12,15 @@ export type QueuedScene = {
   start: Beats;
 };
 
-// TODO: needs to be rethought
+// TODO: needs to be rethought, if scenes operate on playing slots then the queue might be something else
 export type SlotPlaybackState = {
   playingSlots: Array<PlayingSlot>;
-  // TODO: probably want to remove this
-  activeSceneIds: Array<string>;
   queuedScenes: Array<QueuedScene>;
 };
 
 export const createSlotPlaybackState = (): SlotPlaybackState => {
   const defaultSlotPlaybackState = {
     playingSlots: [],
-    activeSceneIds: [],
     queuedScenes: [],
   };
 

@@ -1,18 +1,15 @@
 import { getFrequency } from '../../liveseq/lib/note/note';
 import type { ScheduleItem } from '../../liveseq/lib/scheduler/scheduler';
-import { ItemsViewer } from '../general/ItemsViewer';
+import { ItemsViewer, ViewerVisualProps } from '../general/ItemsViewer';
 import { Item } from '../general/Item';
 import { Box } from '../general/Box';
 import { Label } from '../general/Label';
 
 type ScheduleNotesProps = {
   scheduleItem: ScheduleItem;
-  totalBeats: number;
-  horizontalScale: number;
   verticalScale?: number;
-  height?: number;
   octaves?: number;
-};
+} & ViewerVisualProps;
 
 export const ScheduleNotes = ({
   scheduleItem,
@@ -48,7 +45,7 @@ export const ScheduleNotes = ({
               height={1}
               style={{ background: 'red' }}
             />
-            <Label>{note.pitch}</Label>
+            <Label>{`${note.id} ${note.pitch}`}</Label>
           </Item>
         );
       })}

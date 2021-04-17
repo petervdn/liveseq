@@ -9,7 +9,7 @@ import { times } from './liveseq/lib/utils/times';
 const liveseq = createLiveseq({ project: { name: 'Test project' } });
 
 const offset = 4;
-times(2, (index) => {
+times(1, (index) => {
   addCompleteRouting({
     liveseq,
     notes: getMetronomeNotes(index % 2 === 1),
