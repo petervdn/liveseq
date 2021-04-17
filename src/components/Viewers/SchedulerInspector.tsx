@@ -68,7 +68,7 @@ const Scheduler = ({ totalBeats, horizontalScale, height }: ViewerVisualProps) =
           position="absolute"
           top={0}
           bottom={0}
-          backgroundColor="yellow"
+          backgroundColor="lime"
           opacity={0.5}
         />
       </Wrapper>

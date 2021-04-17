@@ -8,6 +8,7 @@ export const errorMessages = {
     return `Library version must be greater than the project version. ${libraryName} version is ${libraryVersion} and project version is ${projectVersion}.`;
   },
   invalidIds: always('Invalid ids in project.'),
+  failedToCreateAudioContext: always('Failed to create AudioContext.'),
   contextSuspended: always('Cannot play, AudioContext is suspended.'),
   invalidEntityId: (entityKey: string, id: string) => {
     return `Can't find id ${id} in ${entityKey}.`;

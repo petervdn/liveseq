@@ -41,6 +41,10 @@ export const createEngine = ({
   });
 
   // SELECTORS
+  const getAudioContext = () => {
+    return audioContext;
+  };
+
   const getProject = () => {
     const serializableEntities = entities.encodeEntities();
     const slotPlaybackState = scheduler.getSlotPlaybackState();
@@ -53,10 +57,6 @@ export const createEngine = ({
         entities: serializableEntities,
       }),
     );
-  };
-
-  const getAudioContext = () => {
-    return audioContext;
   };
 
   // CORE

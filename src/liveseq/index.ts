@@ -6,3 +6,4 @@ export { libraryVersion } from './lib/meta';
 export type { TimeInSeconds, Bpm, Beats } from './lib/types';
 export { getAbSwitch } from './projects/abSwitch';
 export type { BeatsRange } from './lib/time/beatsRange/beatsRange';
+export { createAudioContext } from './lib/utils/createAudioContext';
