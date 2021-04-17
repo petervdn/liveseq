@@ -166,6 +166,8 @@ OscillatorNode = (function (superClass) {
     return OscillatorNode.__super__.constructor.apply(this, arguments);
   }
 
+
+
   return OscillatorNode;
 })(AudioSourceNode);
 

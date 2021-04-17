@@ -10,6 +10,9 @@ export const errorMessages = {
   invalidIds: always('Invalid ids in project.'),
   failedToCreateAudioContext: always('Failed to create AudioContext.'),
   contextSuspended: always('Cannot play, AudioContext is suspended.'),
+  cantPlayWithoutProperAudioContext: always(
+    'Cannot play, please supply a valid instance of AudioContext upon initialization. It is recommended to use createAudioContext() exported from this library.',
+  ),
   invalidEntityId: (entityKey: string, id: string) => {
     return `Can't find id ${id} in ${entityKey}.`;
   },

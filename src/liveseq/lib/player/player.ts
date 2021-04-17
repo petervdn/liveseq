@@ -116,6 +116,10 @@ export const createPlayer = ({
   };
 
   const play = () => {
+    if (!(audioContext instanceof window.AudioContext)) {
+      throw new TypeError(errorMessages.cantPlayWithoutProperAudioContext());
+    }
+
     const handlePlay = () => {
       playStartTime = audioContext.currentTime;
 
