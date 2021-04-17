@@ -2,13 +2,11 @@ import { BeatsRange, createRange } from '../../time/beatsRange/beatsRange';
 import type { QueuedScenesByStart } from './groupQueuedScenesByStart';
 import type { EntityEntries } from '../../entities/entities';
 import type { Beats } from '../../types';
-import { applyScenesToSlotPlaybackState } from './applyScenesToSlotPlaybackState';
+import { getPlayingSlots } from './getPlayingSlots';
 import { removeScenesFromQueue } from './removeScenesFromQueue';
 import type { SlotPlaybackState } from '../schedulerState';
 
-// TODO: better naming
-// this is probably the reason it doesn't work at all right now
-export const getAppliedStatesForQueuedScenes = (
+export const getSlotPlaybackStateRanges = (
   beatsRange: BeatsRange,
   queuedScenesByStart: QueuedScenesByStart,
   entities: EntityEntries,
@@ -32,16 +30,27 @@ export const getAppliedStatesForQueuedScenes = (
         return entities.scenes.get(scene.sceneId);
       });
 
+      // TODO: should be scene.getIsEnabled (we gotta pass the whole thing here)
+      const enabledScenes = sceneEntities.filter((scene) => scene.isEnabled);
+      const thisCurrentScenes = enabledScenes.map((scene) => ({
+        start: 0 as Beats,
+        sceneId: scene.id,
+      }));
+
+      const actions = enabledScenes.flatMap((scene) => {
+        return scene.enter || [];
+      });
+
       const appliedSlotPlaybackState = {
-        ...removeScenesFromQueue(
-          queuedScenes,
-          applyScenesToSlotPlaybackState(
-            sceneEntities,
+        ...{
+          queuedScenes: removeScenesFromQueue(queuedScenes, thisCurrentScenes),
+          playingSlots: getPlayingSlots(
+            actions,
             entities,
             currentSlotPlaybackState,
             start as Beats,
           ),
-        ),
+        },
         ...createRange(start as Beats, end as Beats),
       };
 

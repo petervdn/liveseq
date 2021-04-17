@@ -2,7 +2,7 @@ import { addScenesToQueue } from './utils/addScenesToQueue';
 import { removeScenesFromQueue } from './utils/removeScenesFromQueue';
 import type { Beats } from '../types';
 
-type PlayingSlot = {
+export type PlayingSlot = {
   slotId: string;
   start: Beats;
 };
@@ -57,16 +57,20 @@ export const createSchedulerState = (initialState: Partial<SchedulerState>) => {
   };
 
   const addSceneToQueue = (scene: QueuedScene) => {
-    // TODO: consider duplicates
     setState({
-      slotPlaybackState: addScenesToQueue([scene], state.slotPlaybackState),
+      slotPlaybackState: {
+        ...state.slotPlaybackState,
+        queuedScenes: addScenesToQueue([scene], state.slotPlaybackState.queuedScenes),
+      },
     });
   };
 
   const removeSceneFromQueue = (scene: QueuedScene) => {
-    // TODO: consider duplicates
     setState({
-      slotPlaybackState: removeScenesFromQueue([scene], state.slotPlaybackState),
+      slotPlaybackState: {
+        ...state.slotPlaybackState,
+        queuedScenes: removeScenesFromQueue([scene], state.slotPlaybackState.queuedScenes),
+      },
     });
   };
 

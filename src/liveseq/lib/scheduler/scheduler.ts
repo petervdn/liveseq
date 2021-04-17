@@ -7,7 +7,7 @@ import type { EntityEntries } from '../entities/entities';
 import { timeRangeToBeatsRange } from '../time/beatsRange/timeRangeToBeatsRange';
 import { getQueuedScenesWithinRange } from './utils/getQueuedScenesWithinRange';
 import { groupQueuedScenesByStart } from './utils/groupQueuedScenesByStart';
-import { getAppliedStatesForQueuedScenes } from './utils/getAppliedStatesForQueuedScenes';
+import { getSlotPlaybackStateRanges } from './utils/getSlotPlaybackStateRanges';
 import { getNotesForInstrumentInTimeRange } from '../entities/utils/getNotesForInstrumentInTimeRange';
 import { createSchedulerEvents } from './schedulerEvents';
 import { createSchedulerState, SchedulerState, SlotPlaybackState } from './schedulerState';
@@ -72,7 +72,7 @@ export const createScheduler = ({ initialState, entityEntries }: SchedulerProps)
     const slotPlaybackState = getSlotPlaybackState();
     const queuedScenes = getQueuedScenesWithinRange(beatsRange, slotPlaybackState);
     const queuedScenesByStart = groupQueuedScenesByStart(beatsRange.start, queuedScenes);
-    const slotPlaybackStateRanges = getAppliedStatesForQueuedScenes(
+    const slotPlaybackStateRanges = getSlotPlaybackStateRanges(
       beatsRange,
       queuedScenesByStart,
       entityEntries,

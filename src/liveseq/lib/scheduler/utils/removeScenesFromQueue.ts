@@ -1,14 +1,11 @@
 import { isSameQueuedScene } from './isSameQueuedScene';
-import type { QueuedScene, SlotPlaybackState } from '../schedulerState';
+import type { QueuedScene } from '../schedulerState';
 
 export const removeScenesFromQueue = (
   scenes: Array<QueuedScene>,
-  slotPlaybackState: SlotPlaybackState,
-): SlotPlaybackState => {
-  return {
-    ...slotPlaybackState,
-    queuedScenes: slotPlaybackState.queuedScenes.filter((queuedSceneA) => {
-      return !scenes.find((queuedSceneB) => isSameQueuedScene(queuedSceneA, queuedSceneB));
-    }),
-  };
+  queuedScenes: Array<QueuedScene>,
+): Array<QueuedScene> => {
+  return queuedScenes.filter((queuedSceneA) => {
+    return !scenes.find((queuedSceneB) => isSameQueuedScene(queuedSceneA, queuedSceneB));
+  });
 };
