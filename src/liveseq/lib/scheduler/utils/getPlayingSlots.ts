@@ -9,7 +9,15 @@ export const getPlayingSlots = (
   slotPlaybackState: SlotPlaybackState,
   start: Beats,
 ): Array<PlayingSlot> => {
-  const appliedScenes = sceneActions.reduce((accumulator, action) => {
+  return sceneActions.reduce((accumulator, action) => {
+    if (action.type === 'stopSlots') {
+      return action.slotIds
+        ? accumulator.filter((playingSlot) => {
+            return action.slotIds!.includes(playingSlot.slotId);
+          })
+        : [];
+    }
+
     if (action.type === 'playSlots') {
       const playingSlots = (action.slotIds || Object.keys(entities.slots)).map((id) => {
         return {
@@ -21,18 +29,6 @@ export const getPlayingSlots = (
       return action.slotIds ? [...accumulator, ...playingSlots] : playingSlots;
     }
 
-    if (action.type === 'stopSlots') {
-      return action.slotIds
-        ? accumulator.filter((playingSlot) => {
-            return action.slotIds!.includes(playingSlot.slotId);
-          })
-        : [];
-    }
-
     return accumulator;
   }, slotPlaybackState.playingSlots);
-
-  const playingSlots = slotPlaybackState.playingSlots.concat(appliedScenes);
-
-  return playingSlots;
 };

@@ -1,5 +1,5 @@
 import type { Beats, Liveseq } from '../../liveseq';
-import { playSlots } from '../../liveseq/lib/entities/scene';
+import { playSlots, stopSlots } from '../../liveseq/lib/entities/scene';
 import type { Note } from '../../liveseq/lib/note/note';
 
 type CompleteRoutingProps = {
@@ -51,7 +51,8 @@ export const addCompleteRouting = ({ name, liveseq, sceneStart, notes }: Complet
 
   const sceneId = liveseq.scenes.create({
     name: `Scene - ${name}`,
-    enter: [playSlots([slotId])],
+    enter: [stopSlots(), playSlots([slotId])],
+    // enter: [playSlots([slotId])],
   });
 
   liveseq.addSceneToQueue({

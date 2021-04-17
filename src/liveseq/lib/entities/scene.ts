@@ -10,7 +10,7 @@ type PlaySlotsAction = {
   slotIds?: ReadonlyArray<string>;
 };
 
-export const playSlots = (slotIds: ReadonlyArray<string> = []): PlaySlotsAction => {
+export const playSlots = (slotIds?: ReadonlyArray<string>): PlaySlotsAction => {
   return {
     type: 'playSlots',
     slotIds,
@@ -23,7 +23,7 @@ type StopSlotsAction = {
   slotIds?: ReadonlyArray<string>;
 };
 
-export const stopSlots = (slotIds: ReadonlyArray<string> = []): StopSlotsAction => {
+export const stopSlots = (slotIds?: ReadonlyArray<string>): StopSlotsAction => {
   return {
     type: 'stopSlots',
     slotIds,

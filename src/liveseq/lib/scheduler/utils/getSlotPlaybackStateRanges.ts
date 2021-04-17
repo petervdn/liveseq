@@ -26,32 +26,25 @@ export const getSlotPlaybackStateRanges = (
       // get slotPlaybackState from previous item in accumulator if there is one
       const currentSlotPlaybackState = index > 0 ? accumulator[index - 1] : slotPlaybackState;
 
-      const sceneEntities = queuedScenes.map((scene) => {
-        return entities.scenes.get(scene.sceneId);
-      });
+      const sceneEntities = queuedScenes
+        .map((scene) => {
+          return entities.scenes.get(scene.sceneId);
+        })
+        .filter((scene) => scene.isEnabled);
 
-      // TODO: should be scene.getIsEnabled (we gotta pass the whole thing here)
-      const enabledScenes = sceneEntities.filter((scene) => scene.isEnabled);
-      const thisCurrentScenes = enabledScenes.map((scene) => ({
-        start: 0 as Beats,
+      const thisCurrentScenes = sceneEntities.map((scene) => ({
+        start: 0 as Beats, // TODO: fix
         sceneId: scene.id,
       }));
 
-      const actions = enabledScenes.flatMap((scene) => {
+      const actions = sceneEntities.flatMap((scene) => {
         return scene.enter || [];
       });
 
       const appliedSlotPlaybackState = {
-        ...{
-          queuedScenes: removeScenesFromQueue(queuedScenes, thisCurrentScenes),
-          playingSlots: getPlayingSlots(
-            actions,
-            entities,
-            currentSlotPlaybackState,
-            start as Beats,
-          ),
-        },
         ...createRange(start as Beats, end as Beats),
+        queuedScenes: removeScenesFromQueue(queuedScenes, thisCurrentScenes),
+        playingSlots: getPlayingSlots(actions, entities, currentSlotPlaybackState, start as Beats),
       };
 
       accumulator.push(appliedSlotPlaybackState);
