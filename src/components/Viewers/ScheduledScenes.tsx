@@ -9,7 +9,7 @@ type ScheduleScenesProps = {
   totalBeats: number;
   horizontalScale: number;
   verticalScale?: number;
-  height?: number;
+  height: number;
 };
 
 export const ScheduleScenes = ({
@@ -17,7 +17,7 @@ export const ScheduleScenes = ({
   totalBeats,
   horizontalScale,
   verticalScale = 18,
-  height = 200,
+  height,
 }: ScheduleScenesProps) => {
   const noteHeight = height / 12;
 

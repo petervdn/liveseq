@@ -1,9 +1,10 @@
 import { isContextSuspended } from '../utils/isContextSuspended';
-import type { Bpm, TimeInSeconds } from '../types';
+import type { Beats, Bpm, TimeInSeconds } from '../types';
 import { errorMessages } from '../errors';
 import { createPubSub } from '../utils/pubSub';
 import { objectValues } from '../utils/objUtils';
 import type { Scheduler } from '../scheduler/scheduler';
+import { timeToBeats } from '../time/musicTime';
 
 // TODO: this is a bit repeated in scheduler
 export const createPlayerEvents = () => {
@@ -79,6 +80,21 @@ export const createPlayer = ({
     return state.playbackState;
   };
 
+  // TODO: consider paused and stopped states
+  const getProgressInSeconds = () => {
+    if (!playStartTime) return 0 as TimeInSeconds;
+
+    return (audioContext.currentTime - playStartTime) as TimeInSeconds;
+  };
+
+  const getProgressInBeats = () => {
+    const time = getProgressInSeconds();
+    if (!time) return 0 as Beats;
+
+    return timeToBeats(time, getTempo());
+  };
+
+  // ACTIONS
   const setPlaybackState = (playbackState: PlaybackStates) => {
     if (state.playbackState === playbackState) return;
 
@@ -99,16 +115,13 @@ export const createPlayer = ({
     playerEvents.onTempoChange.dispatch(bpm);
   };
 
-  const getTime = () => {
-    // will error if called and it's not playing
-    return (audioContext.currentTime - playStartTime!) as TimeInSeconds;
-  };
-
   const play = () => {
     const handlePlay = () => {
       playStartTime = audioContext.currentTime;
 
-      onStopHandlers.push(scheduler.loop(getTime, getTempo, scheduleInterval, lookAheadTime));
+      onStopHandlers.push(
+        scheduler.loop(getProgressInSeconds, getTempo, scheduleInterval, lookAheadTime),
+      );
 
       setPlaybackState('playing');
     };
@@ -148,6 +161,8 @@ export const createPlayer = ({
   return {
     getPlaybackState,
     getTempo,
+    getProgressInSeconds,
+    getProgressInBeats,
     onPlaybackChange: playerEvents.onPlaybackChange.subscribe,
     onTempoChange: playerEvents.onTempoChange.subscribe,
     pause,

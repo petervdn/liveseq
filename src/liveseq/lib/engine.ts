@@ -74,6 +74,8 @@ export const createEngine = ({
     play: player.play,
     pause: player.pause,
     stop: player.stop,
+    getProgressInSeconds: player.getProgressInSeconds,
+    getProgressInBeats: player.getProgressInBeats,
     getPlaybackState: player.getPlaybackState,
     onPlaybackChange: player.onPlaybackChange,
     onTempoChange: player.onTempoChange,

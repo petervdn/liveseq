@@ -52,7 +52,7 @@ export const createScheduler = ({ initialState, entityEntries }: SchedulerProps)
   // todo: how does this work when slots are played again later on (and loop count is reset)
   // ^ we could assign new ids at every play if that is an issue
   // but we gotta clean up based on some criteria
-  const previouslyScheduledNoteIds: Array<string> = [];
+  let previouslyScheduledNoteIds: Array<string> = [];
 
   const schedule = (scheduleItems: Array<ScheduleItem>) => {
     scheduleItems.forEach((item) => {
@@ -147,6 +147,7 @@ export const createScheduler = ({ initialState, entityEntries }: SchedulerProps)
 
   const dispose = () => {
     stopLoop();
+    previouslyScheduledNoteIds = [];
     schedulerEvents.dispose();
     schedulerState.dispose();
   };
