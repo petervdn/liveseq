@@ -10,6 +10,7 @@ export type ItemProps = {
   width: number;
   bottom: number;
   left: number;
+  isHighlighted?: boolean;
 };
 
 export const Item = ({
@@ -20,6 +21,7 @@ export const Item = ({
   left,
   horizontalScale,
   verticalScale,
+  isHighlighted,
 }: ItemProps) => {
   return (
     <Box
@@ -30,7 +32,7 @@ export const Item = ({
       left={left * horizontalScale}
       style={{
         // TODO: expose these from box
-        border: '1px solid blue',
+        border: `1px solid ${isHighlighted ? 'yellow' : 'blue'}`,
         background: 'rgba(0, 0, 0, 0.5)',
       }}
     >

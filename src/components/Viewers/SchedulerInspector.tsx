@@ -8,7 +8,7 @@ import { Tabs } from '../general/Tabs';
 import type { ViewerVisualProps } from '../general/ItemsViewer';
 
 export const SchedulerInspector = ({ totalBeats, horizontalScale, height }: ViewerVisualProps) => {
-  const scheduleData = useScheduleData(0, totalBeats);
+  const { scheduleData, scheduledNotes } = useScheduleData(0, totalBeats);
 
   return (
     <Tabs
@@ -27,6 +27,7 @@ export const SchedulerInspector = ({ totalBeats, horizontalScale, height }: View
                     horizontalScale={horizontalScale}
                     scheduleItem={scheduleItem}
                     height={height}
+                    scheduledNotes={scheduledNotes}
                   />
                 );
               })}

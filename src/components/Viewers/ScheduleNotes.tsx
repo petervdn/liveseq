@@ -9,6 +9,7 @@ type ScheduleNotesProps = {
   scheduleItem: ScheduleItem;
   verticalScale?: number;
   octaves?: number;
+  scheduledNotes: Array<string>;
 } & ViewerVisualProps;
 
 export const ScheduleNotes = ({
@@ -18,6 +19,7 @@ export const ScheduleNotes = ({
   verticalScale = 0.1,
   octaves = 2,
   height = 200,
+  scheduledNotes,
 }: ScheduleNotesProps) => {
   const noteHeight = height / (12 * octaves);
   // TODO: note output per instrument (instrument channel??)
@@ -38,6 +40,7 @@ export const ScheduleNotes = ({
             left={note.start}
             horizontalScale={horizontalScale}
             verticalScale={verticalScale}
+            isHighlighted={scheduledNotes.includes(note.schedulingId)}
           >
             <Box
               width={`${note.velocity * 100}%`}
