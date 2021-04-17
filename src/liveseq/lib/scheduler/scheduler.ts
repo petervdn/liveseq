@@ -61,9 +61,6 @@ export const createScheduler = ({ initialState, entityEntries }: SchedulerProps)
 
         previouslyScheduledNoteIds.push(note.schedulingId);
         onStopCallbacks.push(item.instrument.schedule(note, item.channelMixer));
-
-        // eslint-disable-next-line no-console
-        console.log('scheduling', note.schedulingId);
       });
     });
   };
