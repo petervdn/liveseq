@@ -3,8 +3,9 @@ import { createAudioContext, getAbSwitch } from './liveseq';
 import { GlobalStyle } from './components/general/GlobalStyle';
 import { Tabs } from './components/general/Tabs';
 import { getSimpleMetronome } from './liveseq/projects/simpleMetronome';
+import { getTestProject } from './liveseq/projects/testProject';
 
-const projects = [getSimpleMetronome(), getAbSwitch()].map((project) => ({
+const projects = [getSimpleMetronome(), getTestProject(), getAbSwitch()].map((project) => ({
   label: project.name,
   project,
 }));

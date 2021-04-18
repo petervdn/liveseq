@@ -26,6 +26,7 @@ export type ScheduleItem = {
 };
 
 export type ScheduleData = {
+  beatsRange: BeatsRange;
   slotPlaybackStateRanges: Array<BeatsRange & SlotPlaybackState>;
   scheduleItems: Array<ScheduleItem>;
 };
@@ -84,6 +85,7 @@ export const createScheduler = ({ initialState, entityEntries }: SchedulerProps)
     });
 
     return {
+      beatsRange,
       slotPlaybackStateRanges,
       scheduleItems,
     };
