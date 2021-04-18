@@ -2,7 +2,6 @@ import { useScheduleData } from '../../liveseq/react/useScheduleData';
 import { ScheduleNotes } from './ScheduleNotes';
 import { ScheduleSlots } from './ScheduleSlots';
 import { ScheduleScenes } from './ScheduledScenes';
-import { useScheduledNotes } from '../../liveseq/react/useScheduledNotes';
 import type { SchedulerInspectorProps } from './SchedulerInspector';
 
 export type SchedulerViewersProps = SchedulerInspectorProps & {
@@ -17,7 +16,6 @@ export const SchedulerViewers = ({
   start,
 }: SchedulerViewersProps) => {
   const scheduleData = useScheduleData(start, end);
-  const scheduledNotes = useScheduledNotes();
 
   return (
     <>
@@ -31,7 +29,6 @@ export const SchedulerViewers = ({
             horizontalScale={horizontalScale}
             scheduleItem={scheduleItem}
             height={height}
-            scheduledNotes={scheduledNotes}
           />
         );
       })}

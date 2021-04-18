@@ -15,7 +15,9 @@ export const useScheduledNotes = () => {
   useEffect(() => {
     return liveseq.onSchedule((data) => {
       const schedulingIds = data.scheduleItems.flatMap((item) =>
-        item.notes.map((note) => note.schedulingId),
+        item.notes.flatMap((note) =>
+          scheduledNotes.includes(note.schedulingId) ? [] : note.schedulingId,
+        ),
       );
 
       setScheduledNotes(scheduledNotes.concat(schedulingIds));

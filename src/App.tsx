@@ -20,7 +20,15 @@ export default function App() {
       <Tabs
         items={projects.map(({ label, project }) => ({
           label,
-          component: () => <Liveseq key={label} project={project} audioContext={audioContext} />,
+          component: () => (
+            <Liveseq
+              key={label}
+              project={project}
+              audioContext={audioContext}
+              // lookAheadTime={100 as TimeInSeconds}
+              // scheduleInterval={50 as TimeInSeconds}
+            />
+          ),
         }))}
       />
     </>

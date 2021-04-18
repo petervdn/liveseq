@@ -62,6 +62,13 @@ export const createScheduler = ({ initialState, entityEntries }: SchedulerProps)
 
         previouslyScheduledNoteIds.push(note.schedulingId);
         onStopCallbacks.push(item.instrument.schedule(note, item.channelMixer));
+
+        // TODO: time accuracy can probably be improved
+        onStopCallbacks.push(
+          setTimer(() => {
+            schedulerEvents.onPlayNote.dispatch(note);
+          }, note.startTime * 1000),
+        );
       });
     });
   };
@@ -158,6 +165,7 @@ export const createScheduler = ({ initialState, entityEntries }: SchedulerProps)
     getSlotPlaybackState,
     getScheduleDataWithinRange,
     onSchedule: schedulerEvents.onSchedule.subscribe,
+    onPlayNote: schedulerEvents.onPlayNote.subscribe,
     schedule,
     loop,
     dispose,

@@ -1,6 +1,12 @@
 import type React from 'react';
 import { Box } from './Box';
 
+const variants = {
+  regular: 'blue',
+  highlighted: 'yellow',
+  active: 'lime',
+};
+
 export type ItemProps = {
   children: React.ReactNode;
   // style: React.HTMLAttributes<HTMLDivElement>['style'];
@@ -10,7 +16,7 @@ export type ItemProps = {
   width: number;
   bottom: number;
   left: number;
-  isHighlighted?: boolean;
+  variant?: keyof typeof variants;
 };
 
 export const Item = ({
@@ -21,7 +27,7 @@ export const Item = ({
   left,
   horizontalScale,
   verticalScale,
-  isHighlighted,
+  variant = 'regular',
 }: ItemProps) => {
   return (
     <Box
@@ -32,7 +38,7 @@ export const Item = ({
       left={left * horizontalScale}
       style={{
         // TODO: expose these from box
-        border: `1px solid ${isHighlighted ? 'yellow' : 'blue'}`,
+        border: `1px solid ${variants[variant]}`,
         background: 'rgba(0, 0, 0, 0.5)',
       }}
     >

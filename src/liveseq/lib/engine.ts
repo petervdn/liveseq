@@ -80,6 +80,7 @@ export const createEngine = ({
     onPlaybackChange: player.onPlaybackChange,
     onTempoChange: player.onTempoChange,
     onSchedule: scheduler.onSchedule,
+    onPlayNote: scheduler.onPlayNote,
     setTempo: player.setTempo,
     addSceneToQueue: scheduler.addSceneToQueue,
     removeSceneFromQueue: scheduler.removeSceneFromQueue,

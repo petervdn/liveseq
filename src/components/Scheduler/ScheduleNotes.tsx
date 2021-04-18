@@ -1,15 +1,17 @@
+import { useEffect } from 'react';
 import { getFrequency } from '../../liveseq/lib/note/note';
 import type { ScheduleItem } from '../../liveseq/lib/scheduler/scheduler';
 import { ItemsViewer, ViewerVisualProps } from '../general/ItemsViewer';
 import { Item } from '../general/Item';
 import { Box } from '../general/Box';
 import { Label } from '../general/Label';
+import { useScheduledNotes } from '../../liveseq/react/useScheduledNotes';
+import { usePlayedNotes } from '../../liveseq/react/usePlayedNotes';
 
 type ScheduleNotesProps = {
   scheduleItem: ScheduleItem;
   verticalScale?: number;
   octaves?: number;
-  scheduledNotes: Array<string>;
 } & ViewerVisualProps;
 
 export const ScheduleNotes = ({
@@ -19,9 +21,20 @@ export const ScheduleNotes = ({
   verticalScale = 0.1,
   octaves = 2,
   height = 200,
-  scheduledNotes,
 }: ScheduleNotesProps) => {
+  const scheduledNotes = useScheduledNotes();
+  const playedNotes = usePlayedNotes();
   const noteHeight = height / (12 * octaves);
+
+  // TODO: remove
+  useEffect(() => {
+    // eslint-disable-next-line no-console
+    console.log({
+      scheduledNotes: scheduledNotes.length,
+      playedNotes: playedNotes.length,
+    });
+  }, [scheduledNotes.length, playedNotes.length]);
+
   // TODO: note output per instrument (instrument channel??)
   return (
     <ItemsViewer
@@ -31,6 +44,13 @@ export const ScheduleNotes = ({
       height={height}
     >
       {scheduleItem.notes.map((note) => {
+        // eslint-disable-next-line no-nested-ternary
+        const itemVariant = playedNotes.includes(note.schedulingId)
+          ? 'active'
+          : scheduledNotes.includes(note.schedulingId)
+          ? 'highlighted'
+          : 'regular';
+
         return (
           <Item
             key={note.schedulingId}
@@ -40,7 +60,7 @@ export const ScheduleNotes = ({
             left={note.start}
             horizontalScale={horizontalScale}
             verticalScale={verticalScale}
-            isHighlighted={scheduledNotes.includes(note.schedulingId)}
+            variant={itemVariant}
           >
             <Box
               width={`${note.velocity * 100}%`}
