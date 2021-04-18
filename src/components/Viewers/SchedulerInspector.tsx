@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useScheduleData } from '../../liveseq/react/useScheduleData';
 import { ScheduleNotes } from './ScheduleNotes';
 import { ScheduleSlots } from './ScheduleSlots';
@@ -13,10 +13,15 @@ import { Box } from '../general/Box';
 
 type SchedulerInspectorProps = ViewerVisualProps & {
   // eslint-disable-next-line react/no-unused-prop-types
+  // start: number;
+};
+
+type SchedulerProps = SchedulerInspectorProps & {
+  // eslint-disable-next-line react/no-unused-prop-types
   start: number;
 };
 
-const Scheduler = ({ totalBeats, horizontalScale, height, start }: SchedulerInspectorProps) => {
+const Scheduler = ({ totalBeats, horizontalScale, height, start }: SchedulerProps) => {
   const { scheduleData, scheduledNotes } = useScheduleData(start, totalBeats);
   const liveseq = useLiveseqContext();
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -88,25 +93,47 @@ const Scheduler = ({ totalBeats, horizontalScale, height, start }: SchedulerInsp
   );
 };
 
-const ScheduleData = ({ totalBeats }: SchedulerInspectorProps) => {
+const ScheduleData = ({ totalBeats }: SchedulerProps) => {
   const { scheduleData } = useScheduleData(0, totalBeats);
 
   return <CodeViewer name="Schedule Data">{removeNonSerializableProps(scheduleData)}</CodeViewer>;
 };
 
 export const SchedulerInspector = (props: SchedulerInspectorProps) => {
+  const [start, setStart] = useState(0);
+  const [totalBeats, setTotalBeats] = useState(props.totalBeats);
+
   return (
     <Tabs
       items={[
         {
           label: 'Visualizer',
-          component: () => <Scheduler {...props} />,
+          component: () => <Scheduler {...props} start={start} totalBeats={totalBeats} />,
         },
         {
           label: 'Schedule Data',
-          component: () => <ScheduleData {...props} />,
+          component: () => <ScheduleData {...props} start={start} totalBeats={totalBeats} />,
         },
       ]}
-    />
+    >
+      <input
+        type="number"
+        value={start}
+        min="0"
+        max="100"
+        onChange={(event) => {
+          setStart(parseInt(event.target.value, 10));
+        }}
+      />
+      <input
+        type="number"
+        value={totalBeats}
+        min="0"
+        max="100"
+        onChange={(event) => {
+          setTotalBeats(parseInt(event.target.value, 10));
+        }}
+      />
+    </Tabs>
   );
 };

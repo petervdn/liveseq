@@ -14,7 +14,7 @@ export const Timelines = ({ height = 200, horizontalScale }: ViewerVisualProps) 
           <ItemsViewer
             key={timeline.id}
             horizontalScale={horizontalScale}
-            totalBeats={getTimelineDuration(timeline) + 1}
+            totalBeats={getTimelineDuration(timeline)}
             title={timeline.name!}
             height={height}
           >

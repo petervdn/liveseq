@@ -1,5 +1,3 @@
-import type React from 'react';
-import { useState } from 'react';
 import { LiveseqProps, useLiveseq } from '../liveseq';
 import { PlaybackButton } from './PlaybackButton';
 import { Tempo } from './Tempo';
@@ -17,40 +15,21 @@ const viewerProps = {
 
 export const Liveseq: React.FunctionComponent<LiveseqProps> = (props) => {
   const { LiveseqProvider } = useLiveseq(props);
-  const [start, setStart] = useState(0);
-  const [totalBeats, setTotalBeats] = useState(viewerProps.totalBeats);
 
   return (
     <LiveseqProvider>
       {/* start */}
-      <input
-        type="range"
-        onChange={(event) => {
-          const unit = parseInt(event.target.value, 10) / 100;
-          setStart(Math.round(viewerProps.totalBeats * unit));
-        }}
-      />
-      {/* end */}
-      <input
-        type="range"
-        onChange={(event) => {
-          const unit = parseInt(event.target.value, 10) / 100;
-          setTotalBeats(Math.round(viewerProps.totalBeats * unit));
-        }}
-      />
 
       <Box position="relative" marginLeft="200px;" marginTop={30} paddingBottom={150}>
         <Tabs
           items={[
             {
               label: 'Scheduler',
-              component: () => (
-                <SchedulerInspector {...viewerProps} start={start} totalBeats={totalBeats} />
-              ),
+              component: () => <SchedulerInspector {...viewerProps} />,
             },
             {
               label: 'Timelines',
-              component: () => <Timelines {...viewerProps} totalBeats={totalBeats} />,
+              component: () => <Timelines {...viewerProps} />,
             },
             {
               label: 'Project',

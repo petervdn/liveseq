@@ -7,9 +7,10 @@ export type TabsProps = {
     component: () => JSX.Element;
     label: string;
   }>;
+  children?: React.ReactNode;
 };
 
-export const Tabs = ({ items, ...props }: TabsProps) => {
+export const Tabs = ({ items, children, ...props }: TabsProps) => {
   const [activeTabIndex, setActiveTabIndex] = useState(0);
   return (
     <Box {...props} position="relative">
@@ -24,7 +25,7 @@ export const Tabs = ({ items, ...props }: TabsProps) => {
           </Button>
         );
       })}
-
+      {children}
       {items[activeTabIndex].component()}
     </Box>
   );

@@ -27,7 +27,7 @@ export const ItemsViewer = ({
   return (
     <Wrapper padding={10} marginTop={20} marginBottom={15} height={height}>
       <Fill color="#292d3d" />
-      {times(totalBeats, (index) => {
+      {times(totalBeats + 1, (index) => {
         return (
           <Box
             position="absolute"
