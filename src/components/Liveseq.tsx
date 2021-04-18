@@ -1,11 +1,11 @@
 import { LiveseqProps, useLiveseq } from '../liveseq';
 import { PlaybackButton } from './PlaybackButton';
 import { Tempo } from './Tempo';
-import { SchedulerInspector } from './Viewers/SchedulerInspector';
 import { ProjectJson } from './Project/ProjectJson';
 import { Box } from './general/Box';
 import { Tabs } from './general/Tabs';
-import { Timelines } from './Viewers/Timelines';
+import { Timelines } from './Entities/Timelines';
+import { SchedulerInspector } from './Scheduler/SchedulerInspector';
 
 const viewerProps = {
   horizontalScale: 60,
