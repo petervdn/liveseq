@@ -11,11 +11,9 @@ import { useLiveseqContext } from '../../liveseq';
 import { Wrapper } from '../general/Wrapper';
 import { Box } from '../general/Box';
 import { useSchedulerInterval } from '../../liveseq/react/useSchedulerInterval';
+import { useScheduledNotes } from '../../liveseq/react/useScheduledNotes';
 
-type SchedulerInspectorProps = ViewerVisualProps & {
-  // eslint-disable-next-line react/no-unused-prop-types
-  // start: number;
-};
+type SchedulerInspectorProps = ViewerVisualProps;
 
 type SchedulerProps = SchedulerInspectorProps & {
   // eslint-disable-next-line react/no-unused-prop-types
@@ -23,7 +21,8 @@ type SchedulerProps = SchedulerInspectorProps & {
 };
 
 const SchedulerViewers = ({ end, horizontalScale, height, start }: SchedulerProps) => {
-  const { scheduleData, scheduledNotes } = useScheduleData(start, end);
+  const scheduleData = useScheduleData(start, end);
+  const scheduledNotes = useScheduledNotes();
 
   return (
     <>
@@ -129,7 +128,7 @@ const Scheduler = (props: SchedulerProps) => {
 };
 
 const ScheduleData = ({ end }: SchedulerProps) => {
-  const { scheduleData } = useScheduleData(0, end);
+  const scheduleData = useScheduleData(0, end);
 
   return <CodeViewer name="Schedule Data">{removeNonSerializableProps(scheduleData)}</CodeViewer>;
 };

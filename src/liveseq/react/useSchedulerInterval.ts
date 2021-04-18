@@ -1,9 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useLiveseqContext } from './useLiveseq';
+import { usePlayback } from './usePlayback';
 
+const initialBeatsRange = { start: 0, end: 0 };
 export const useSchedulerInterval = () => {
   const liveseq = useLiveseqContext();
-  const [beatsRange, setBeatsRange] = useState({ start: 0, end: 0 });
+  const [beatsRange, setBeatsRange] = useState(initialBeatsRange);
+  const { playbackState } = usePlayback();
+
+  useEffect(() => {
+    playbackState === 'stopped' && setBeatsRange(initialBeatsRange);
+  }, [playbackState]);
 
   useEffect(() => {
     return liveseq.onSchedule((data) => {

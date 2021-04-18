@@ -1,22 +1,16 @@
 import type React from 'react';
-import { useEffect, useState } from 'react';
-import { useLiveseqContext } from '../liveseq/react/useLiveseq';
 import { Button } from './general/Button';
+import { usePlayback } from '../liveseq/react/usePlayback';
 
 export const PlaybackButton: React.FunctionComponent = () => {
-  const liveseq = useLiveseqContext();
-  const [playbackState, setPlaybackState] = useState(liveseq.getPlaybackState);
-
-  useEffect(() => {
-    return liveseq.onPlaybackChange(setPlaybackState);
-  }, [liveseq]);
+  const { playbackState, stop, play } = usePlayback();
 
   return (
     <>
       {playbackState === 'playing' ? (
         <Button
           onClick={() => {
-            liveseq.stop();
+            stop();
           }}
         >
           stop
@@ -24,7 +18,7 @@ export const PlaybackButton: React.FunctionComponent = () => {
       ) : (
         <Button
           onClick={() => {
-            liveseq.play();
+            play();
           }}
         >
           start
