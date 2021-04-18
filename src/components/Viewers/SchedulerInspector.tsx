@@ -11,8 +11,13 @@ import { useLiveseqContext } from '../../liveseq';
 import { Wrapper } from '../general/Wrapper';
 import { Box } from '../general/Box';
 
-const Scheduler = ({ totalBeats, horizontalScale, height }: ViewerVisualProps) => {
-  const { scheduleData, scheduledNotes } = useScheduleData(0, totalBeats);
+type SchedulerInspectorProps = ViewerVisualProps & {
+  // eslint-disable-next-line react/no-unused-prop-types
+  start: number;
+};
+
+const Scheduler = ({ totalBeats, horizontalScale, height, start }: SchedulerInspectorProps) => {
+  const { scheduleData, scheduledNotes } = useScheduleData(start, totalBeats);
   const liveseq = useLiveseqContext();
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -71,18 +76,25 @@ const Scheduler = ({ totalBeats, horizontalScale, height }: ViewerVisualProps) =
           backgroundColor="lime"
           opacity={0.5}
         />
+        <Box
+          position="absolute"
+          left={scheduleData.beatsRange.start * horizontalScale}
+          width={(scheduleData.beatsRange.end - scheduleData.beatsRange.start) * horizontalScale}
+          height="10px"
+          backgroundColor="red"
+        />
       </Wrapper>
     </>
   );
 };
 
-const ScheduleData = ({ totalBeats }: ViewerVisualProps) => {
+const ScheduleData = ({ totalBeats }: SchedulerInspectorProps) => {
   const { scheduleData } = useScheduleData(0, totalBeats);
 
   return <CodeViewer name="Schedule Data">{removeNonSerializableProps(scheduleData)}</CodeViewer>;
 };
 
-export const SchedulerInspector = (props: ViewerVisualProps) => {
+export const SchedulerInspector = (props: SchedulerInspectorProps) => {
   return (
     <Tabs
       items={[

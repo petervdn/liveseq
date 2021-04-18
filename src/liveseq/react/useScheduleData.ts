@@ -4,10 +4,11 @@ import { createRange } from '../lib/time/beatsRange/beatsRange';
 
 export const useScheduleData = (start: number, end: number) => {
   const liveseq = useLiveseqContext();
-  const [scheduleData] = useState(
+  const getScheduleDataWithinRange = () => {
     // TODO: would be nice to not have to pass the tempo
-    liveseq.getScheduleDataWithinRange(createRange(start, end), liveseq.getTempo()),
-  );
+    return liveseq.getScheduleDataWithinRange(createRange(start, end), liveseq.getTempo());
+  };
+  const [scheduleData, setScheduleData] = useState(getScheduleDataWithinRange);
   const [scheduledNotes, setScheduledNotes] = useState<Array<string>>([]);
 
   useEffect(() => {
@@ -19,6 +20,12 @@ export const useScheduleData = (start: number, end: number) => {
       setScheduledNotes(scheduledNotes.concat(schedulingIds));
     });
   }, [liveseq, scheduledNotes]);
+
+  useEffect(() => {
+    setScheduleData(getScheduleDataWithinRange());
+    // disabled on purpose
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [start, end]);
 
   return {
     scheduleData,
