@@ -22,7 +22,7 @@ type SchedulerProps = SchedulerInspectorProps & {
 };
 
 const Scheduler = ({ totalBeats, horizontalScale, height, start }: SchedulerProps) => {
-  const { scheduleData, scheduledNotes } = useScheduleData(start, totalBeats);
+  const { scheduleData, scheduledNotes, beatsRange } = useScheduleData(start, totalBeats);
   const liveseq = useLiveseqContext();
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -45,7 +45,23 @@ const Scheduler = ({ totalBeats, horizontalScale, height, start }: SchedulerProp
 
   return (
     <>
-      <Wrapper>
+      <Box
+        position="absolute"
+        marginTop="13px"
+        left={scheduleData.beatsRange.start * horizontalScale}
+        width={(scheduleData.beatsRange.end - scheduleData.beatsRange.start) * horizontalScale}
+        height="4px"
+        backgroundColor="blue"
+      />
+      <Box
+        position="absolute"
+        marginTop="10px"
+        left={beatsRange.start * horizontalScale}
+        width={(beatsRange.end - beatsRange.start) * horizontalScale}
+        height="10px"
+        backgroundColor="yellow"
+      />
+      <Wrapper marginTop="40px">
         {/* note output per instrument (instrument channel??) */}
         {scheduleData.scheduleItems.map((scheduleItem, index) => {
           return (
@@ -80,13 +96,6 @@ const Scheduler = ({ totalBeats, horizontalScale, height, start }: SchedulerProp
           bottom={0}
           backgroundColor="lime"
           opacity={0.5}
-        />
-        <Box
-          position="absolute"
-          left={scheduleData.beatsRange.start * horizontalScale}
-          width={(scheduleData.beatsRange.end - scheduleData.beatsRange.start) * horizontalScale}
-          height="10px"
-          backgroundColor="red"
         />
       </Wrapper>
     </>
