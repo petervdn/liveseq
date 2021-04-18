@@ -9,7 +9,7 @@ import { Timelines } from './Viewers/Timelines';
 
 const viewerProps = {
   horizontalScale: 60,
-  totalBeats: 32,
+  end: 32,
   height: 200,
 };
 

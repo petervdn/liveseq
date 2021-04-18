@@ -4,7 +4,7 @@ import { Item } from '../general/Item';
 import { Label } from '../general/Label';
 import { getTimelineDuration } from '../../liveseq/lib/entities/utils/getTimelineDuration';
 
-// TODO: clamp with totalBeats
+// TODO: clamp with end
 export const Timelines = ({ height = 200, horizontalScale }: ViewerVisualProps) => {
   const timelines = useTimelines();
   return (
@@ -14,7 +14,7 @@ export const Timelines = ({ height = 200, horizontalScale }: ViewerVisualProps) 
           <ItemsViewer
             key={timeline.id}
             horizontalScale={horizontalScale}
-            totalBeats={getTimelineDuration(timeline)}
+            end={getTimelineDuration(timeline)}
             title={timeline.name!}
             height={height}
           >

@@ -15,7 +15,7 @@ type ScheduleNotesProps = {
 export const ScheduleNotes = ({
   scheduleItem,
   horizontalScale,
-  totalBeats,
+  end,
   verticalScale = 0.1,
   octaves = 2,
   height = 200,
@@ -26,7 +26,7 @@ export const ScheduleNotes = ({
   return (
     <ItemsViewer
       horizontalScale={horizontalScale}
-      totalBeats={totalBeats}
+      end={end}
       title="Scheduled Notes"
       height={height}
     >

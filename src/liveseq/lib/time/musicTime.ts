@@ -37,9 +37,9 @@ export const normalizeMusicTime = (
     sixteenthsPerBeat = DEFAULT_SIXTEENTHS_PER_BEAT,
   }: MusicTimeOptions = {},
 ): MusicTime => {
-  const totalBeats = musicTimeToBeats(time, { sixteenthsPerBeat, beatsPerBar });
+  const end = musicTimeToBeats(time, { sixteenthsPerBeat, beatsPerBar });
 
-  const totalSixteenths = totalBeats * sixteenthsPerBeat;
+  const totalSixteenths = end * sixteenthsPerBeat;
   const flooredSixteenths = Math.floor(totalSixteenths);
   const sixteenthsPerBar = sixteenthsPerBeat * beatsPerBar;
   const bars = Math.floor(flooredSixteenths / sixteenthsPerBar);

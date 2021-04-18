@@ -9,7 +9,6 @@ export const useScheduleData = (start: number, end: number) => {
     return liveseq.getScheduleDataWithinRange(createRange(start, end), liveseq.getTempo());
   };
   const [scheduleData, setScheduleData] = useState(getScheduleDataWithinRange);
-  const [beatsRange, setBeatsRange] = useState({ start: 0, end: 0 });
   const [scheduledNotes, setScheduledNotes] = useState<Array<string>>([]);
 
   useEffect(() => {
@@ -17,8 +16,6 @@ export const useScheduleData = (start: number, end: number) => {
       const schedulingIds = data.scheduleItems.flatMap((item) =>
         item.notes.map((note) => note.schedulingId),
       );
-
-      setBeatsRange({ start: data.beatsRange.start, end: data.beatsRange.end });
 
       setScheduledNotes(scheduledNotes.concat(schedulingIds));
     });
@@ -32,7 +29,6 @@ export const useScheduleData = (start: number, end: number) => {
 
   return {
     scheduleData,
-    beatsRange,
     scheduledNotes,
   };
 };

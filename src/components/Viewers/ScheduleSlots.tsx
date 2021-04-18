@@ -6,7 +6,7 @@ import { Label } from '../general/Label';
 
 type ScheduleSlotsProps = {
   slotPlaybackStateRanges: Array<BeatsRange & SlotPlaybackState>;
-  totalBeats: number;
+  end: number;
   horizontalScale: number;
   verticalScale?: number;
   height: number;
@@ -15,19 +15,14 @@ type ScheduleSlotsProps = {
 export const ScheduleSlots = ({
   slotPlaybackStateRanges,
   horizontalScale,
-  totalBeats,
+  end,
   verticalScale = 18,
   height,
 }: ScheduleSlotsProps) => {
   const noteHeight = height / 12;
 
   return (
-    <ItemsViewer
-      horizontalScale={horizontalScale}
-      totalBeats={totalBeats}
-      title="Active Slots"
-      height={height}
-    >
+    <ItemsViewer horizontalScale={horizontalScale} end={end} title="Active Slots" height={height}>
       {slotPlaybackStateRanges.flatMap(({ start, end, ...slotPlaybackStanteRange }, index) => {
         return slotPlaybackStanteRange.playingSlots.map((playingSlot, slotIndex) => {
           return (

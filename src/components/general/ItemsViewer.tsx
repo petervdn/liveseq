@@ -6,7 +6,7 @@ import { times } from '../../liveseq/lib/utils/times';
 import { Label } from './Label';
 
 export type ViewerVisualProps = {
-  totalBeats: number;
+  end: number;
   horizontalScale: number;
   // verticalScale?: number;
   height: number;
@@ -20,14 +20,14 @@ export type ItemsViewerProps = {
 export const ItemsViewer = ({
   title,
   horizontalScale,
-  totalBeats,
+  end,
   height,
   children,
 }: ItemsViewerProps) => {
   return (
     <Wrapper padding={10} marginTop={20} marginBottom={15} height={height}>
       <Fill color="#292d3d" />
-      {times(totalBeats + 1, (index) => {
+      {times(end + 1, (index) => {
         return (
           <Box
             position="absolute"

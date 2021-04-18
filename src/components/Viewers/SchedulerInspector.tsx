@@ -10,6 +10,7 @@ import type { ViewerVisualProps } from '../general/ItemsViewer';
 import { useLiveseqContext } from '../../liveseq';
 import { Wrapper } from '../general/Wrapper';
 import { Box } from '../general/Box';
+import { useSchedulerInterval } from '../../liveseq/react/useSchedulerInterval';
 
 type SchedulerInspectorProps = ViewerVisualProps & {
   // eslint-disable-next-line react/no-unused-prop-types
@@ -21,8 +22,73 @@ type SchedulerProps = SchedulerInspectorProps & {
   start: number;
 };
 
-const Scheduler = ({ totalBeats, horizontalScale, height, start }: SchedulerProps) => {
-  const { scheduleData, scheduledNotes, beatsRange } = useScheduleData(start, totalBeats);
+const SchedulerViewers = ({ end, horizontalScale, height, start }: SchedulerProps) => {
+  const { scheduleData, scheduledNotes } = useScheduleData(start, end);
+
+  return (
+    <>
+      {/* note output per instrument (instrument channel??) */}
+      {scheduleData.scheduleItems.map((scheduleItem, index) => {
+        return (
+          <ScheduleNotes
+            // eslint-disable-next-line react/no-array-index-key
+            key={index}
+            end={end}
+            horizontalScale={horizontalScale}
+            scheduleItem={scheduleItem}
+            height={height}
+            scheduledNotes={scheduledNotes}
+          />
+        );
+      })}
+      <ScheduleSlots
+        end={end}
+        horizontalScale={horizontalScale}
+        height={height}
+        slotPlaybackStateRanges={scheduleData.slotPlaybackStateRanges}
+      />
+      <ScheduleScenes
+        end={end}
+        horizontalScale={horizontalScale}
+        height={height}
+        slotPlaybackStateRanges={scheduleData.slotPlaybackStateRanges}
+      />
+    </>
+  );
+};
+
+type SchedulerIntervalProps = {
+  start: number;
+  end: number;
+  horizontalScale: number;
+};
+const SchedulerInterval = ({ start, end, horizontalScale }: SchedulerIntervalProps) => {
+  const beatsRange = useSchedulerInterval();
+  return (
+    <>
+      <Box
+        position="absolute"
+        marginTop="13px"
+        left={start * horizontalScale}
+        width={(end - start) * horizontalScale}
+        height="4px"
+        backgroundColor="blue"
+      />
+      <Box
+        position="absolute"
+        marginTop="10px"
+        left={beatsRange.start * horizontalScale}
+        width={(beatsRange.end - beatsRange.start) * horizontalScale}
+        height="10px"
+        backgroundColor="yellow"
+      />
+    </>
+  );
+};
+
+const Scheduler = (props: SchedulerProps) => {
+  const { horizontalScale } = props;
+
   const liveseq = useLiveseqContext();
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -45,49 +111,9 @@ const Scheduler = ({ totalBeats, horizontalScale, height, start }: SchedulerProp
 
   return (
     <>
-      <Box
-        position="absolute"
-        marginTop="13px"
-        left={scheduleData.beatsRange.start * horizontalScale}
-        width={(scheduleData.beatsRange.end - scheduleData.beatsRange.start) * horizontalScale}
-        height="4px"
-        backgroundColor="blue"
-      />
-      <Box
-        position="absolute"
-        marginTop="10px"
-        left={beatsRange.start * horizontalScale}
-        width={(beatsRange.end - beatsRange.start) * horizontalScale}
-        height="10px"
-        backgroundColor="yellow"
-      />
+      <SchedulerInterval {...props} />
       <Wrapper marginTop="40px">
-        {/* note output per instrument (instrument channel??) */}
-        {scheduleData.scheduleItems.map((scheduleItem, index) => {
-          return (
-            <ScheduleNotes
-              // eslint-disable-next-line react/no-array-index-key
-              key={index}
-              totalBeats={totalBeats}
-              horizontalScale={horizontalScale}
-              scheduleItem={scheduleItem}
-              height={height}
-              scheduledNotes={scheduledNotes}
-            />
-          );
-        })}
-        <ScheduleSlots
-          totalBeats={totalBeats}
-          horizontalScale={horizontalScale}
-          height={height}
-          slotPlaybackStateRanges={scheduleData.slotPlaybackStateRanges}
-        />
-        <ScheduleScenes
-          totalBeats={totalBeats}
-          horizontalScale={horizontalScale}
-          height={height}
-          slotPlaybackStateRanges={scheduleData.slotPlaybackStateRanges}
-        />
+        <SchedulerViewers {...props} />
         <Box
           ref={wrapperRef}
           width="2px"
@@ -102,26 +128,26 @@ const Scheduler = ({ totalBeats, horizontalScale, height, start }: SchedulerProp
   );
 };
 
-const ScheduleData = ({ totalBeats }: SchedulerProps) => {
-  const { scheduleData } = useScheduleData(0, totalBeats);
+const ScheduleData = ({ end }: SchedulerProps) => {
+  const { scheduleData } = useScheduleData(0, end);
 
   return <CodeViewer name="Schedule Data">{removeNonSerializableProps(scheduleData)}</CodeViewer>;
 };
 
 export const SchedulerInspector = (props: SchedulerInspectorProps) => {
   const [start, setStart] = useState(0);
-  const [totalBeats, setTotalBeats] = useState(props.totalBeats);
+  const [end, setTotalBeats] = useState(props.end);
 
   return (
     <Tabs
       items={[
         {
           label: 'Visualizer',
-          component: () => <Scheduler {...props} start={start} totalBeats={totalBeats} />,
+          component: () => <Scheduler {...props} start={start} end={end} />,
         },
         {
           label: 'Schedule Data',
-          component: () => <ScheduleData {...props} start={start} totalBeats={totalBeats} />,
+          component: () => <ScheduleData {...props} start={start} end={end} />,
         },
       ]}
     >
@@ -136,7 +162,7 @@ export const SchedulerInspector = (props: SchedulerInspectorProps) => {
       />
       <input
         type="number"
-        value={totalBeats}
+        value={end}
         min="0"
         max="100"
         onChange={(event) => {

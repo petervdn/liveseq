@@ -6,7 +6,7 @@ import { Label } from '../general/Label';
 
 type ScheduleScenesProps = {
   slotPlaybackStateRanges: Array<BeatsRange & SlotPlaybackState>;
-  totalBeats: number;
+  end: number;
   horizontalScale: number;
   verticalScale?: number;
   height: number;
@@ -14,7 +14,7 @@ type ScheduleScenesProps = {
 
 export const ScheduleScenes = ({
   slotPlaybackStateRanges,
-  totalBeats,
+  end,
   horizontalScale,
   verticalScale = 18,
   height,
@@ -22,12 +22,7 @@ export const ScheduleScenes = ({
   const noteHeight = height / 12;
 
   return (
-    <ItemsViewer
-      horizontalScale={horizontalScale}
-      totalBeats={totalBeats}
-      title="Active Scenes"
-      height={height}
-    >
+    <ItemsViewer horizontalScale={horizontalScale} end={end} title="Active Scenes" height={height}>
       {slotPlaybackStateRanges.flatMap(({ start, end, ...slotPlaybackStateRange }, index) => {
         return slotPlaybackStateRange.queuedScenes.map((queuedScene, slotIndex) => {
           return (
