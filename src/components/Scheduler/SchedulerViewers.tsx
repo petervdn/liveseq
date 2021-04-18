@@ -3,11 +3,14 @@ import { ScheduleNotes } from './ScheduleNotes';
 import { ScheduleSlots } from './ScheduleSlots';
 import { ScheduleScenes } from './ScheduledScenes';
 import type { SchedulerInspectorProps } from './SchedulerInspector';
+import { useSchedulerInterval } from '../../liveseq/react/useSchedulerInterval';
 
 export type SchedulerViewersProps = SchedulerInspectorProps & {
   // eslint-disable-next-line react/no-unused-prop-types
   start: number;
 };
+
+const onlyInRange = true;
 
 export const SchedulerViewers = ({
   end,
@@ -15,7 +18,9 @@ export const SchedulerViewers = ({
   height,
   start,
 }: SchedulerViewersProps) => {
-  const scheduleData = useScheduleData(start, end);
+  const beatsRange = useSchedulerInterval();
+  const interval = onlyInRange ? [beatsRange.start, beatsRange.end] : [start, end];
+  const scheduleData = useScheduleData(interval[0], interval[1]);
 
   return (
     <>

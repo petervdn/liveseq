@@ -11,7 +11,7 @@ export const getEngineProps = ({
 }: LiveseqProps = {}): EngineProps => {
   return {
     project: createProject(project),
-    lookAheadTime: 1.2 as TimeInSeconds,
+    lookAheadTime: 2 as TimeInSeconds,
     scheduleInterval: 1 as TimeInSeconds,
     audioContext: audioContext || createMockedAudioContext(),
     ...props,

@@ -32,8 +32,9 @@ export type SchedulerState = {
 };
 
 export const createSchedulerState = (initialState: Partial<SchedulerState>) => {
+  const initialSlotPlaybackState = initialState.slotPlaybackState || createSlotPlaybackState();
   let state: SchedulerState = {
-    slotPlaybackState: initialState.slotPlaybackState || createSlotPlaybackState(),
+    slotPlaybackState: initialSlotPlaybackState,
   };
 
   const getSlotPlaybackState = () => {
@@ -74,6 +75,12 @@ export const createSchedulerState = (initialState: Partial<SchedulerState>) => {
     });
   };
 
+  const reset = () => {
+    setState({
+      slotPlaybackState: initialSlotPlaybackState,
+    });
+  };
+
   const dispose = () => {
     //
   };
@@ -83,6 +90,7 @@ export const createSchedulerState = (initialState: Partial<SchedulerState>) => {
     setSlotPlaybackState,
     addSceneToQueue,
     removeSceneFromQueue,
+    reset,
     dispose,
   };
 };

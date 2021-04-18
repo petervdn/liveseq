@@ -9,7 +9,7 @@ import { SchedulerInspector } from './Scheduler/SchedulerInspector';
 
 const viewerProps = {
   horizontalScale: 60,
-  end: 32,
+  end: 16,
   height: 200,
 };
 

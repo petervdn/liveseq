@@ -1,5 +1,5 @@
 import type { Note } from '../note/note';
-import type { Bpm, TimeInSeconds } from '../types';
+import type { Beats, Bpm, TimeInSeconds } from '../types';
 import type { MixerChannel } from '../mixer/mixer';
 import type { Instrument } from '../entities/instrumentChannel';
 import type { BeatsRange } from '../..';
@@ -45,6 +45,7 @@ export const createScheduler = ({ initialState, entityEntries }: SchedulerProps)
     setSlotPlaybackState,
     addSceneToQueue,
     removeSceneFromQueue,
+    reset,
     ...schedulerState
   } = createSchedulerState(initialState);
   let onStopCallbacks: Array<() => void> = [];
@@ -58,7 +59,10 @@ export const createScheduler = ({ initialState, entityEntries }: SchedulerProps)
   const schedule = (scheduleItems: Array<ScheduleItem>) => {
     scheduleItems.forEach((item) => {
       item.notes.forEach((note) => {
-        if (previouslyScheduledNoteIds.includes(note.schedulingId)) return;
+        if (previouslyScheduledNoteIds.includes(note.schedulingId)) {
+          // console.log('skipping', note.schedulingId);
+          return;
+        }
 
         previouslyScheduledNoteIds.push(note.schedulingId);
         onStopCallbacks.push(item.instrument.schedule(note, item.channelMixer));
@@ -73,8 +77,26 @@ export const createScheduler = ({ initialState, entityEntries }: SchedulerProps)
     });
   };
 
+  // TODO: can be optmized by caching at some times and using that as a start, now just reduces from the beginning
+  const getSlotPlaybackStateAt = (at: Beats) => {
+    const initialSlotPlaybackState = getSlotPlaybackState();
+    const start = 0 as Beats;
+    const beatsRange = { start, end: at };
+    const queuedScenes = getQueuedScenesWithinRange(beatsRange, initialSlotPlaybackState);
+    const queuedScenesByStart = groupQueuedScenesByStart(start, queuedScenes);
+    // TODO: adapt this function so we don't need to collect and throw away all the items, but just reduce to the last directly
+    const slotPlaybackStateRanges = getSlotPlaybackStateRanges(
+      beatsRange,
+      queuedScenesByStart,
+      entityEntries,
+      initialSlotPlaybackState,
+    );
+    const last = slotPlaybackStateRanges[slotPlaybackStateRanges.length - 1];
+    return last;
+  };
+
   const getScheduleDataWithinRange = (beatsRange: BeatsRange, tempo: Bpm): ScheduleData => {
-    const slotPlaybackState = getSlotPlaybackState();
+    const slotPlaybackState = getSlotPlaybackStateAt(beatsRange.start);
     const queuedScenes = getQueuedScenesWithinRange(beatsRange, slotPlaybackState);
     const queuedScenesByStart = groupQueuedScenesByStart(beatsRange.start, queuedScenes);
     const slotPlaybackStateRanges = getSlotPlaybackStateRanges(
@@ -125,10 +147,6 @@ export const createScheduler = ({ initialState, entityEntries }: SchedulerProps)
       // we must split the beatsRange into sections where the playing slots in the slotPlaybackState changes
       const scheduleData = getScheduleDataWithinRange(beatsRange, tempo);
 
-      // TODO: not sure this logic is correct, we gotta update the state
-      // the first slotPlaybackState becomes the new slotPlaybackState assuming we always move ahead in time
-      // setSlotPlaybackState(scheduleData.slotPlaybackStateRanges[0]);
-
       schedule(scheduleData.scheduleItems);
       schedulerEvents.onSchedule.dispatch(scheduleData);
     };
@@ -153,6 +171,7 @@ export const createScheduler = ({ initialState, entityEntries }: SchedulerProps)
 
   const dispose = () => {
     stopLoop();
+    reset();
     previouslyScheduledNoteIds = [];
     schedulerEvents.dispose();
     schedulerState.dispose();
