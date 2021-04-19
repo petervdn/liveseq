@@ -1,4 +1,4 @@
-import { createPubSub } from '../utils/pubSub';
+import { createPubSub } from '../../../pubSub/pubSub';
 import { objectValues } from '../utils/objUtils';
 import type { ScheduleData, ScheduleNote } from './scheduler';
 

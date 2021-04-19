@@ -1,7 +1,7 @@
 import { createProject } from '../project/project';
 import type { LiveseqProps } from '../liveseq';
 import type { EngineProps } from '../engine';
-import { createMockedAudioContext } from './createMockedAudioContext';
+import { createMockedAudioContext } from '../../../audioContextMock/createMockedAudioContext';
 import type { TimeInSeconds } from '../../../time/types';
 
 export const getEngineProps = ({

@@ -1,4 +1,4 @@
-import { wrapInRange } from '../../liveseq/lib/utils/wrapInRange';
+import { wrapInRange } from './wrapInRange';
 import { getRangeDuration } from './getRangeDuration';
 import { setStart } from './setStart';
 import { clampRange } from './clampRange';

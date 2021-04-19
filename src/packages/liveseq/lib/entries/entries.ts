@@ -1,11 +1,11 @@
 import type { CommonProps, OmitId, PartialCommonProps } from '../types';
 import { errorMessages } from '../errors';
-import { getIdGenerator } from '../utils/getIdGenerator';
-import { getHighestId } from '../utils/getHighestId';
+import { getIdGenerator } from '../../../idGenerator/getIdGenerator';
+import { getHighestId } from '../../../idGenerator/getHighestId';
 import { enable } from '../utils/enable';
 import { disable } from '../utils/disable';
 import { objectValues } from '../utils/objUtils';
-import { createPubSub } from '../utils/pubSub';
+import { createPubSub } from '../../../pubSub/pubSub';
 
 // TODO: make its own package (remove dependencies)
 // TODO: rename Instance to Entity
