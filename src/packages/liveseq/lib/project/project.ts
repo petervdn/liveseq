@@ -1,0 +1,41 @@
+import type { PlayerState } from '../player/player';
+import { libraryVersion } from '../meta';
+import { validateProject } from './validateProject';
+import type { SerializableEntities } from '../entities/entities';
+import type { SchedulerState } from '../scheduler/schedulerState';
+import { createSlotPlaybackState } from '../scheduler/schedulerState';
+
+export type SerializableProject = {
+  libraryVersion: number;
+  name: string;
+  initialState: Partial<PlayerState & SchedulerState>;
+  entities: SerializableEntities;
+};
+
+export const defaultProjectName = 'untitled';
+
+export const createProject = (project: Partial<SerializableProject> = {}): SerializableProject => {
+  const projectWithDefaults: SerializableProject = {
+    libraryVersion,
+    name: defaultProjectName,
+    ...project,
+    initialState: {
+      slotPlaybackState: createSlotPlaybackState(),
+      ...(project.initialState || {}),
+    },
+    entities: {
+      instrumentChannels: [],
+      samplers: [],
+      timelines: [],
+      noteClips: [],
+      scenes: [],
+      samples: [],
+      slots: [],
+      ...(project.entities || {}),
+    },
+  };
+
+  validateProject(projectWithDefaults);
+
+  return projectWithDefaults;
+};

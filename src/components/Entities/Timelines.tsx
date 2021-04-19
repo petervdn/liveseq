@@ -1,8 +1,8 @@
-import { useTimelines } from '../../liveseq/react/useEntities';
+import { useTimelines } from '../../packages/liveseq/react/useEntities';
 import { ItemsViewer, ViewerVisualProps } from '../general/ItemsViewer';
 import { Item } from '../general/Item';
 import { Label } from '../general/Label';
-import { getTimelineDuration } from '../../liveseq/lib/entities/utils/getTimelineDuration';
+import { getTimelineDuration } from '../../packages/liveseq/lib/entities/utils/getTimelineDuration';
 
 // TODO: clamp with end
 export const Timelines = ({ height = 200, horizontalScale }: ViewerVisualProps) => {

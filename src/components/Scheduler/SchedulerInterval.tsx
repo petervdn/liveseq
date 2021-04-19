@@ -1,5 +1,5 @@
 import { Box } from '../general/Box';
-import { useSchedulerInterval } from '../../liveseq/react/useSchedulerInterval';
+import { useSchedulerInterval } from '../../packages/liveseq/react/useSchedulerInterval';
 
 export type SchedulerIntervalProps = {
   start: number;

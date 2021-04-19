@@ -1,9 +1,9 @@
-import { useScheduleData } from '../../liveseq/react/useScheduleData';
+import { useScheduleData } from '../../packages/liveseq/react/useScheduleData';
 import { ScheduleNotes } from './ScheduleNotes';
 import { ScheduleSlots } from './ScheduleSlots';
 import { ScheduleScenes } from './ScheduledScenes';
 import type { SchedulerInspectorProps } from './SchedulerInspector';
-import { useSchedulerInterval } from '../../liveseq/react/useSchedulerInterval';
+import { useSchedulerInterval } from '../../packages/liveseq/react/useSchedulerInterval';
 
 export type SchedulerViewersProps = SchedulerInspectorProps & {
   // eslint-disable-next-line react/no-unused-prop-types

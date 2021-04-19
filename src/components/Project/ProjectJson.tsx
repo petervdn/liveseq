@@ -1,5 +1,5 @@
 import { CodeViewer } from '../general/CodeViewer';
-import { useLiveseqContext } from '../../liveseq';
+import { useLiveseqContext } from '../../packages/liveseq';
 
 export const ProjectJson = () => {
   const liveseq = useLiveseqContext();

@@ -1,4 +1,4 @@
-import { LiveseqProps, useLiveseq } from '../liveseq';
+import { LiveseqProps, useLiveseq } from '../packages/liveseq';
 import { PlaybackButton } from './PlaybackButton';
 import { Tempo } from './Tempo';
 import { ProjectJson } from './Project/ProjectJson';

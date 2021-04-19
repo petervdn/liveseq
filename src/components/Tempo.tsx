@@ -1,4 +1,4 @@
-import { useTempo } from '../liveseq/react/useTempo';
+import { useTempo } from '../packages/liveseq/react/useTempo';
 
 export const Tempo = () => {
   const [tempo, setTempo] = useTempo();

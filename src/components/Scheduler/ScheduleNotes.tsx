@@ -1,12 +1,12 @@
 import { useEffect } from 'react';
-import { getFrequency } from '../../liveseq/lib/note/note';
-import type { ScheduleItem } from '../../liveseq/lib/scheduler/scheduler';
+import { getFrequency } from '../../packages/note/note';
+import type { ScheduleItem } from '../../packages/liveseq/lib/scheduler/scheduler';
 import { ItemsViewer, ViewerVisualProps } from '../general/ItemsViewer';
 import { Item } from '../general/Item';
 import { Box } from '../general/Box';
 import { Label } from '../general/Label';
-import { useScheduledNotes } from '../../liveseq/react/useScheduledNotes';
-import { usePlayedNotes } from '../../liveseq/react/usePlayedNotes';
+import { useScheduledNotes } from '../../packages/liveseq/react/useScheduledNotes';
+import { usePlayedNotes } from '../../packages/liveseq/react/usePlayedNotes';
 
 type ScheduleNotesProps = {
   scheduleItem: ScheduleItem;
