@@ -1,5 +1,5 @@
-import type { Hertz } from '../../../note/note';
-import type { MixerChannel } from '../mixer/mixer';
+import type { Hertz } from '../../note/note';
+import type { MixerChannel } from '../../liveseq/lib/mixer/mixer';
 
 export const playTick = (
   channelMixer: MixerChannel,

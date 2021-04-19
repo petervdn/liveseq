@@ -10,7 +10,7 @@ import { getSlotPlaybackStateRanges } from './utils/getSlotPlaybackStateRanges';
 import { getNotesForInstrumentInTimeRange } from '../entities/utils/getNotesForInstrumentInTimeRange';
 import { createSchedulerEvents } from './schedulerEvents';
 import { createSchedulerState, SchedulerState, SlotPlaybackState } from './schedulerState';
-import { setTimer } from '../utils/setTimer';
+import { setTimer } from '../../../core/utils/setTimer';
 import type { TimeInSeconds } from '../../../time/types';
 
 export type ScheduleNote = Note & {

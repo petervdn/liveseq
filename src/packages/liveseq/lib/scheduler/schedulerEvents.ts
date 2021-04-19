@@ -1,5 +1,5 @@
 import { createPubSub } from '../../../pubSub/pubSub';
-import { objectValues } from '../utils/objUtils';
+import { objectValues } from '../../../core/utils/objUtils';
 import type { ScheduleData, ScheduleNote } from './scheduler';
 
 // TODO: this is a bit repeated in player

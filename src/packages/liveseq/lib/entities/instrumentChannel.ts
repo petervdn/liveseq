@@ -1,7 +1,7 @@
 import type { CommonProps, Disposable, PartialCommonProps } from '../types';
-import { createEntries } from '../entries/entries';
-import { identity } from '../utils/identity';
-import { without } from '../utils/without';
+import { createEntries } from '../../../entries/entries';
+import { identity } from '../../../core/utils/identity';
+import { without } from '../../../core/utils/without';
 import type { MixerChannel, Mixer } from '../mixer/mixer';
 import type { ScheduleNote } from '../scheduler/scheduler';
 

@@ -1,11 +1,11 @@
-import type { CommonProps, OmitId, PartialCommonProps } from '../types';
-import { errorMessages } from '../errors';
-import { getIdGenerator } from '../../../idGenerator/getIdGenerator';
-import { getHighestId } from '../../../idGenerator/getHighestId';
-import { enable } from '../utils/enable';
-import { disable } from '../utils/disable';
-import { objectValues } from '../utils/objUtils';
-import { createPubSub } from '../../../pubSub/pubSub';
+import type { CommonProps, OmitId, PartialCommonProps } from '../liveseq/lib/types';
+import { errorMessages } from '../liveseq/lib/errors';
+import { getIdGenerator } from '../idGenerator/getIdGenerator';
+import { getHighestId } from '../idGenerator/getHighestId';
+import { enable } from './utils/enable';
+import { disable } from './utils/disable';
+import { objectValues } from '../core/utils/objUtils';
+import { createPubSub } from '../pubSub/pubSub';
 
 // TODO: make its own package (remove dependencies)
 // TODO: rename Instance to Entity

@@ -1,10 +1,10 @@
-import { playTick } from '../utils/playTick';
+import { playTick } from '../../../core/utils/playTick';
 import { getFrequency } from '../../../note/note';
 import type { CommonProps, Disposable, PartialCommonProps } from '../types';
-import { createEntries } from '../entries/entries';
-import { always } from '../utils/always';
+import { createEntries } from '../../../entries/entries';
+import { always } from '../../../core/utils/always';
 import type { Instrument } from './instrumentChannel';
-import { noop } from '../utils/noop';
+import { noop } from '../../../core/utils/noop';
 
 export type SerializableSampler = CommonProps;
 export type SamplerInstance = Disposable<Instrument & SerializableSampler>;

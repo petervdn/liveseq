@@ -1,10 +1,10 @@
 import type { Note } from '../../../note/note';
 import type { CommonProps, Disposable, PartialCommonProps } from '../types';
-import { createEntries } from '../entries/entries';
-import { identity } from '../utils/identity';
+import { createEntries } from '../../../entries/entries';
+import { identity } from '../../../core/utils/identity';
 import { createNote } from '../../../note/note';
 import { getIdGenerator } from '../../../idGenerator/getIdGenerator';
-import { noop } from '../utils/noop';
+import { noop } from '../../../core/utils/noop';
 import type { Beats } from '../../../time/types';
 
 export type NoteClip = CommonProps & {

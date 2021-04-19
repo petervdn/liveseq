@@ -1,4 +1,4 @@
-import { errorMessages } from '../errors';
+import { errorMessages } from '../../liveseq/lib/errors';
 
 export const createAudioContext = (): AudioContext => {
   // this is split in 2 ifs like this because it was throwing error in nodejs

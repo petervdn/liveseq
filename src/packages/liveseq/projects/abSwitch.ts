@@ -1,7 +1,7 @@
 import type { Beats, Liveseq, SerializableProject } from '../index';
 import type { NoteName } from '../../note/note';
 import { createLiveseq } from '../lib/liveseq';
-import { times } from '../lib/utils/times';
+import { times } from '../../core/utils/times';
 import { playSlots, stopSlots } from '../lib/entities/scene';
 
 export const getAbSwitch = (): SerializableProject => {

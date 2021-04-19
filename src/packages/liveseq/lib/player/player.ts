@@ -1,7 +1,7 @@
-import { isContextSuspended } from '../utils/isContextSuspended';
+import { isContextSuspended } from '../../../core/utils/isContextSuspended';
 import { errorMessages } from '../errors';
 import { createPubSub } from '../../../pubSub/pubSub';
-import { objectValues } from '../utils/objUtils';
+import { objectValues } from '../../../core/utils/objUtils';
 import type { Scheduler } from '../scheduler/scheduler';
 import { timeToBeats } from '../../../time/musicTime';
 import type { Beats, Bpm, TimeInSeconds } from '../../../time/types';

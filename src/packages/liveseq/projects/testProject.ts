@@ -1,5 +1,5 @@
 import { createLiveseq } from '../lib/liveseq';
-import { times } from '../lib/utils/times';
+import { times } from '../../core/utils/times';
 import { addCompleteRouting } from './utils/addCompletRouting';
 import { getMetronomeNotes } from './abSwitch';
 import type { Beats } from '../../time/types';

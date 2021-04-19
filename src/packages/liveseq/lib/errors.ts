@@ -1,5 +1,5 @@
 import { libraryName } from './meta';
-import { always } from './utils/always';
+import { always } from '../../core/utils/always';
 
 // so we can test the errors
 export const errorMessages = {
