@@ -39,6 +39,7 @@
     "@types/react-dom": "^17.0.0",
     "@types/styled-components": "^5.1.9",
     "@types/styled-system": "^5.1.11",
+    "callbag-common": "^0.1.8",
     "change-case": "^4.1.2",
     "cross-env": "^7.0.3",
     "eslint": "^7.21.0",
