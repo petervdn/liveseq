@@ -1,5 +1,5 @@
-import type { CommonProps, OmitId, PartialCommonProps } from '../liveseq/lib/types';
-import { errorMessages } from '../liveseq/lib/errors';
+import type { CommonProps, OmitId, PartialCommonProps } from '../sequencer/lib/types';
+import { errorMessages } from '../sequencer/lib/errors';
 import { getIdGenerator } from './idGenerator/getIdGenerator';
 import { getHighestId } from './idGenerator/getHighestId';
 import { enable } from './utils/enable';

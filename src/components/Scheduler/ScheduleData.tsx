@@ -1,4 +1,4 @@
-import { useScheduleData } from '../../packages/liveseq/react/useScheduleData';
+import { useScheduleData } from '../../packages/sequencer/react/useScheduleData';
 import { CodeViewer } from '../general/CodeViewer';
 import { removeNonSerializableProps } from '../utils/removeNonSerializableProps';
 import type { SchedulerViewersProps } from './SchedulerViewers';

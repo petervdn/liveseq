@@ -1,4 +1,4 @@
-import type { CommonProps } from '../../liveseq/lib/types';
+import type { CommonProps } from '../../sequencer/lib/types';
 
 export const disable = <T extends Pick<CommonProps, 'isEnabled'>>(common: T): T => {
   return {

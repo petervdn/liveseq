@@ -1,6 +1,6 @@
 import type React from 'react';
 import { Button } from './general/Button';
-import { usePlayback } from '../packages/liveseq/react/usePlayback';
+import { usePlayback } from '../packages/sequencer/react/usePlayback';
 
 export const PlaybackButton: React.FunctionComponent = () => {
   const { playbackState, stop, play, pause } = usePlayback();

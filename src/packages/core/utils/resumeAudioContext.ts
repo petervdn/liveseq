@@ -1,5 +1,5 @@
 import { isContextSuspended } from './isContextSuspended';
-import { errorMessages } from '../../liveseq/lib/errors';
+import { errorMessages } from '../../sequencer/lib/errors';
 
 export const resumeAudioContext = (audioContext: AudioContext) => {
   return new Promise<void>((resolve, reject) => {

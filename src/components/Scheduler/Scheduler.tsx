@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { useLiveseqContext } from '../../packages/liveseq';
+import { useLiveseqContext } from '../../packages/sequencer';
 import { Wrapper } from '../general/Wrapper';
 import { Box } from '../general/Box';
 

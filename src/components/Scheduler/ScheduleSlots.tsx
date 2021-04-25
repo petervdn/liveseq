@@ -1,5 +1,5 @@
-import type { BeatsRange } from '../../packages/liveseq';
-import type { SlotPlaybackState } from '../../packages/liveseq/lib/scheduler/schedulerState';
+import type { BeatsRange } from '../../packages/sequencer';
+import type { SlotPlaybackState } from '../../packages/sequencer/lib/scheduler/schedulerState';
 import { ItemsViewer } from '../general/ItemsViewer';
 import { Item } from '../general/Item';
 import { Label } from '../general/Label';

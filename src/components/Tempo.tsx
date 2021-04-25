@@ -1,4 +1,4 @@
-import { useTempo } from '../packages/liveseq/react/useTempo';
+import { useTempo } from '../packages/sequencer/react/useTempo';
 import type { Bpm } from '../packages/time/types';
 
 export const Tempo = () => {
