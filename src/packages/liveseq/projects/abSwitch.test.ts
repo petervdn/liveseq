@@ -50,7 +50,6 @@ it('abSwitch is correct', () => {
         { id: 'samplers_0', isEnabled: true },
         { id: 'samplers_1', isEnabled: true },
       ],
-      samples: [],
       scenes: [
         {
           enter: [{ slotIds: ['slots_0'], type: 'playSlots' }],

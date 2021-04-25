@@ -1,7 +1,6 @@
 import type { SerializableProject } from '../project/project';
 import { createInstrumentChannelEntries, SerializableInstrumentChannel } from './instrumentChannel';
 import { createNoteClipEntries, SerializableClip } from './noteClip';
-import { createSampleEntries, SerializableSample } from './sample';
 import { createSamplerEntries, SerializableSampler } from './sampler';
 import { createSceneEntries, SerializableScene } from './scene';
 import { createSlotEntries, SerializableSlot } from './slot';
@@ -18,7 +17,6 @@ const decodeProjectEntities = (props: CreateEntitiesProps) => {
   const entries = {
     ...createInstrumentChannelEntries(props.mixer),
     ...createNoteClipEntries(),
-    ...createSampleEntries(),
     ...createSamplerEntries(),
     ...createSceneEntries(),
     ...createSlotEntries(),
@@ -40,7 +38,6 @@ export type SerializableEntities = {
   instrumentChannels: Array<SerializableInstrumentChannel>;
   noteClips: Array<SerializableClip>;
   samplers: Array<SerializableSampler>;
-  samples: Array<SerializableSample>;
   scenes: Array<SerializableScene>;
   slots: Array<SerializableSlot>;
   timelines: Array<SerializableTimeline>;

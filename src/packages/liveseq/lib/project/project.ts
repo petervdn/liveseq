@@ -35,7 +35,6 @@ export const createProject = (project: Partial<SerializableProject> = {}): Seria
       timelines: [],
       noteClips: [],
       scenes: [],
-      samples: [],
       slots: [],
       ...(project.entities || {}),
     },

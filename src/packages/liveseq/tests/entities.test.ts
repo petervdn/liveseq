@@ -19,7 +19,6 @@ it('adds all types of entities correctly', () => {
     ],
     noteClips: [{ duration: 10, id: 'noteClips_0', isEnabled: true, notes: [] }],
     samplers: [{ id: 'samplers_0', isEnabled: true }],
-    samples: [{ id: 'samples_0', isEnabled: true, source: '' }],
     scenes: [
       { enter: [{ slotIds: ['slots_0'], type: 'playSlots' }], id: 'scenes_0', isEnabled: true },
     ],
@@ -61,10 +60,6 @@ it('adds all types of entities correctly', () => {
     samplers: [
       { id: 'samplers_0', isEnabled: true },
       { id: 'samplers_1', isEnabled: true },
-    ],
-    samples: [
-      { id: 'samples_0', isEnabled: true, source: '' },
-      { id: 'samples_1', isEnabled: true, source: '' },
     ],
     scenes: [
       { enter: [{ slotIds: ['slots_0'], type: 'playSlots' }], id: 'scenes_0', isEnabled: true },
@@ -108,18 +103,12 @@ function removeAllByIteration(liveseq: Liveseq, iter: number) {
   liveseq.instrumentChannels.remove(`instrumentChannels_${iter}`);
   liveseq.noteClips.remove(`noteClips_${iter}`);
   liveseq.samplers.remove(`samplers_${iter}`);
-  liveseq.samples.remove(`samples_${iter}`);
   liveseq.scenes.remove(`scenes_${iter}`);
   liveseq.slots.remove(`slots_${iter}`);
   liveseq.timelines.remove(`timelines_${iter}`);
 }
 
 function addAllTypesOfEntities(liveseq: Liveseq) {
-  // TODO: use sample in a sampler
-  liveseq.samples.create({
-    source: '',
-  });
-
   const noteClipId = liveseq.noteClips.create({
     duration: 10 as Beats,
     notes: [], // TODO: remove this

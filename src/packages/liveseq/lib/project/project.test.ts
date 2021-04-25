@@ -9,7 +9,6 @@ it('can create empty project with createProject', () => {
       instrumentChannels: [],
       noteClips: [],
       samplers: [],
-      samples: [],
       scenes: [],
       slots: [],
       timelines: [],
