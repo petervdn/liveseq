@@ -1,5 +1,5 @@
 import type { SerializableProject } from './project/project';
-import { getEninePropsWithDefaults } from './utils/getEninePropsWithDefaults';
+import { getEninePropsWithDefaults } from './getEninePropsWithDefaults';
 import { createEngine, Engine, EngineProps } from './engine';
 import type { TimeInSeconds } from '../../time/types';
 
