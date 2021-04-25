@@ -3,7 +3,7 @@ import share from 'callbag-share';
 import type { Bpm, TimeInSeconds } from '../time/types';
 import { timeToBeats } from '../time/musicTime';
 import { getPlaybackSources, PlaybackSources } from './streams/playback';
-import { createRange } from '../time/beatsRange/beatsRange';
+import { createRange } from '../beatsRange/beatsRange';
 import { getClockStreams } from './streams/clock';
 import { extract } from './utils/extract';
 

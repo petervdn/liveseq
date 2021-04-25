@@ -1,5 +1,5 @@
 import type { BeatsRange } from './beatsRange';
-import type { Beats } from '../types';
+import type { Beats } from '../time/types';
 
 export const addToRange = <T extends BeatsRange>(range: T, offsetBy: Beats): T => {
   return {

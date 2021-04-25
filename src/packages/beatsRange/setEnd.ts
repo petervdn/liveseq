@@ -1,5 +1,5 @@
 import type { BeatsRange } from './beatsRange';
-import type { Beats } from '../types';
+import type { Beats } from '../time/types';
 
 // generic because we are keeping any extra properties from range
 

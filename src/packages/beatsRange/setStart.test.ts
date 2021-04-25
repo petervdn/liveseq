@@ -1,6 +1,6 @@
 import type { BeatsRange } from './beatsRange';
 import { setStart } from './setStart';
-import type { Beats } from '../types';
+import type { Beats } from '../time/types';
 
 it('setStart', () => {
   expect(setStart({ start: 0, end: 10 } as BeatsRange, 10 as Beats)).toEqual({

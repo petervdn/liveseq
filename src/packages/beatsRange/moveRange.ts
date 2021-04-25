@@ -1,5 +1,5 @@
 import type { BeatsRange } from './beatsRange';
-import type { Beats } from '../types';
+import type { Beats } from '../time/types';
 
 // moves whole range to new start
 export const moveRange = (range: BeatsRange, newStart: Beats): BeatsRange => {

@@ -1,4 +1,4 @@
-import { BeatsRange, createRange } from '../../../../time/beatsRange/beatsRange';
+import { BeatsRange, createRange } from '../../../../beatsRange/beatsRange';
 import type { QueuedScenesByStart } from './groupQueuedScenesByStart';
 import type { EntityEntries } from '../../entities/entities';
 import { getPlayingSlots } from './getPlayingSlots';

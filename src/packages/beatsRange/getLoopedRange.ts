@@ -1,7 +1,7 @@
 import { getRangeDuration } from './getRangeDuration';
 import type { BeatsRange } from './beatsRange';
 import { createRangeFromDuration } from './createRangeFromDuration';
-import type { Beats } from '../types';
+import type { Beats } from '../time/types';
 
 // given a range and a number of loops, what is the resulting range?
 

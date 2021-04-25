@@ -1,5 +1,5 @@
-import type { BeatsRange } from '../../../../time/beatsRange/beatsRange';
-import { isTimeInRange } from '../../../../time/beatsRange/isTimeInRange';
+import type { BeatsRange } from '../../../../beatsRange/beatsRange';
+import { isTimeInRange } from '../../../../beatsRange/isTimeInRange';
 import type { QueuedScene, SlotPlaybackState } from '../schedulerState';
 
 // find the scenes that will get triggered in the beatsRange
