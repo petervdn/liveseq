@@ -7,7 +7,7 @@ import { createScheduler } from './scheduler/scheduler';
 import { removeNonSerializableProps } from '../../../components/utils/removeNonSerializableProps';
 import type { TimeInSeconds } from '../../time/types';
 import { player } from '../../core/player';
-import type { InputProps } from '../../core/createInputProps';
+import type { InputProps } from '../../core/getInputProps';
 
 export type EngineProps = {
   project: SerializableProject;

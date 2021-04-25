@@ -4,19 +4,15 @@ import { createSubject$WithPush } from './streams/subject$WithPush';
 import { extract } from './utils/extract';
 
 // yep :`|
-export type CreateInputPropsProps = {
+export type GetInputPropsProps = {
   lookAheadTime: TimeInSeconds;
   scheduleInterval: TimeInSeconds;
   tempo: Bpm;
 };
 
-export type InputProps = ReturnType<typeof createInputProps>;
+export type InputProps = ReturnType<typeof getInputProps>;
 
-export const createInputProps = ({
-  lookAheadTime,
-  scheduleInterval,
-  tempo,
-}: CreateInputPropsProps) => {
+export const getInputProps = ({ lookAheadTime, scheduleInterval, tempo }: GetInputPropsProps) => {
   const [play$, play] = createTrigger$();
   const [stop$, stop] = createTrigger$(true);
   const [pause$, pause] = createTrigger$();
