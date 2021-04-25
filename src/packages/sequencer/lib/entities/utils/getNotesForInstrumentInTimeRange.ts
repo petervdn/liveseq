@@ -35,7 +35,6 @@ export const getNotesForInstrumentInTimeRange = (
       const instrument = entities.samplers.get(instrumentChannel.instrumentId);
 
       accumulator.push({
-        channelMixer: instrumentChannel.getMixerChannel(),
         instrument,
         notes: notes.map((note) => {
           return {

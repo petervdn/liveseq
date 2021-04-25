@@ -6,16 +6,14 @@ import { createSceneEntries, SerializableScene } from './scene';
 import { createSlotEntries, SerializableSlot } from './slot';
 import { createTimelineEntries, SerializableTimeline } from './timeline';
 import { objectEntries, objectValues } from '../../../core/utils/objUtils';
-import type { Mixer } from '../../../mixer/mixer';
 
 export type CreateEntitiesProps = {
   project: SerializableProject;
-  mixer: Mixer;
 };
 
 const decodeProjectEntities = (props: CreateEntitiesProps) => {
   const entries = {
-    ...createInstrumentChannelEntries(props.mixer),
+    ...createInstrumentChannelEntries(),
     ...createNoteClipEntries(),
     ...createSamplerEntries(),
     ...createSceneEntries(),

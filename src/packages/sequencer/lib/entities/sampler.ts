@@ -1,5 +1,3 @@
-import { playTick } from '../../../core/utils/playTick';
-import { getFrequency } from '../../../note/note';
 import type { CommonProps, Disposable, PartialCommonProps } from '../types';
 import { createEntries } from '../../../entries/entries';
 import { always } from '../../../core/utils/always';
@@ -17,8 +15,9 @@ export const createSamplerEntries = () => {
       return {
         isEnabled: true,
         ...serializable,
-        schedule: (note, mixer) => {
-          playTick(mixer, getFrequency(note.pitch), note.startTime, note.endTime - note.startTime);
+        schedule: () => {
+          // TODO: emit stream
+          // playTick(audioContext, getFrequency(note.pitch), note.startTime, note.endTime - note.startTime);
 
           return () => {
             // TODO returns a "cancel" fn

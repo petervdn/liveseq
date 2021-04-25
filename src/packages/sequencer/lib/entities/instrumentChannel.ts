@@ -2,13 +2,12 @@ import type { CommonProps, Disposable, PartialCommonProps } from '../types';
 import { createEntries } from '../../../entries/entries';
 import { identity } from '../../../core/utils/identity';
 import { without } from '../../../core/utils/without';
-import type { MixerChannel, Mixer } from '../../../mixer/mixer';
 import type { ScheduleNote } from '../scheduler/scheduler';
 
 // TODO: rename to Channel
 export type Instrument = {
   // when the player calls instrument.schedule, it will already pass notes with time in seconds
-  schedule: (notes: ScheduleNote, channelMixer: MixerChannel) => () => void;
+  schedule: (notes: ScheduleNote) => () => void;
 };
 
 export type SerializableInstrumentChannel = CommonProps & {
@@ -16,18 +15,14 @@ export type SerializableInstrumentChannel = CommonProps & {
   slotIds: Array<string>;
 };
 
-export type InstrumentChannelInstance = Disposable<
-  SerializableInstrumentChannel & {
-    getMixerChannel: () => MixerChannel;
-  }
->;
+export type InstrumentChannelInstance = Disposable<SerializableInstrumentChannel>;
 
 type ExtraMethods = {
   addSlotReference: (channelId: string, slotId: string) => void;
   removeSlotReference: (channelId: string, slotId: string) => void;
 };
 
-export const createInstrumentChannelEntries = (mixer: Mixer) => {
+export const createInstrumentChannelEntries = () => {
   return createEntries<
     'instrumentChannels',
     InstrumentChannelInstance,
@@ -36,15 +31,12 @@ export const createInstrumentChannelEntries = (mixer: Mixer) => {
   >(
     'instrumentChannels',
     (serializable) => {
-      const mixerChannel = mixer.addChannel(0.75, 0);
       return {
         isEnabled: true,
         ...serializable,
-        getMixerChannel: () => {
-          return mixerChannel;
-        },
+
         dispose: () => {
-          mixerChannel.dispose();
+          // noop
         },
       };
     },

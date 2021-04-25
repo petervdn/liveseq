@@ -2,7 +2,6 @@ import type { Source } from 'callbag-common';
 import { combine, pipe, subscribe, tap } from 'callbag-common';
 import share from 'callbag-share';
 import type { Note } from '../../../note/note';
-import type { MixerChannel } from '../../../mixer/mixer';
 import type { Instrument } from '../entities/instrumentChannel';
 import type { Beats, BeatsRange, Bpm } from '../../index';
 import type { EntityEntries } from '../entities/entities';
@@ -23,7 +22,6 @@ export type ScheduleNote = Note & {
 
 export type ScheduleItem = {
   notes: Array<ScheduleNote>;
-  channelMixer: MixerChannel;
   instrument: Instrument;
 };
 
@@ -74,7 +72,7 @@ export const createScheduler = ({
         }
 
         previouslyScheduledNoteIds.push(note.schedulingId);
-        onStopCallbacks.push(item.instrument.schedule(note, item.channelMixer));
+        onStopCallbacks.push(item.instrument.schedule(note));
 
         // TODO: time accuracy can probably be improved
         onStopCallbacks.push(
