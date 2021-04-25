@@ -7,7 +7,4 @@ export type Range<T extends number> = {
   start: T;
   end: T;
 };
-export type TimeRange = {
-  start: TimeInSeconds;
-  end: TimeInSeconds;
-};
+export type TimeRange = Range<TimeInSeconds>;
