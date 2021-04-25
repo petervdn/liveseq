@@ -31,7 +31,7 @@ export type PlayerProps = {
   scheduler: Scheduler;
 };
 
-export type PlaybackStates = 'playing' | 'paused' | 'stopped';
+export type PlaybackStates = 'play' | 'pause' | 'stop';
 
 export type PlayerState = {
   playbackState: PlaybackStates;
@@ -53,7 +53,7 @@ export const createPlayer = ({
   let playStartTime: number | null = null;
 
   let state: PlayerState = {
-    playbackState: 'stopped',
+    playbackState: 'stop',
     tempo: 120 as Bpm,
     ...initialState,
   };
@@ -127,7 +127,7 @@ export const createPlayer = ({
         scheduler.loop(getProgressInSeconds, getTempo, scheduleInterval, lookAheadTime),
       );
 
-      setPlaybackState('playing');
+      setPlaybackState('play');
     };
 
     isContextSuspended(audioContext)
@@ -147,12 +147,12 @@ export const createPlayer = ({
 
     onStopHandlers.forEach((callback) => callback());
     onStopHandlers = [];
-    setPlaybackState('stopped');
+    setPlaybackState('stop');
   };
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   const pause = () => {
-    setPlaybackState('paused');
+    setPlaybackState('pause');
   };
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars

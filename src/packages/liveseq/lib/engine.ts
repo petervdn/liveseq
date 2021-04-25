@@ -74,21 +74,24 @@ export const createEngine = ({
   const getCurrentTime = () => audioContext.currentTime as TimeInSeconds;
   const {
     playback$,
-    playStartTime$,
+    startTime$,
     elapsedTime$,
     interval$,
     isPlaying$,
     timeRange$,
     beatsRange$,
+    isRunning$,
   } = setup({
     getCurrentTime,
     sources,
   });
+
+  subscribe((x) => console.log('isRunning$', x))(isRunning$);
   subscribe((x) => console.log('interval$', x))(interval$);
+  subscribe((x) => console.log('isPlaying$', x))(isPlaying$);
   subscribe((x) => console.log('playback$', x))(playback$);
   subscribe((x) => console.log('elapsedTime$', x))(elapsedTime$);
-  subscribe((x) => console.log('isPlaying$', x))(isPlaying$);
-  subscribe((x) => console.log('playStartTime$', x))(playStartTime$);
+  subscribe((x) => console.log('startTime$', x))(startTime$);
   subscribe((x) => console.log('timeRange$', x))(timeRange$);
   subscribe((x) => console.log('beatsRange$', x))(beatsRange$);
 

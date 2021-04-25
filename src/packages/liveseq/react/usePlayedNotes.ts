@@ -9,7 +9,7 @@ export const usePlayedNotes = () => {
   const { playbackState } = usePlayback();
 
   useEffect(() => {
-    playbackState === 'stopped' && setPlayedNotes([]);
+    playbackState === 'stop' && setPlayedNotes([]);
   }, [playbackState]);
 
   useEffect(() => {

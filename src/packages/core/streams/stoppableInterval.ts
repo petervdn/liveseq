@@ -3,14 +3,14 @@ import type { TimeInSeconds } from '../../time/types';
 import { createNoop$ } from './noop';
 
 export const createStoppableInterval$ = (timeInterval$: Source<TimeInSeconds>) => (
-  isEnabled$: Source<boolean>,
+  isRunning$: Source<boolean>,
 ) => {
   const noop$ = createNoop$();
 
   return pipe(
-    combine(isEnabled$, timeInterval$),
-    map(([isEnabled, timeInterval]) => {
-      return isEnabled
+    combine(isRunning$, timeInterval$),
+    map(([isRunning, timeInterval]) => {
+      return isRunning
         ? pipe(
             interval(timeInterval * 1000) as Source<TimeInSeconds>,
             map((x) => x + 1),

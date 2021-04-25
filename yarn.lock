@@ -4115,6 +4115,13 @@ callbag-pipe@^1.2.0:
   resolved "https://registry.yarnpkg.com/callbag-pipe/-/callbag-pipe-1.2.0.tgz#7c00f47774da0096a7c5afa8a14f7873b5be1daf"
   integrity sha512-M+LdHUK0qJkm4CRe+I870ZzD/SnzcpTsfJRzFoB2hOkNXlrVdoj002KMkfdS4pHMfV6egzZFd8j+xJu6C4kwEQ==
 
+callbag-sample@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/callbag-sample/-/callbag-sample-2.1.0.tgz#a7c96b9815a6f4efeb16a6961385d753b849b982"
+  integrity sha512-cHh9qtroWbGGLJSOdMAlU1AsECyuBq/9i4J4r2qUbppg0TJ5BeBtfw0h+H8nmMRKRvTisWI+056rVeeVFANyAQ==
+  dependencies:
+    callbag "^1.4.0"
+
 callbag-scan@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/callbag-scan/-/callbag-scan-1.1.0.tgz#09e5bea479b849d51c0087be81a28044f9c5ddf3"

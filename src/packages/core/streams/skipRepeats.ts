@@ -2,7 +2,7 @@ import { filter, map, pipe, Source } from 'callbag-common';
 import { isEqual } from '../utils/isEqual';
 import { withPrevious } from './withPrevious';
 
-export const dropRepeats = (isRepeat = isEqual) => <T>(source$: Source<T>) => {
+export const skipRepeats = (isRepeat = isEqual) => <T>(source$: Source<T>) => {
   return pipe(
     source$,
     withPrevious,

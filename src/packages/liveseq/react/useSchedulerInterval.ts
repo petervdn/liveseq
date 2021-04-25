@@ -9,7 +9,7 @@ export const useSchedulerInterval = () => {
   const { playbackState } = usePlayback();
 
   useEffect(() => {
-    playbackState === 'stopped' && setBeatsRange(initialBeatsRange);
+    playbackState === 'stop' && setBeatsRange(initialBeatsRange);
   }, [playbackState]);
 
   useEffect(() => {

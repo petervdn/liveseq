@@ -9,7 +9,7 @@ export const useScheduledNotes = () => {
   const { playbackState } = usePlayback();
 
   useEffect(() => {
-    playbackState === 'stopped' && setScheduledNotes([]);
+    playbackState === 'stop' && setScheduledNotes([]);
   }, [playbackState]);
 
   useEffect(() => {

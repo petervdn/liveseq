@@ -8,7 +8,7 @@ export const PlaybackButton: React.FunctionComponent = () => {
   return (
     <>
       <Button
-        isDisabled={playbackState === 'paused'}
+        isDisabled={playbackState === 'pause'}
         onClick={() => {
           pause();
         }}
@@ -16,7 +16,7 @@ export const PlaybackButton: React.FunctionComponent = () => {
         pause
       </Button>
       <Button
-        isDisabled={playbackState === 'stopped'}
+        isDisabled={playbackState === 'stop'}
         onClick={() => {
           stop();
         }}
@@ -24,7 +24,7 @@ export const PlaybackButton: React.FunctionComponent = () => {
         stop
       </Button>
       <Button
-        isDisabled={playbackState === 'playing'}
+        isDisabled={playbackState === 'play'}
         onClick={() => {
           play();
         }}
