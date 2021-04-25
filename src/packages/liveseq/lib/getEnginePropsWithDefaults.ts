@@ -7,8 +7,8 @@ import type { EngineProps } from './engine';
 
 export const getEnginePropsWithDefaults = (props: LiveseqProps = {}): EngineProps => {
   const project = createProject(props.project);
-  const lookAheadTime = 2 as TimeInSeconds; // TODO: get from props
-  const scheduleInterval = 1 as TimeInSeconds; // TODO: get from props
+  const lookAheadTime = props.lookAheadTime || (2 as TimeInSeconds); // TODO: get from props
+  const scheduleInterval = props.scheduleInterval || (1 as TimeInSeconds); // TODO: get from props
   const tempo = 120 as Bpm; // TODO: get from project??
   const audioContext = props.audioContext || createMockedAudioContext();
   const inputSources = getInputProps({
