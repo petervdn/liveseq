@@ -2,7 +2,7 @@
 import { createProject, SerializableProject } from './project/project';
 import { libraryVersion } from './meta';
 import { createEntities } from './entities/entities';
-import { createMixer } from './mixer/mixer';
+import { createMixer } from '../../mixer/mixer';
 import { createScheduler } from './scheduler/scheduler';
 import { removeNonSerializableProps } from '../../../components/utils/removeNonSerializableProps';
 import type { TimeInSeconds } from '../../time/types';

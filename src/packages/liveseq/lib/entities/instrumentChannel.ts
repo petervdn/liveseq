@@ -2,9 +2,10 @@ import type { CommonProps, Disposable, PartialCommonProps } from '../types';
 import { createEntries } from '../../../entries/entries';
 import { identity } from '../../../core/utils/identity';
 import { without } from '../../../core/utils/without';
-import type { MixerChannel, Mixer } from '../mixer/mixer';
+import type { MixerChannel, Mixer } from '../../../mixer/mixer';
 import type { ScheduleNote } from '../scheduler/scheduler';
 
+// TODO: rename to Channel
 export type Instrument = {
   // when the player calls instrument.schedule, it will already pass notes with time in seconds
   schedule: (notes: ScheduleNote, channelMixer: MixerChannel) => () => void;

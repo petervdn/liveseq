@@ -7,7 +7,7 @@ import { createSceneEntries, SerializableScene } from './scene';
 import { createSlotEntries, SerializableSlot } from './slot';
 import { createTimelineEntries, SerializableTimeline } from './timeline';
 import { objectEntries, objectValues } from '../../../core/utils/objUtils';
-import type { Mixer } from '../mixer/mixer';
+import type { Mixer } from '../../../mixer/mixer';
 
 export type CreateEntitiesProps = {
   project: SerializableProject;

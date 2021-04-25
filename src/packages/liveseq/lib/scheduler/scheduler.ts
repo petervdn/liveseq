@@ -2,7 +2,7 @@ import type { Source } from 'callbag-common';
 import { combine, pipe, subscribe, tap } from 'callbag-common';
 import share from 'callbag-share';
 import type { Note } from '../../../note/note';
-import type { MixerChannel } from '../mixer/mixer';
+import type { MixerChannel } from '../../../mixer/mixer';
 import type { Instrument } from '../entities/instrumentChannel';
 import type { Beats, BeatsRange, Bpm } from '../../index';
 import type { EntityEntries } from '../entities/entities';
