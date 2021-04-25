@@ -1,5 +1,5 @@
 import type { BeatsRange } from './beatsRange';
-import type { Beats } from '../time/types';
+import type { Beats } from '../core/types';
 
 // generic because we are keeping any extra properties from range
 export const setStart = <T extends BeatsRange>(range: T, start: Beats): T => {

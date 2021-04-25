@@ -1,7 +1,7 @@
 import { combine, map, pipe, Source } from 'callbag-common';
 import share from 'callbag-share';
 import { createStoppableInterval$ } from './stoppableInterval';
-import type { TimeInSeconds } from '../../time/types';
+import type { TimeInSeconds } from '../types';
 
 type ClockSources = {
   // TODO: need to be more accurate than start stop, so we can do pause

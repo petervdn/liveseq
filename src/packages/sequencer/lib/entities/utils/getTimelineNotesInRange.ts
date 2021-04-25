@@ -9,7 +9,7 @@ import { addToRange } from '../../../../beatsRange/addToRange';
 import { createRangeFromDuration } from '../../../../beatsRange/createRangeFromDuration';
 import { getWrappedRanges } from '../../../../beatsRange/getWrappedRanges';
 import { getItemsInRange } from '../../../../beatsRange/getItemsInRange';
-import type { Beats } from '../../../../time/types';
+import type { Beats } from '../../../../core/types';
 
 export const getTimelineNotesInRange = (
   range: BeatsRange,

@@ -1,6 +1,6 @@
 import { addScenesToQueue } from './utils/addScenesToQueue';
 import { removeScenesFromQueue } from './utils/removeScenesFromQueue';
-import type { Beats } from '../../../time/types';
+import type { Beats } from '../../../core/types';
 
 export type PlayingSlot = {
   slotId: string;

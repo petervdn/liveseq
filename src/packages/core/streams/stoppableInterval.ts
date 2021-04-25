@@ -1,6 +1,6 @@
 import { combine, flatten, interval, map, pipe, Source, startWith } from 'callbag-common';
-import type { TimeInSeconds } from '../../time/types';
 import { createNoop$ } from './noop';
+import type { TimeInSeconds } from '../types';
 
 export const createStoppableInterval$ = (timeInterval$: Source<TimeInSeconds>) => (
   isRunning$: Source<boolean>,

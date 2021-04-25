@@ -1,9 +1,9 @@
 import { createProject } from './project/project';
 import type { LiveseqProps } from './liveseq';
 import { createMockedAudioContext } from '../../audioContextMock/createMockedAudioContext';
-import type { TimeInSeconds, Bpm } from '../../time/types';
 import { getInputProps } from '../../core/getInputProps';
 import type { EngineProps } from './engine';
+import type { Bpm, TimeInSeconds } from '../../core/types';
 
 export const getEnginePropsWithDefaults = (props: LiveseqProps = {}): EngineProps => {
   const project = createProject(props.project);

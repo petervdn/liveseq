@@ -1,5 +1,5 @@
 import { useTempo } from '../packages/sequencer/react/useTempo';
-import type { Bpm } from '../packages/time/types';
+import type { Bpm } from '../packages/core/types';
 
 export const Tempo = () => {
   const [tempo, setTempo] = useTempo();

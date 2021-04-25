@@ -3,7 +3,7 @@ import { combine, pipe, subscribe, tap } from 'callbag-common';
 import share from 'callbag-share';
 import type { Note } from '../../../note/note';
 import type { Instrument } from '../entities/instrumentChannel';
-import type { Beats, BeatsRange, Bpm } from '../../index';
+import type { Beats, BeatsRange, Bpm, TimeInSeconds } from '../../index';
 import type { EntityEntries } from '../entities/entities';
 import { getQueuedScenesWithinRange } from './utils/getQueuedScenesWithinRange';
 import { groupQueuedScenesByStart } from './utils/groupQueuedScenesByStart';
@@ -12,7 +12,6 @@ import { getNotesForInstrumentInTimeRange } from '../entities/utils/getNotesForI
 import { createSchedulerEvents } from './schedulerEvents';
 import { createSchedulerState, SchedulerState, SlotPlaybackState } from './schedulerState';
 import { setTimer } from '../../../core/utils/setTimer';
-import type { TimeInSeconds } from '../../../time/types';
 
 export type ScheduleNote = Note & {
   startTime: TimeInSeconds;

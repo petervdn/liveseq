@@ -4,7 +4,7 @@ import { createEntries } from '../../../entries/entries';
 import { identity } from '../../../core/utils/identity';
 import { always } from '../../../core/utils/always';
 import { noop } from '../../../core/utils/noop';
-import type { Beats } from '../../../time/types';
+import type { Beats } from '../../../core/types';
 
 export type SerializableTimeline = CommonProps & {
   duration?: Beats;

@@ -1,7 +1,7 @@
 import type { SerializableProject } from './project/project';
 import { getEnginePropsWithDefaults } from './getEnginePropsWithDefaults';
 import { createEngine, Engine, EngineProps } from './engine';
-import type { TimeInSeconds } from '../../time/types';
+import type { TimeInSeconds } from '../../core/types';
 
 export type Liveseq = Engine;
 

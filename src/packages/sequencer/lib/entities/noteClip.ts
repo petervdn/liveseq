@@ -5,7 +5,7 @@ import { identity } from '../../../core/utils/identity';
 import { createNote } from '../../../note/note';
 import { getIdGenerator } from '../../../entries/idGenerator/getIdGenerator';
 import { noop } from '../../../core/utils/noop';
-import type { Beats } from '../../../time/types';
+import type { Beats } from '../../../core/types';
 
 export type NoteClip = CommonProps & {
   duration: Beats;

@@ -1,4 +1,4 @@
-import type { Beats } from '../time/types';
+import type { Beats } from '../core/types';
 
 export type BeatsRange = {
   start: Beats;

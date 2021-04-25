@@ -1,7 +1,7 @@
-import type { Bpm, TimeInSeconds } from '../time/types';
 import { createTrigger$ } from './streams/trigger';
 import { createSubject$WithPush } from './streams/subject$WithPush';
 import { extract } from './utils/extract';
+import type { Bpm, TimeInSeconds } from './types';
 
 // yep :`|
 export type GetInputPropsProps = {

@@ -5,8 +5,8 @@ import { mapTo } from './mapTo';
 import { skipRepeats } from './skipRepeats';
 import { withPrevious } from './withPrevious';
 import type { Trigger } from './trigger';
-import type { TimeInSeconds } from '../../time/types';
 import { withTime } from './withTime';
+import type { TimeInSeconds } from '../types';
 
 export type Playback = 'play' | 'stop' | 'pause' | 'resume';
 export type Playback$ = Source<Playback>;

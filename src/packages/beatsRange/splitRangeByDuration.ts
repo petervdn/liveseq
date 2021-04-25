@@ -1,6 +1,6 @@
 import type { BeatsRange } from './beatsRange';
 import { splitRange } from './splitRange';
-import type { Beats } from '../time/types';
+import type { Beats } from '../core/types';
 
 export const splitRangeByDuration = (range: BeatsRange, duration: Beats): Array<BeatsRange> => {
   return splitRange(range, (range.start + duration) as Beats);
