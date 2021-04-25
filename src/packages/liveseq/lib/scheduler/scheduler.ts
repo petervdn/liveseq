@@ -1,9 +1,11 @@
+import type { Source } from 'callbag-common';
+import { combine, pipe, subscribe, tap } from 'callbag-common';
+import share from 'callbag-share';
 import type { Note } from '../../../note/note';
 import type { MixerChannel } from '../mixer/mixer';
 import type { Instrument } from '../entities/instrumentChannel';
 import type { Beats, BeatsRange, Bpm } from '../../index';
 import type { EntityEntries } from '../entities/entities';
-import { timeRangeToBeatsRange } from '../../../time/beatsRange/timeRangeToBeatsRange';
 import { getQueuedScenesWithinRange } from './utils/getQueuedScenesWithinRange';
 import { groupQueuedScenesByStart } from './utils/groupQueuedScenesByStart';
 import { getSlotPlaybackStateRanges } from './utils/getSlotPlaybackStateRanges';
@@ -32,13 +34,20 @@ export type ScheduleData = {
 };
 
 type SchedulerProps = {
+  beatsRange$: Source<BeatsRange>;
+  tempo$: Source<Bpm>;
   entityEntries: EntityEntries;
   initialState: Partial<SchedulerState>;
 };
 
 export type Scheduler = ReturnType<typeof createScheduler>;
 
-export const createScheduler = ({ initialState, entityEntries }: SchedulerProps) => {
+export const createScheduler = ({
+  initialState,
+  entityEntries,
+  beatsRange$,
+  tempo$,
+}: SchedulerProps) => {
   const schedulerEvents = createSchedulerEvents();
   const {
     getSlotPlaybackState,
@@ -48,7 +57,7 @@ export const createScheduler = ({ initialState, entityEntries }: SchedulerProps)
     reset,
     ...schedulerState
   } = createSchedulerState(initialState);
-  let onStopCallbacks: Array<() => void> = [];
+  const onStopCallbacks: Array<() => void> = [];
 
   // todo: probably make this an object for more efficient lookup
   // todo: how does this work when slots are played again later on (and loop count is reset)
@@ -120,57 +129,23 @@ export const createScheduler = ({ initialState, entityEntries }: SchedulerProps)
     };
   };
 
-  const stopLoop = () => {
-    onStopCallbacks.forEach((callback) => {
-      callback();
-    });
-    onStopCallbacks = [];
-  };
-
-  const loop = (
-    getTime: () => TimeInSeconds,
-    getTempo: () => Bpm,
-    scheduleInterval: TimeInSeconds,
-    lookAheadTime: TimeInSeconds,
-  ) => {
-    const internalSchedule = () => {
-      const songTime = getTime();
-      const tempo = getTempo();
-      const beatsRange = timeRangeToBeatsRange(
-        {
-          start: songTime,
-          end: (songTime + lookAheadTime) as TimeInSeconds,
-        },
-        tempo,
-      );
-
+  // react to beatsRange$ and tempo$
+  const update$ = pipe(
+    combine(beatsRange$, tempo$),
+    tap(([beatsRange, tempo]) => {
       // we must split the beatsRange into sections where the playing slots in the slotPlaybackState changes
       const scheduleData = getScheduleDataWithinRange(beatsRange, tempo);
 
       schedule(scheduleData.scheduleItems);
       schedulerEvents.onSchedule.dispatch(scheduleData);
-    };
+    }),
+    share,
+  );
 
-    const handleSchedule = () => {
-      const cancelTimer = setTimer(() => {
-        internalSchedule();
-        handleSchedule();
-      }, scheduleInterval * 1000);
-
-      // TODO: will keep adding until stopped, maybe just save this separately or improve cleanup
-      onStopCallbacks.push(cancelTimer);
-    };
-
-    internalSchedule();
-    handleSchedule();
-
-    return () => {
-      stopLoop();
-    };
-  };
+  // eslint-disable-next-line no-console
+  subscribe((x) => console.log('update$', x))(update$);
 
   const dispose = () => {
-    stopLoop();
     reset();
     previouslyScheduledNoteIds = [];
     schedulerEvents.dispose();
@@ -186,7 +161,6 @@ export const createScheduler = ({ initialState, entityEntries }: SchedulerProps)
     onSchedule: schedulerEvents.onSchedule.subscribe,
     onPlayNote: schedulerEvents.onPlayNote.subscribe,
     schedule,
-    loop,
     dispose,
   };
 };

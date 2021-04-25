@@ -15,10 +15,11 @@ export const Scheduler = (props: SchedulerViewersProps) => {
   useEffect(() => {
     let isLooping = true;
     const handleLoop = () => {
-      if (wrapperRef.current) {
-        const progress = liveseq.getProgressInBeats();
-        wrapperRef.current.style.transform = `translate(${progress * horizontalScale}px, 0px)`;
-      }
+      // TODO: put back, but via raf stream with progress
+      // if (wrapperRef.current) {
+      //   const progress = liveseq.getProgressInBeats();
+      //   wrapperRef.current.style.transform = `translate(${progress * horizontalScale}px, 0px)`;
+      // }
 
       isLooping && requestAnimationFrame(handleLoop);
     };

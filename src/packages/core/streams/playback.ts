@@ -29,15 +29,15 @@ export type PlaybackSources = {
   pause$: Trigger;
 };
 
-export type GetPlaybackStreamsProps = {
+export type GetPlaybackSourcesProps = {
   sources: PlaybackSources;
   getCurrentTime: () => TimeInSeconds;
 };
 
-export const getPlaybackStreams = ({
+export const getPlaybackSources = ({
   sources: { play$, stop$, pause$ },
   getCurrentTime,
-}: GetPlaybackStreamsProps) => {
+}: GetPlaybackSourcesProps) => {
   // playback status
   const playback$ = pipe(
     merge(mapToPlay(play$), mapToStop(stop$), mapToPause(pause$)),
@@ -51,6 +51,7 @@ export const getPlaybackStreams = ({
       // add resume state from pause -> play, which also makes play happen only from stop
       return isResuming(current, previous!) ? 'resume' : current;
     }),
+
     skipRepeats(),
     share,
   );

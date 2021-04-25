@@ -1,9 +1,15 @@
-import type { PlayerState } from '../player/player';
 import { libraryVersion } from '../meta';
 import { validateProject } from './validateProject';
 import type { SerializableEntities } from '../entities/entities';
 import type { SchedulerState } from '../scheduler/schedulerState';
 import { createSlotPlaybackState } from '../scheduler/schedulerState';
+import type { Bpm } from '../../../time/types';
+import type { Playback } from '../../../core/streams/playback';
+
+export type PlayerState = {
+  playbackState: Playback;
+  tempo: Bpm;
+};
 
 export type SerializableProject = {
   libraryVersion: number;

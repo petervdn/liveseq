@@ -40,6 +40,8 @@
     "@types/styled-components": "^5.1.9",
     "@types/styled-system": "^5.1.11",
     "callbag-common": "^0.1.8",
+    "callbag-latest": "^1.1.0",
+    "callbag-remember": "^2.0.0",
     "callbag-sample": "^2.1.0",
     "callbag-share": "^1.3.0",
     "callbag-subject": "^2.1.0",

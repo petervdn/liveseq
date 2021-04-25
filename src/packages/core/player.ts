@@ -1,40 +1,11 @@
 import { combine, map, pipe, Source } from 'callbag-common';
 import share from 'callbag-share';
 import type { Bpm, TimeInSeconds } from '../time/types';
-import { createSubject$WithPush } from './streams/subject$WithPush';
 import { timeToBeats } from '../time/musicTime';
-import { createTrigger$ } from './streams/trigger';
-import { getPlaybackStreams, PlaybackSources } from './streams/playback';
+import { getPlaybackSources, PlaybackSources } from './streams/playback';
 import { createRange } from '../time/beatsRange/beatsRange';
 import { getClockStreams } from './streams/clock';
-
-export const getSetupSourcesWithHandlers = () => {
-  const [play$, play] = createTrigger$();
-  const [stop$, stop] = createTrigger$();
-  const [pause$, pause] = createTrigger$();
-  const [tempo$, setTempo] = createSubject$WithPush(120 as Bpm);
-  const [lookahead$, setLookahead] = createSubject$WithPush(1.2 as TimeInSeconds);
-  const [timeInterval$, setTimeInterval] = createSubject$WithPush(1 as TimeInSeconds);
-
-  return {
-    sources: {
-      play$,
-      stop$,
-      pause$,
-      tempo$,
-      lookahead$,
-      timeInterval$,
-    },
-    handlers: {
-      play,
-      stop,
-      pause,
-      setTempo,
-      setLookahead,
-      setTimeInterval,
-    },
-  };
-};
+import { extract } from './utils/extract';
 
 type SetupProps = {
   // TODO: convert to pullable source?
@@ -48,14 +19,14 @@ type SetupProps = {
 
 // TODO: all of the resulting streams must be shared... and also we don't need to use subject for everything inside
 // TODO: perhaps use pipe-me library https://github.com/sartaj/pipe-me/blob/master/index.js
-export const setup = (props: SetupProps) => {
+export const player = (props: SetupProps) => {
   const { sources, getCurrentTime } = props;
-  const playbackStreams = getPlaybackStreams(props);
-  const { startTime$ } = playbackStreams;
+  const playerSources = getPlaybackSources(props);
+  const { startTime$ } = playerSources;
   const { elapsedTime$, interval$ } = getClockStreams({
     sources: {
       ...props.sources,
-      ...playbackStreams,
+      ...playerSources,
     },
     getCurrentTime,
   });
@@ -77,12 +48,17 @@ export const setup = (props: SetupProps) => {
   );
 
   return {
-    ...sources,
-    ...playbackStreams,
-    startTime$,
-    elapsedTime$,
-    interval$,
-    timeRange$,
-    beatsRange$,
+    sources: {
+      ...sources,
+      ...playerSources,
+      startTime$,
+      elapsedTime$,
+      interval$,
+      timeRange$,
+      beatsRange$,
+    },
+    getters: {
+      getPlayback: () => extract(playerSources.playback$),
+    },
   };
 };

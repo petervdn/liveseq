@@ -1,15 +1,21 @@
 import type { SerializableProject } from './project/project';
-import { getEngineProps } from './utils/getEngineProps';
+import { getEninePropsWithDefaults } from './utils/getEninePropsWithDefaults';
 import { createEngine, Engine, EngineProps } from './engine';
+import type { TimeInSeconds } from '../../time/types';
 
 export type Liveseq = Engine;
 
 export type LiveseqProps = Partial<
-  Omit<EngineProps, 'project'> & { project: Partial<SerializableProject> }
+  Omit<EngineProps, 'project'> & {
+    project: Partial<SerializableProject>;
+  } & {
+    lookAheadTime: TimeInSeconds;
+    scheduleInterval: TimeInSeconds;
+  }
 >;
 
 export const createLiveseq = (props: LiveseqProps = {}): Liveseq => {
-  const propsWithDefaults = getEngineProps(props);
+  const propsWithDefaults = getEninePropsWithDefaults(props);
 
   return createEngine(propsWithDefaults);
 };

@@ -1,4 +1,5 @@
 import { useTempo } from '../packages/liveseq/react/useTempo';
+import type { Bpm } from '../packages/time/types';
 
 export const Tempo = () => {
   const [tempo, setTempo] = useTempo();
@@ -10,7 +11,7 @@ export const Tempo = () => {
         type="number"
         value={tempo}
         onChange={(changeEvent) => {
-          setTempo(parseInt(changeEvent.target.value, 10));
+          setTempo(parseInt(changeEvent.target.value, 10) as Bpm);
         }}
       />
     </>

@@ -15,7 +15,7 @@ it('returns an object with the expected keys from createLiveseq', () => {
   const liveseq = createLiveseq(getMockedProps());
   // SELECTORS
   // store
-  expect(liveseq.getPlaybackState).toBeDefined();
+  expect(liveseq.getPlayback).toBeDefined();
   expect(liveseq.getTempo).toBeDefined();
   // core
   expect(liveseq.getScheduleDataWithinRange).toBeDefined();

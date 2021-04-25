@@ -22,7 +22,7 @@ export const Button = ({ children, isActive, onClick, isDisabled }: ButtonProps)
       padding="7px 18px"
       style={{
         border: `1px solid ${isActive ? 'red' : 'white'}`,
-        // borderRadius: '1000px',
+        opacity: isDisabled ? 0.5 : 1,
       }}
     >
       <Text>{children}</Text>

@@ -1,6 +1,6 @@
 import { getAbSwitch } from '../../projects/abSwitch';
 import type { LiveseqProps } from '../liveseq';
-import { getEngineProps } from './getEngineProps';
+import { getEninePropsWithDefaults } from './getEninePropsWithDefaults';
 
 // some tests should pass with all these props
 export const propsForTests: Array<LiveseqProps | undefined> = [
@@ -8,5 +8,5 @@ export const propsForTests: Array<LiveseqProps | undefined> = [
   {},
   { project: getAbSwitch() },
   { audioContext: {} as AudioContext },
-  getEngineProps(),
+  getEninePropsWithDefaults(),
 ];

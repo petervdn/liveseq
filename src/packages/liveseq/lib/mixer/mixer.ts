@@ -58,7 +58,7 @@ export const createMixer = (audioContext: AudioContext) => {
     // const getIsMuted = () => {
     //   return state.isMuted;
     // };
-    //
+
     // const setIsMuted = (isMuted: boolean) => {
     //   if (getIsMuted() === isMuted) return;
     //

@@ -1,14 +1,11 @@
-import { useEffect, useState } from 'react';
 import { useLiveseqContext } from './useLiveseq';
+import { useCallbag } from './useCallbag';
 
 export const usePlayback = () => {
   const liveseq = useLiveseqContext();
-  const [playbackState, setPlaybackState] = useState(liveseq.getPlaybackState);
-
-  useEffect(() => {
-    return liveseq.onPlaybackChange(setPlaybackState);
-  }, [liveseq]);
-
+  const playbackState = useCallbag(liveseq.playback$);
+  // TODO: coming undefined sometimes
+  // console.log(playbackState);
   return {
     playbackState,
     play: liveseq.play,
