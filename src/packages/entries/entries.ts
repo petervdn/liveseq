@@ -1,7 +1,7 @@
 import type { CommonProps, OmitId, PartialCommonProps } from '../liveseq/lib/types';
 import { errorMessages } from '../liveseq/lib/errors';
-import { getIdGenerator } from '../idGenerator/getIdGenerator';
-import { getHighestId } from '../idGenerator/getHighestId';
+import { getIdGenerator } from './idGenerator/getIdGenerator';
+import { getHighestId } from './idGenerator/getHighestId';
 import { enable } from './utils/enable';
 import { disable } from './utils/disable';
 import { objectValues } from '../core/utils/objUtils';

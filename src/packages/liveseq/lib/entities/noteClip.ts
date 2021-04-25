@@ -3,7 +3,7 @@ import type { CommonProps, Disposable, PartialCommonProps } from '../types';
 import { createEntries } from '../../../entries/entries';
 import { identity } from '../../../core/utils/identity';
 import { createNote } from '../../../note/note';
-import { getIdGenerator } from '../../../idGenerator/getIdGenerator';
+import { getIdGenerator } from '../../../entries/idGenerator/getIdGenerator';
 import { noop } from '../../../core/utils/noop';
 import type { Beats } from '../../../time/types';
 

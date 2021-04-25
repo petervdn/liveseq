@@ -3,27 +3,34 @@ import { Button } from './general/Button';
 import { usePlayback } from '../packages/liveseq/react/usePlayback';
 
 export const PlaybackButton: React.FunctionComponent = () => {
-  const { playbackState, stop, play } = usePlayback();
+  const { playbackState, stop, play, pause } = usePlayback();
 
   return (
     <>
-      {playbackState === 'playing' ? (
-        <Button
-          onClick={() => {
-            stop();
-          }}
-        >
-          stop
-        </Button>
-      ) : (
-        <Button
-          onClick={() => {
-            play();
-          }}
-        >
-          start
-        </Button>
-      )}
+      <Button
+        isDisabled={playbackState === 'paused'}
+        onClick={() => {
+          pause();
+        }}
+      >
+        pause
+      </Button>
+      <Button
+        isDisabled={playbackState === 'stopped'}
+        onClick={() => {
+          stop();
+        }}
+      >
+        stop
+      </Button>
+      <Button
+        isDisabled={playbackState === 'playing'}
+        onClick={() => {
+          play();
+        }}
+      >
+        play
+      </Button>
     </>
   );
 };

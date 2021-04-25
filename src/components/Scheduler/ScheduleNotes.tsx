@@ -29,10 +29,10 @@ export const ScheduleNotes = ({
   // TODO: remove
   useEffect(() => {
     // eslint-disable-next-line no-console
-    console.log({
-      scheduledNotes: scheduledNotes.length,
-      playedNotes: playedNotes.length,
-    });
+    // console.log({
+    //   scheduledNotes: scheduledNotes.length,
+    //   playedNotes: playedNotes.length,
+    // });
   }, [scheduledNotes.length, playedNotes.length]);
 
   // TODO: note output per instrument (instrument channel??)
