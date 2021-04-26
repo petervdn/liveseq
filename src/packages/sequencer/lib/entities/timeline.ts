@@ -1,10 +1,9 @@
-import type { BeatsRange } from '../../../beatsRange/beatsRange';
 import type { CommonProps, Disposable, PartialCommonProps } from '../types';
 import { createEntries } from '../../../entries/entries';
 import { identity } from '../../../core/utils/identity';
 import { always } from '../../../core/utils/always';
 import { noop } from '../../../core/utils/noop';
-import type { Beats } from '../../../core/types';
+import type { Beats, BeatsRange } from '../../../core/types';
 
 export type SerializableTimeline = CommonProps & {
   duration?: Beats;

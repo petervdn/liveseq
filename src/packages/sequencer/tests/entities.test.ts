@@ -1,7 +1,8 @@
-import { Beats, createLiveseq, Liveseq } from '../index';
+import { createLiveseq, Liveseq } from '../index';
 import { musicTimeToBeats } from '../../time/musicTime';
 import { playSlots } from '../lib/entities/scene';
 import { getMockedProps } from './getMockedProps';
+import type { Beats } from '../../core';
 
 it('adds all types of entities correctly', () => {
   const liveseq = createLiveseq(getMockedProps());

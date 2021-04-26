@@ -10,3 +10,7 @@ export type Range<T extends number> = {
   end: T;
 };
 export type TimeRange = Range<TimeInSeconds>;
+export type BeatsRange = {
+  start: Beats;
+  end: Beats;
+};

@@ -1,6 +1,7 @@
-import type { Beats, Liveseq } from '../../index';
+import type { Liveseq } from '../../index';
 import { playSlots, stopSlots } from '../../lib/entities/scene';
 import type { Note } from '../../../note/note';
+import type { Beats } from '../../../core';
 
 type CompleteRoutingProps = {
   name: string;

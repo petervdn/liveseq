@@ -1,5 +1,5 @@
-import type { BeatsRange } from './beatsRange';
 import { isInRange } from './isInRange';
+import type { BeatsRange } from '../core/types';
 
 it('isInRange', () => {
   expect(isInRange({ start: 0, end: 10 } as BeatsRange, { start: 5, end: 15 } as BeatsRange)).toBe(

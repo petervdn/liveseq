@@ -1,10 +1,10 @@
-import { BeatsRange, createRange } from '../../../../beatsRange/beatsRange';
+import { createRange } from '../../../../beatsRange/beatsRange';
 import type { QueuedScenesByStart } from './groupQueuedScenesByStart';
 import type { EntityEntries } from '../../entities/entities';
 import { getPlayingSlots } from './getPlayingSlots';
 import { removeScenesFromQueue } from './removeScenesFromQueue';
 import type { SlotPlaybackState } from '../schedulerState';
-import type { Beats } from '../../../../core/types';
+import type { Beats, BeatsRange } from '../../../../core/types';
 
 export const getSlotPlaybackStateRanges = (
   beatsRange: BeatsRange,

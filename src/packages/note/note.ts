@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import type { Opaque } from 'type-fest';
-import type { BeatsRange } from '../beatsRange/beatsRange';
-import type { Beats } from '../core/types';
+import type { Beats, BeatsRange } from '../core/types';
 
 export type Hertz = Opaque<number, 'Hertz'>;
 

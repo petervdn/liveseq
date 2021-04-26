@@ -1,5 +1,5 @@
 import { getRangeDuration } from './getRangeDuration';
-import type { BeatsRange } from './beatsRange';
+import type { BeatsRange } from '../core/types';
 
 // might clamp to an invalid duration, so might return null
 export const clampRange = (range: BeatsRange, rangeLimit: BeatsRange): BeatsRange | null => {

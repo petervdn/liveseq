@@ -1,5 +1,5 @@
-import type { BeatsRange } from './beatsRange';
 import { getRangeDuration } from './getRangeDuration';
+import type { BeatsRange } from '../core/types';
 
 it('getRangeDuration', () => {
   expect(getRangeDuration({ start: 10, end: 0 } as BeatsRange)).toEqual(-10);

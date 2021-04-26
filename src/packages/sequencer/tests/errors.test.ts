@@ -1,8 +1,8 @@
 import { createLiveseq } from '../lib/liveseq';
 import { errorMessages } from '../lib/errors';
 import { createProject } from '../lib/project/project';
-import type { TimeInSeconds } from '../index';
 import { getMockedProps } from './getMockedProps';
+import type { TimeInSeconds } from '../../core';
 
 it('throws when lookahead time is smaller than interval', () => {
   // error

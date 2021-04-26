@@ -1,5 +1,5 @@
 import { isInRange } from './isInRange';
-import type { BeatsRange } from './beatsRange';
+import type { BeatsRange } from '../core/types';
 
 export const getItemsInRange = <T extends BeatsRange>(range: BeatsRange, items: Array<T>) => {
   return items.filter((item) => {

@@ -1,7 +1,6 @@
 import type { SerializableTimeline } from '../timeline';
 import type { Note } from '../../../../note/note';
 import { getUniqueSchedulingId } from '../../scheduler/utils/getUniqueSchedulingId';
-import type { BeatsRange } from '../../../../beatsRange/beatsRange';
 import type { NoteClip } from '../noteClip';
 import { getTimelineDuration } from './getTimelineDuration';
 import { subtractFromRange } from '../../../../beatsRange/subtractFromRange';
@@ -9,7 +8,7 @@ import { addToRange } from '../../../../beatsRange/addToRange';
 import { createRangeFromDuration } from '../../../../beatsRange/createRangeFromDuration';
 import { getWrappedRanges } from '../../../../beatsRange/getWrappedRanges';
 import { getItemsInRange } from '../../../../beatsRange/getItemsInRange';
-import type { Beats } from '../../../../core/types';
+import type { Beats, BeatsRange } from '../../../../core/types';
 
 export const getTimelineNotesInRange = (
   range: BeatsRange,

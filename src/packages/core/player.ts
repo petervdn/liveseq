@@ -7,7 +7,7 @@ import { getClockStreams } from './streams/clock';
 import { extract } from './utils/extract';
 import type { Bpm, TimeInSeconds } from './types';
 
-type SetupProps = {
+type CreatePlayerProps = {
   // TODO: convert to pullable source?
   getCurrentTime: () => TimeInSeconds;
   sources: PlaybackSources & {
@@ -19,7 +19,7 @@ type SetupProps = {
 
 // TODO: all of the resulting streams must be shared... and also we don't need to use subject for everything inside
 // TODO: perhaps use pipe-me library https://github.com/sartaj/pipe-me/blob/master/index.js
-export const player = (props: SetupProps) => {
+export const createPlayer = (props: CreatePlayerProps) => {
   const { sources, getCurrentTime } = props;
   const playerSources = getPlaybackSources(props);
   const { startTime$ } = playerSources;
@@ -30,7 +30,7 @@ export const player = (props: SetupProps) => {
     },
     getCurrentTime,
   });
-  // TODO: maybe do elapsedBeats and convert that to beatsRange instead of having the timeRange
+
   const timeRange$ = pipe(
     combine(elapsedTime$, sources.lookahead$),
     map(([elapsedTime, lookahead]) => ({

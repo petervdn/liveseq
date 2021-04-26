@@ -1,8 +1,8 @@
-import type { BeatsRange } from '../../packages/sequencer';
 import type { SlotPlaybackState } from '../../packages/sequencer/lib/scheduler/schedulerState';
 import { ItemsViewer } from '../general/ItemsViewer';
 import { Item } from '../general/Item';
 import { Label } from '../general/Label';
+import type { BeatsRange } from '../../packages/core';
 
 type ScheduleScenesProps = {
   slotPlaybackStateRanges: Array<BeatsRange & SlotPlaybackState>;

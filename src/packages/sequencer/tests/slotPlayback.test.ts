@@ -1,6 +1,7 @@
-import { Beats, createLiveseq } from '../index';
+import { createLiveseq } from '../index';
 import { playSlots } from '../lib/entities/scene';
 import { getMockedProps } from './getMockedProps';
+import type { Beats } from '../../core';
 
 it('getSlotPlaybackStatesWithinRange', () => {
   const liveseq = createLiveseq(getMockedProps());

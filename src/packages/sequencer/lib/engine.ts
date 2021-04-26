@@ -4,7 +4,7 @@ import { libraryVersion } from './meta';
 import { createEntities } from './entities/entities';
 import { createScheduler } from './scheduler/scheduler';
 import { removeNonSerializableProps } from '../../../components/utils/removeNonSerializableProps';
-import { player } from '../../core/player';
+import { createPlayer } from '../../core/player';
 import type { InputProps } from '../../core/getInputProps';
 import type { TimeInSeconds } from '../../core/types';
 
@@ -22,7 +22,7 @@ export const createEngine = ({
   getters,
   handlers,
 }: EngineProps) => {
-  const { sources: playerSources, getters: playerGetters } = player({
+  const { sources: playerSources, getters: playerGetters } = createPlayer({
     getCurrentTime: () => audioContext.currentTime as TimeInSeconds,
     sources,
   });
