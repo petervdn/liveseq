@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useLiveseqContext } from './useLiveseq';
-import { createRange } from '../../beatsRange/beatsRange';
 import { useTempo } from './useTempo';
+import { createRange } from '../../range';
 
 export const useScheduleData = (start: number, end: number) => {
   const liveseq = useLiveseqContext();

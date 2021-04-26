@@ -3,12 +3,14 @@ import type { Note } from '../../../../note/note';
 import { getUniqueSchedulingId } from '../../scheduler/utils/getUniqueSchedulingId';
 import type { NoteClip } from '../noteClip';
 import { getTimelineDuration } from './getTimelineDuration';
-import { subtractFromRange } from '../../../../beatsRange/subtractFromRange';
-import { addToRange } from '../../../../beatsRange/addToRange';
-import { createRangeFromDuration } from '../../../../beatsRange/createRangeFromDuration';
-import { getWrappedRanges } from '../../../../beatsRange/getWrappedRanges';
-import { getItemsInRange } from '../../../../beatsRange/getItemsInRange';
 import type { Beats, BeatsRange } from '../../../../core/lib/types';
+import {
+  addToRange,
+  createRangeFromDuration,
+  getItemsInRange,
+  getWrappedRanges,
+  subtractFromRange,
+} from '../../../../range';
 
 export const getTimelineNotesInRange = (
   range: BeatsRange,

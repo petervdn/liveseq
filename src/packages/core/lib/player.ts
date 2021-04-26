@@ -2,10 +2,10 @@ import { combine, map, pipe, Source } from 'callbag-common';
 import share from 'callbag-share';
 import { timeToBeats } from '../../time/musicTime';
 import { getPlaybackSources, PlaybackSources } from './streams/playback';
-import { createRange } from '../../beatsRange/beatsRange';
 import { getClockSources } from './streams/clock';
 import { extract } from './streams/extract';
 import type { Bpm, TimeInSeconds } from './types';
+import { createRange } from '../../range';
 
 export type CreatePlayerProps = {
   // TODO: convert to pullable source?
