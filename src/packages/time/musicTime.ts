@@ -67,13 +67,14 @@ export const musicTimeToTime = (
 export const timeToMusicTime = (time: TimeInSeconds, bpm: Bpm): MusicTime =>
   normalizeMusicTime([0, timeToBeats(time, bpm)]);
 
-// is a before b
-export const isBefore = (a: MusicTime, b: MusicTime) => musicTimeToBeats(a) < musicTimeToBeats(b);
-
 export const isSameTime = (a: MusicTime, b: MusicTime) => {
   return musicTimeToBeats(a) === musicTimeToBeats(b);
 };
 
-export const addMusicTime = (a: MusicTime, b: MusicTime) => {
-  return normalizeMusicTime([0, musicTimeToBeats(a) + musicTimeToBeats(b)]);
+export const operateMusicTime = (
+  a: MusicTime,
+  b: MusicTime,
+  operator: (a: Beats, b: Beats) => Beats,
+) => {
+  return normalizeMusicTime([0, operator(musicTimeToBeats(a), musicTimeToBeats(b))]);
 };

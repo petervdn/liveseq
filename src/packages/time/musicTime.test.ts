@@ -1,9 +1,13 @@
-import { addMusicTime, musicTimeToBeats, musicTimeToTime, normalizeMusicTime } from './musicTime';
+import {
+  MusicTime,
+  musicTimeToBeats,
+  musicTimeToTime,
+  normalizeMusicTime,
+  operateMusicTime,
+} from './musicTime';
 import type { Beats, Bpm, TimeInSeconds } from '../core/lib/types';
 import { beatsToTime } from '../core/lib/time/beatsToTime';
 import { timeToBeats } from '../core/lib/time/timeToBeats';
-
-export {};
 
 it('normalizes musicTime', () => {
   expect(normalizeMusicTime([1])).toEqual([1, 0, 0, 0]);
@@ -48,7 +52,10 @@ it('converts musicTime to time', () => {
   expect(musicTimeToTime([0, 120], 120 as Bpm)).toBe(60);
 });
 
-it('adds musicTimes', () => {
+it('operate musicTimes', () => {
+  const addMusicTime = (a: MusicTime, b: MusicTime) => {
+    return operateMusicTime(a, b, (a, b) => (a + b) as Beats);
+  };
   expect(addMusicTime([0], [0])).toEqual([0, 0, 0, 0]);
   expect(addMusicTime([1], [1])).toEqual([2, 0, 0, 0]);
   expect(addMusicTime([1, 2, 3, 4], [1, 2, 3, 4])).toEqual([3, 3, 2, 0]);
