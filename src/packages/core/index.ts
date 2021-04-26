@@ -1,3 +1,4 @@
+// general types
 export type {
   SourceType,
   Beats,
@@ -7,6 +8,8 @@ export type {
   TimeRange,
   BeatsRange,
 } from './lib/types';
+
+// player
 export { createPlayer } from './lib/player';
 export type { CreatePlayerProps } from './lib/player';
 
