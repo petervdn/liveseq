@@ -1,4 +1,4 @@
-import type { BeatsRange } from '../core/types';
+import type { BeatsRange } from '../core/lib/types';
 
 export const createRange = (start: number, end: number): BeatsRange => {
   return {

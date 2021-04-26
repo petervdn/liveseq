@@ -1,5 +1,5 @@
 import { getWrappedRanges } from './getWrappedRanges';
-import type { BeatsRange } from '../core/types';
+import type { BeatsRange } from '../core/lib/types';
 
 it('getWrappedRanges', () => {
   // LOOPING

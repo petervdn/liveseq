@@ -8,7 +8,7 @@ import { addToRange } from '../../../../beatsRange/addToRange';
 import { createRangeFromDuration } from '../../../../beatsRange/createRangeFromDuration';
 import { getWrappedRanges } from '../../../../beatsRange/getWrappedRanges';
 import { getItemsInRange } from '../../../../beatsRange/getItemsInRange';
-import type { Beats, BeatsRange } from '../../../../core/types';
+import type { Beats, BeatsRange } from '../../../../core/lib/types';
 
 export const getTimelineNotesInRange = (
   range: BeatsRange,

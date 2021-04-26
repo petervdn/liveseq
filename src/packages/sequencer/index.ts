@@ -4,4 +4,4 @@ export type { SerializableProject } from './lib/project/project';
 export { useLiveseq, useLiveseqContext } from './react/useLiveseq';
 export { libraryVersion } from './lib/meta';
 export { getAbSwitch } from './projects/abSwitch';
-export { createAudioContext } from '../core/utils/createAudioContext';
+export { createAudioContext } from '../core/lib/utils/createAudioContext';

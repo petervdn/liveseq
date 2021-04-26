@@ -1,4 +1,4 @@
-import type { Hertz } from '../../note/note';
+import type { Hertz } from '../../../note/note';
 
 export const playTick = (
   audioContext: AudioContext,

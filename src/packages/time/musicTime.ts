@@ -1,4 +1,4 @@
-import type { Beats, Bpm, TimeInSeconds } from '../core/types';
+import type { Beats, Bpm, TimeInSeconds } from '../core/lib/types';
 
 export type MusicTime = [
   bars: number,

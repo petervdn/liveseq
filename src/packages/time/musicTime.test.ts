@@ -6,7 +6,7 @@ import {
   normalizeMusicTime,
   timeToBeats,
 } from './musicTime';
-import type { Beats, Bpm, TimeInSeconds } from '../core/types';
+import type { Beats, Bpm, TimeInSeconds } from '../core/lib/types';
 
 export {};
 

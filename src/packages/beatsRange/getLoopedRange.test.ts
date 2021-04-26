@@ -1,5 +1,5 @@
 import { getLoopedRange } from './getLoopedRange';
-import type { BeatsRange } from '../core/types';
+import type { BeatsRange } from '../core/lib/types';
 
 it('getLoopedRange', () => {
   // doesn't modify start, only duration

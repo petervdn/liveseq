@@ -1,5 +1,5 @@
 import type { QueuedScene } from '../schedulerState';
-import type { Beats } from '../../../../core/types';
+import type { Beats } from '../../../../core/lib/types';
 
 export type QueuedScenesByStart = Record<number, Array<QueuedScene>>;
 export const groupQueuedScenesByStart = (

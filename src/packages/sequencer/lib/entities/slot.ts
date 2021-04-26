@@ -1,8 +1,8 @@
 import type { CommonProps, Disposable, PartialCommonProps } from '../types';
 import { createEntries } from '../../../entries/entries';
-import { identity } from '../../../core/utils/identity';
-import { always } from '../../../core/utils/always';
-import { noop } from '../../../core/utils/noop';
+import { identity } from '../../../core/lib/utils/identity';
+import { always } from '../../../core/lib/utils/always';
+import { noop } from '../../../core/lib/utils/noop';
 
 export type TimelineSlot = CommonProps & {
   type: 'timelineSlot';

@@ -3,7 +3,7 @@ import { getRangeDuration } from './getRangeDuration';
 import { setStart } from './setStart';
 import { clampRange } from './clampRange';
 import { createRangeFromDuration } from './createRangeFromDuration';
-import type { Beats, BeatsRange } from '../core/types';
+import type { Beats, BeatsRange } from '../core/lib/types';
 
 // TODO: this could be optimized
 // returns an array of wrapped ranges representing the range in each loop iteration

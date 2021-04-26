@@ -4,7 +4,7 @@ import { getIdGenerator } from './idGenerator/getIdGenerator';
 import { getHighestId } from './idGenerator/getHighestId';
 import { enable } from './utils/enable';
 import { disable } from './utils/disable';
-import { objectValues } from '../core/utils/objUtils';
+import { objectValues } from '../core/lib/utils/objUtils';
 import { createPubSub } from '../pubSub/pubSub';
 
 // TODO: make its own package (remove dependencies)

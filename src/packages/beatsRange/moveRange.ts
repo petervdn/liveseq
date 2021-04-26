@@ -1,4 +1,4 @@
-import type { Beats, BeatsRange } from '../core/types';
+import type { Beats, BeatsRange } from '../core/lib/types';
 
 // moves whole range to new start
 export const moveRange = (range: BeatsRange, newStart: Beats): BeatsRange => {

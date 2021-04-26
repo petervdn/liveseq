@@ -1,1 +1,1 @@
-export type { TimeInSeconds, Bpm, Beats, BeatsRange } from './types';
+export type { TimeInSeconds, Bpm, Beats, BeatsRange } from './lib/types';

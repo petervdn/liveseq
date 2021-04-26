@@ -2,7 +2,7 @@ import { Wrapper } from './Wrapper';
 import { Fill } from './Fill';
 import { Heading } from './Heading';
 import { Box } from './Box';
-import { times } from '../../packages/core/utils/times';
+import { times } from '../../packages/core/lib/utils/times';
 import { Label } from './Label';
 
 export type ViewerVisualProps = {

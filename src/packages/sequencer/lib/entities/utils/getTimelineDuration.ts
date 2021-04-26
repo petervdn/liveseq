@@ -1,5 +1,5 @@
 import type { SerializableTimeline } from '../timeline';
-import type { Beats } from '../../../../core/types';
+import type { Beats } from '../../../../core/lib/types';
 
 export const getTimelineDuration = (timeline: SerializableTimeline): Beats => {
   return timeline.duration !== undefined

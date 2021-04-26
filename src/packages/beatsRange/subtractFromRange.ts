@@ -1,4 +1,4 @@
-import type { Beats, BeatsRange } from '../core/types';
+import type { Beats, BeatsRange } from '../core/lib/types';
 
 export const subtractFromRange = <T extends BeatsRange>(range: T, offsetBy: Beats): T => {
   return {

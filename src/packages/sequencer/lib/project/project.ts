@@ -3,8 +3,8 @@ import { validateProject } from './validateProject';
 import type { SerializableEntities } from '../entities/entities';
 import type { SchedulerState } from '../scheduler/schedulerState';
 import { createSlotPlaybackState } from '../scheduler/schedulerState';
-import type { Playback } from '../../../core/streams/playback';
-import type { Bpm } from '../../../core/types';
+import type { Playback } from '../../../core/lib/streams/playback';
+import type { Bpm } from '../../../core/lib/types';
 
 export type PlayerState = {
   playbackState: Playback;

@@ -1,7 +1,7 @@
 import type { SceneAction } from '../../entities/scene';
 import type { EntityEntries } from '../../entities/entities';
 import type { PlayingSlot, SlotPlaybackState } from '../schedulerState';
-import type { Beats } from '../../../../core/types';
+import type { Beats } from '../../../../core/lib/types';
 
 export const getPlayingSlots = (
   sceneActions: Array<SceneAction>,

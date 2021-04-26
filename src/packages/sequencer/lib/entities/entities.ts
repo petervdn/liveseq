@@ -5,7 +5,7 @@ import { createSamplerEntries, SerializableSampler } from './sampler';
 import { createSceneEntries, SerializableScene } from './scene';
 import { createSlotEntries, SerializableSlot } from './slot';
 import { createTimelineEntries, SerializableTimeline } from './timeline';
-import { objectEntries, objectValues } from '../../../core/utils/objUtils';
+import { objectEntries, objectValues } from '../../../core/lib/utils/objUtils';
 
 export type CreateEntitiesProps = {
   project: SerializableProject;

@@ -1,5 +1,5 @@
 import { clampRange } from './clampRange';
-import type { BeatsRange } from '../core/types';
+import type { BeatsRange } from '../core/lib/types';
 
 it('clampRange', () => {
   expect(

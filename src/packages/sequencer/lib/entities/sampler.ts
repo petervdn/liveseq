@@ -1,8 +1,8 @@
 import type { CommonProps, Disposable, PartialCommonProps } from '../types';
 import { createEntries } from '../../../entries/entries';
-import { always } from '../../../core/utils/always';
+import { always } from '../../../core/lib/utils/always';
 import type { Instrument } from './instrumentChannel';
-import { noop } from '../../../core/utils/noop';
+import { noop } from '../../../core/lib/utils/noop';
 
 export type SerializableSampler = CommonProps;
 export type SamplerInstance = Disposable<Instrument & SerializableSampler>;

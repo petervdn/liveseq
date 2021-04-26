@@ -1,7 +1,7 @@
 import type { CommonProps, Disposable, PartialCommonProps } from '../types';
 import { createEntries } from '../../../entries/entries';
-import { identity } from '../../../core/utils/identity';
-import { without } from '../../../core/utils/without';
+import { identity } from '../../../core/lib/utils/identity';
+import { without } from '../../../core/lib/utils/without';
 import type { ScheduleNote } from '../scheduler/scheduler';
 
 // TODO: rename to Channel

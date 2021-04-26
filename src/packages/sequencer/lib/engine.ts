@@ -4,9 +4,9 @@ import { libraryVersion } from './meta';
 import { createEntities } from './entities/entities';
 import { createScheduler } from './scheduler/scheduler';
 import { removeNonSerializableProps } from '../../../components/utils/removeNonSerializableProps';
-import { createPlayer } from '../../core/player';
-import type { InputProps } from '../../core/getInputProps';
-import type { TimeInSeconds } from '../../core/types';
+import { createPlayer } from '../../core/lib/player';
+import type { InputProps } from '../../core/lib/getInputProps';
+import type { TimeInSeconds } from '../../core/lib/types';
 
 export type EngineProps = {
   project: SerializableProject;

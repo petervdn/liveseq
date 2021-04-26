@@ -1,7 +1,7 @@
 import type { Liveseq, SerializableProject } from '../index';
 import type { NoteName } from '../../note/note';
 import { createLiveseq } from '../lib/liveseq';
-import { times } from '../../core/utils/times';
+import { times } from '../../core/lib/utils/times';
 import { playSlots, stopSlots } from '../lib/entities/scene';
 import type { Beats } from '../../core';
 

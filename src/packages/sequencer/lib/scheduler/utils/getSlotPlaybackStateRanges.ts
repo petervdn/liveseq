@@ -4,7 +4,7 @@ import type { EntityEntries } from '../../entities/entities';
 import { getPlayingSlots } from './getPlayingSlots';
 import { removeScenesFromQueue } from './removeScenesFromQueue';
 import type { SlotPlaybackState } from '../schedulerState';
-import type { Beats, BeatsRange } from '../../../../core/types';
+import type { Beats, BeatsRange } from '../../../../core/lib/types';
 
 export const getSlotPlaybackStateRanges = (
   beatsRange: BeatsRange,

@@ -1,5 +1,5 @@
 import { createPubSub } from '../../../pubSub/pubSub';
-import { objectValues } from '../../../core/utils/objUtils';
+import { objectValues } from '../../../core/lib/utils/objUtils';
 import type { ScheduleData, ScheduleNote } from './scheduler';
 
 export const createSchedulerEvents = () => {

@@ -1,4 +1,4 @@
-import type { BeatsRange } from '../core/types';
+import type { BeatsRange } from '../core/lib/types';
 
 // is rangeA intersecting rangeB
 export const isInRange = (rangeA: BeatsRange, rangeB: BeatsRange) => {

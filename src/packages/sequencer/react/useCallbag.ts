@@ -1,6 +1,6 @@
 import { Source, subscribe } from 'callbag-common';
 import { useEffect, useState } from 'react';
-import { extract } from '../../core/utils/extract';
+import { extract } from '../../core/lib/utils/extract';
 
 // source must "remember" (callbag-remember) its value so it can be extracted, and have an initial value as well
 export const useCallbag = <T>(source$: Source<T>) => {

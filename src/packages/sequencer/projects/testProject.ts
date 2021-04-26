@@ -1,8 +1,8 @@
 import { createLiveseq } from '../lib/liveseq';
-import { times } from '../../core/utils/times';
+import { times } from '../../core/lib/utils/times';
 import { addCompleteRouting } from './utils/addCompletRouting';
 import { getMetronomeNotes } from './abSwitch';
-import type { Beats } from '../../core/types';
+import type { Beats } from '../../core/lib/types';
 
 export const getTestProject = () => {
   const liveseq = createLiveseq({ project: { name: 'Test Project' } });
