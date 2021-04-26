@@ -25,6 +25,10 @@ export { pulse } from './lib/streams/pulse';
 export { skipRepeats } from './lib/streams/skipRepeats';
 export { withTime } from './lib/streams/withTime';
 
+// time
+export { beatsToTime } from './lib/time/beatsToTime';
+export { timeToBeats } from './lib/time/timeToBeats';
+
 // utils
 export { always } from './lib/utils/always';
 export { createAudioContext } from './lib/utils/createAudioContext';

@@ -16,5 +16,3 @@ export { setStart } from './lib/setStart';
 export { splitRange } from './lib/splitRange';
 export { splitRangeByDuration } from './lib/splitRangeByDuration';
 export { subtractFromRange } from './lib/subtractFromRange';
-// TODO: not generic, remove??
-export { timeRangeToBeatsRange } from './lib/timeRangeToBeatsRange';

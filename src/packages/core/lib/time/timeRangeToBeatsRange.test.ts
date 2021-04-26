@@ -1,5 +1,5 @@
 import { timeRangeToBeatsRange } from './timeRangeToBeatsRange';
-import type { Bpm, TimeRange } from '../../core/lib/types';
+import type { Bpm, TimeRange } from '../types';
 
 it('timeRangeToBeatsRange', () => {
   expect(timeRangeToBeatsRange({ start: 0, end: 10 } as TimeRange, 60 as Bpm)).toEqual({

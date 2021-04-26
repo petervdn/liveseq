@@ -1,5 +1,5 @@
-import { timeToBeats } from '../../time/musicTime';
-import type { BeatsRange, Bpm, TimeRange } from '../../core/lib/types';
+import type { BeatsRange, Bpm, TimeRange } from '../types';
+import { timeToBeats } from './timeToBeats';
 
 export const timeRangeToBeatsRange = (timeRange: TimeRange, bpm: Bpm): BeatsRange => {
   return {

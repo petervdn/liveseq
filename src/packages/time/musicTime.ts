@@ -1,4 +1,6 @@
 import type { Beats, Bpm, TimeInSeconds } from '../core/lib/types';
+import { beatsToTime } from '../core/lib/time/beatsToTime';
+import { timeToBeats } from '../core/lib/time/timeToBeats';
 
 export type MusicTime = [
   bars: number,
@@ -51,14 +53,6 @@ export const normalizeMusicTime = (
     flooredSixteenths - bars * sixteenthsPerBar - beats * sixteenthsPerBeat,
     totalSixteenths - flooredSixteenths,
   ];
-};
-
-export const beatsToTime = (beats: Beats, bpm: Bpm): TimeInSeconds => {
-  return ((beats * 60) / bpm) as TimeInSeconds;
-};
-
-export const timeToBeats = (time: TimeInSeconds, bpm: Bpm): Beats => {
-  return ((time / 60) * bpm) as Beats;
 };
 
 export const musicTimeToTime = (

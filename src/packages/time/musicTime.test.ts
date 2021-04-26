@@ -1,12 +1,7 @@
-import {
-  addMusicTime,
-  beatsToTime,
-  musicTimeToBeats,
-  musicTimeToTime,
-  normalizeMusicTime,
-  timeToBeats,
-} from './musicTime';
+import { addMusicTime, musicTimeToBeats, musicTimeToTime, normalizeMusicTime } from './musicTime';
 import type { Beats, Bpm, TimeInSeconds } from '../core/lib/types';
+import { beatsToTime } from '../core/lib/time/beatsToTime';
+import { timeToBeats } from '../core/lib/time/timeToBeats';
 
 export {};
 

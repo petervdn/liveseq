@@ -1,11 +1,10 @@
 import { combine, map, pipe, Source } from 'callbag-common';
 import share from 'callbag-share';
-import { timeToBeats } from '../../time/musicTime';
 import { getPlaybackSources, PlaybackSources } from './streams/playback';
 import { getClockSources } from './streams/clock';
 import { extract } from './streams/extract';
 import type { Bpm, TimeInSeconds } from './types';
-import { createRange } from '../../range';
+import { timeRangeToBeatsRange } from './time/timeRangeToBeatsRange';
 
 export type CreatePlayerProps = {
   // TODO: convert to pullable source?
@@ -42,7 +41,7 @@ export const createPlayer = (props: CreatePlayerProps) => {
   const beatsRange$ = pipe(
     combine(timeRange$, sources.tempo$),
     map(([timeRange, tempo]) => {
-      return createRange(timeToBeats(timeRange.start, tempo), timeToBeats(timeRange.end, tempo));
+      return timeRangeToBeatsRange(timeRange, tempo);
     }),
     share,
   );

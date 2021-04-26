@@ -4,6 +4,7 @@ export type PubSub<Payload> = {
   dispose: () => void;
 };
 
+// TODO: remove this and replace with streams
 export const createPubSub = <Payload>(): PubSub<Payload> => {
   let subscriptions: Array<(payload: Payload) => void> = [];
 
