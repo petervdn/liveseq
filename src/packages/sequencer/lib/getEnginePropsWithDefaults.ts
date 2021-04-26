@@ -10,6 +10,7 @@ export const getEnginePropsWithDefaults = (props: LiveseqProps = {}): EngineProp
   const lookAheadTime = props.lookAheadTime || (2 as TimeInSeconds);
   const scheduleInterval = props.scheduleInterval || (1 as TimeInSeconds);
   const tempo = 120 as Bpm; // TODO: get from project??
+  // TODO: don't create mocked audio context
   const audioContext = props.audioContext || createMockedAudioContext();
   const inputSources = getInputProps({
     lookAheadTime,

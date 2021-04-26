@@ -8,10 +8,10 @@ import { getQueuedScenesWithinRange } from './utils/getQueuedScenesWithinRange';
 import { groupQueuedScenesByStart } from './utils/groupQueuedScenesByStart';
 import { getSlotPlaybackStateRanges } from './utils/getSlotPlaybackStateRanges';
 import { getNotesForInstrumentInTimeRange } from '../entities/utils/getNotesForInstrumentInTimeRange';
-import { createSchedulerEvents } from './schedulerEvents';
 import { createSchedulerState, SchedulerState, SlotPlaybackState } from './schedulerState';
 import { setTimer } from '../../../core/lib/utils/setTimer';
 import type { Beats, BeatsRange, Bpm, TimeInSeconds } from '../../../core';
+import { createSubject$WithPush } from '../../../core/lib/streams/subject$WithPush';
 
 export type ScheduleNote = Note & {
   startTime: TimeInSeconds;
@@ -45,7 +45,10 @@ export const createScheduler = ({
   beatsRange$,
   tempo$,
 }: SchedulerProps) => {
-  const schedulerEvents = createSchedulerEvents();
+  const [schedule$, onSchedule] = createSubject$WithPush<ScheduleData>(undefined);
+  const [notePlay$, onNotePlay] = createSubject$WithPush<ScheduleNote>(undefined);
+
+  // const schedulerEvents = createSchedulerEvents();
   const {
     getSlotPlaybackState,
     setSlotPlaybackState,
@@ -76,7 +79,7 @@ export const createScheduler = ({
         // TODO: time accuracy can probably be improved
         onStopCallbacks.push(
           setTimer(() => {
-            schedulerEvents.onPlayNote.dispatch(note);
+            onNotePlay(note);
           }, note.startTime * 1000),
         );
       });
@@ -134,7 +137,7 @@ export const createScheduler = ({
       const scheduleData = getScheduleDataWithinRange(beatsRange, tempo);
 
       schedule(scheduleData.scheduleItems);
-      schedulerEvents.onSchedule.dispatch(scheduleData);
+      onSchedule(scheduleData);
     }),
     share,
   );
@@ -145,7 +148,6 @@ export const createScheduler = ({
   const dispose = () => {
     reset();
     previouslyScheduledNoteIds = [];
-    schedulerEvents.dispose();
     schedulerState.dispose();
   };
 
@@ -155,8 +157,8 @@ export const createScheduler = ({
     removeSceneFromQueue,
     getSlotPlaybackState,
     getScheduleDataWithinRange,
-    onSchedule: schedulerEvents.onSchedule.subscribe,
-    onPlayNote: schedulerEvents.onPlayNote.subscribe,
+    schedule$,
+    notePlay$,
     schedule,
     dispose,
   };
