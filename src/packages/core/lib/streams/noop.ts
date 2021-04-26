@@ -1,5 +1,5 @@
 import createSubject from 'callbag-subject';
 
-export const createNoop$ = () => {
+export const createNoopSource = () => {
   return createSubject<never>();
 };

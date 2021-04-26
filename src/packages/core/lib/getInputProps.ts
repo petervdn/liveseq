@@ -1,6 +1,6 @@
 import { createTrigger$ } from './streams/trigger';
 import { createSubject$WithPush } from './streams/subject$WithPush';
-import { extract } from './utils/extract';
+import { extract } from './streams/extract';
 import type { Bpm, TimeInSeconds } from './types';
 
 // yep :`|

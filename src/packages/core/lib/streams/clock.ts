@@ -18,7 +18,7 @@ export type GetClockStreamsProps = {
   getCurrentTime: () => TimeInSeconds;
 };
 
-export const getClockStreams = ({
+export const getClockSources = ({
   sources: { timeInterval$, isRunning$, onPlay$ },
   getCurrentTime,
 }: GetClockStreamsProps) => {

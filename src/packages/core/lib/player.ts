@@ -3,11 +3,11 @@ import share from 'callbag-share';
 import { timeToBeats } from '../../time/musicTime';
 import { getPlaybackSources, PlaybackSources } from './streams/playback';
 import { createRange } from '../../beatsRange/beatsRange';
-import { getClockStreams } from './streams/clock';
-import { extract } from './utils/extract';
+import { getClockSources } from './streams/clock';
+import { extract } from './streams/extract';
 import type { Bpm, TimeInSeconds } from './types';
 
-type CreatePlayerProps = {
+export type CreatePlayerProps = {
   // TODO: convert to pullable source?
   getCurrentTime: () => TimeInSeconds;
   sources: PlaybackSources & {
@@ -23,7 +23,7 @@ export const createPlayer = (props: CreatePlayerProps) => {
   const { sources, getCurrentTime } = props;
   const playerSources = getPlaybackSources(props);
   const { startTime$ } = playerSources;
-  const { elapsedTime$, interval$ } = getClockStreams({
+  const { elapsedTime$, interval$ } = getClockSources({
     sources: {
       ...props.sources,
       ...playerSources,
