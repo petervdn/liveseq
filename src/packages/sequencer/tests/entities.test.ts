@@ -1,5 +1,5 @@
 import { createLiveseq, Liveseq } from '../index';
-import { musicTimeToBeats } from '../../time/musicTime';
+import { musicTimeToBeats } from '../../musicTime/musicTime';
 import { playSlots } from '../lib/entities/scene';
 import { getMockedProps } from './getMockedProps';
 import type { Beats } from '../../core';
